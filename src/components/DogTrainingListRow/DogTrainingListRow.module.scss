@@ -1,0 +1,12 @@
+.dog-training-list-row {
+    padding: 10px;
+    border-radius: 3px;
+    background: #d3d3d3;
+    color: #333;
+
+    &__label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
