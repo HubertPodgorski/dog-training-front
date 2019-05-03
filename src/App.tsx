@@ -42,6 +42,7 @@ class App extends React.Component<Props, State> {
                         color={getColorBasedOnLockStaus(this.state.isDndLocked)}
                         aria-label="lock-unlock"
                         onClick={this.onLockToggle}
+                        className={styles['app-wrapper__lock-icon']}
                     >
                         <Icon>
                             {getIconBasedOnLockStatus(this.state.isDndLocked)}
