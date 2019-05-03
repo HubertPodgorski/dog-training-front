@@ -6,6 +6,7 @@ import { DogTrainingContext } from '../../App';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
+import { FaDog } from 'react-icons/fa';
 
 interface Props {
     dogInTraining: DogTraining;
@@ -35,8 +36,16 @@ const DogTrainingListRow: React.FC<Props> = ({ dogInTraining, index }) => {
                     className={styles['dog-training-list-row']}
                 >
                     <div className={styles['dog-training-list-row__label']}>
-                        <p>{dogInTraining.dogName}</p>
-                        <p>{dogInTraining.handler}</p>
+                        <p>
+                            <span
+                                className={
+                                    styles['dog-training-list-row__icon']
+                                }
+                            >
+                                <FaDog size="1em" />
+                            </span>
+                            {dogInTraining.dogName}
+                        </p>
 
                         <IconButton
                             onClick={() => toggleIsExpanded(!isExpanded)}
