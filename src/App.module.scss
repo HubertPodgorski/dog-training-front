@@ -3,8 +3,9 @@
 .app-wrapper {
     background: $main-bg;
     box-sizing: border-box;
-    min-width: 90vw;
-    min-height: 90vh;
+    width: 100%;
+    min-width: 100vw;
+    min-height: 100vh;
     color: $main-font-color;
     padding-top: 40px;
 
