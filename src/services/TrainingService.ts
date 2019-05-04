@@ -22,6 +22,29 @@ export default class TrainingService {
         newList.splice(prevPositionIndex, 1);
         newList.splice(nextPositionIndex, 0, itemChanged);
 
-        return newList;
+        return newList.map(
+            (dogInTraining: DogTraining, index: number): DogTraining => ({
+                ...dogInTraining,
+                order: index
+            })
+        );
+    }
+
+    static getListOfIdsInUpdatedOrder(
+        dogTrainingList: DogTraining[]
+    ): { id: string; order: number }[] {
+        return dogTrainingList.reduce(
+            (
+                currentList: { id: string; order: number }[],
+                dogInTraining: DogTraining
+            ) => [
+                ...currentList,
+                {
+                    id: dogInTraining.id,
+                    order: dogInTraining.order
+                }
+            ],
+            []
+        );
     }
 }

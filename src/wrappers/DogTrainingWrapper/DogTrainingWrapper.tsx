@@ -4,8 +4,8 @@ import DogTrainingList from '../../components/DogTrainingList/DogTrainingList';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { DogTraining } from '../../types/Dog';
 import TrainingService from '../../services/TrainingService';
-import apiRoutes from '../../consts/apiRoutes';
-import http from '../../helpers/http';
+import { httpMethods, http } from '../../helpers/http';
+import { apiRoutes } from '../../consts/apiRoutes';
 
 interface Props {}
 
@@ -52,10 +52,23 @@ class DogTrainingWrapper extends React.Component<Props, State> {
             destination.index
         );
 
-        this.setState({
-            dogTrainingList: updatedTrainigList
-        });
-        // TODO: send results to backend here
+        this.setState(
+            {
+                dogTrainingList: updatedTrainigList
+            },
+            () => {
+                // TODO: send results to backend here
+                http(
+                    apiRoutes.PUT.changeOrder,
+                    httpMethods.PUT,
+                    TrainingService.getListOfIdsInUpdatedOrder(
+                        this.state.dogTrainingList
+                    )
+                ).then((dogTrainingList: DogTraining[]) => {
+                    console.log('dogTrainingList', dogTrainingList);
+                });
+            }
+        );
     };
 
     render() {
