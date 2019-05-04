@@ -1,5 +1,5 @@
-const apiPrefix = 'http://localhost:3001/api';
-// const apiPrefix = 'https://dog-training-back.herokuapp.com/api';
+// const apiPrefix = 'http://localhost:3001/api';
+const apiPrefix = 'https://dog-training-back.herokuapp.com/api';
 const appendApiPrefix = (suffix: string): string => `${apiPrefix}${suffix}`;
 
 export const apiRoutes = {
