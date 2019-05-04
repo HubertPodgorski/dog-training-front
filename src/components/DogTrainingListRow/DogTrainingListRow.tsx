@@ -44,7 +44,7 @@ const DogTrainingListRow: React.FC<Props> = ({ dogInTraining, index }) => {
                             >
                                 <FaDog size="1em" />
                             </span>
-                            {dogInTraining.dogName}:{dogInTraining.id}
+                            {dogInTraining.dogName}
                         </p>
 
                         <IconButton
