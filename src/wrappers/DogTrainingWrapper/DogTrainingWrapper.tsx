@@ -1,10 +1,11 @@
 import React from 'react';
 // import styles from './DogTraining.module.scss';
-import { dogsListMock } from '../../consts/mocks';
 import DogTrainingList from '../../components/DogTrainingList/DogTrainingList';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { DogTraining } from '../../types/Dog';
 import TrainingService from '../../services/TrainingService';
+import apiRoutes from '../../consts/apiRoutes';
+import http from '../../helpers/http';
 
 interface Props {}
 
@@ -17,12 +18,17 @@ class DogTrainingWrapper extends React.Component<Props, State> {
         super(props);
 
         this.state = {
-            dogTrainingList: dogsListMock
+            dogTrainingList: []
         };
     }
 
     componentDidMount() {
-        // TODO: fetch initial data from backend here
+        http(apiRoutes.GET.trainingDogs).then(
+            (dogTrainingList: DogTraining[]) =>
+                this.setState({
+                    dogTrainingList
+                })
+        );
     }
 
     onDragEnd = (result: DropResult): void => {
