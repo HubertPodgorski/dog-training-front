@@ -8,6 +8,8 @@
     min-height: 100vh;
     color: $main-font-color;
     padding-top: 40px;
+    display: flex;
+    justify-content: center;
 
     &__lock-icon {
         position: fixed !important;

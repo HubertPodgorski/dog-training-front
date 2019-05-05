@@ -57,16 +57,13 @@ class DogTrainingWrapper extends React.Component<Props, State> {
                 dogTrainingList: updatedTrainigList
             },
             () => {
-                // TODO: send results to backend here
                 http(
                     apiRoutes.PUT.changeOrder,
                     httpMethods.PUT,
                     TrainingService.getListOfIdsInUpdatedOrder(
                         this.state.dogTrainingList
                     )
-                ).then((dogTrainingList: DogTraining[]) => {
-                    console.log('dogTrainingList', dogTrainingList);
-                });
+                );
             }
         );
     };
