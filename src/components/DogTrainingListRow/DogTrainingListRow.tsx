@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { apiRoutes } from '../../consts/apiRoutes';
 import { httpMethods, http } from '../../helpers/http';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import PeopleTasks from '../PeopleTasks/PeopleTasks';
 
 interface Props {
     dogInTraining: DogTraining;
@@ -155,6 +156,8 @@ class DogTrainingListRow extends React.Component<Props, State> {
                                             }
                                         />
                                     )}
+
+                                    <PeopleTasks />
                                 </Collapse>
                             </li>
                         )}
