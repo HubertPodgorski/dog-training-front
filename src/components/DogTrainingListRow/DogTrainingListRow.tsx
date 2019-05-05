@@ -138,12 +138,7 @@ class DogTrainingListRow extends React.Component<Props, State> {
 
                                 <Collapse in={this.state.isExpanded}>
                                     {dogTrainingContext.isDndLocked && (
-                                        <p>
-                                            {
-                                                this.props.dogInTraining
-                                                    .trainingDescription
-                                            }
-                                        </p>
+                                        <p>{this.state.trainingDescription}</p>
                                     )}
                                     {!dogTrainingContext.isDndLocked && (
                                         <TextField
