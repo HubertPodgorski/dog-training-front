@@ -6,7 +6,7 @@ export interface TaskPair {
     taskId: string;
 }
 
-export default class PeopleTasksService {
+export default class TasksService {
     static isPersonAlreadyInTheList(
         personUuid: string,
         currentPeopleTasks: TaskPair[]
@@ -24,7 +24,7 @@ export default class PeopleTasksService {
     ): SelectOption[] {
         return allPeopleList.filter(
             (person: SelectOption): boolean =>
-                !PeopleTasksService.isPersonAlreadyInTheList(
+                !TasksService.isPersonAlreadyInTheList(
                     person.id,
                     currentPeopleTasks
                 ) || person.id === currentSelectPersonUid
