@@ -9,9 +9,7 @@ import CustomSelect from './CustomSelect/CustomSelect';
 import { peopleList } from '../../consts/peoples';
 import getUuid from 'uuid/v4';
 import { DogTrainingContext } from '../../App';
-import PeopleTasksService, {
-    TaskPair
-} from '../../services/PeopleTasksService';
+import TasksService, { TaskPair } from '../../services/TasksService';
 
 interface Props {}
 
@@ -82,7 +80,7 @@ const renderPersonTaskRows = (
         >
             <CustomSelect
                 selectedValue={personTaskPair.personId}
-                options={PeopleTasksService.getPeopleListWithoutAlreadyChoosenExceptCurrent(
+                options={TasksService.getPeopleListWithoutAlreadyChoosenExceptCurrent(
                     peopleList,
                     peopleTaskPairs,
                     personTaskPair.personId
@@ -153,13 +151,13 @@ const renderDisplayPersonTaskRows = (peopleTaskPairs: TaskPair[]) =>
         >
             <PersonIcon />
             <strong>
-                {PeopleTasksService.getLabelByIdFromList(
+                {TasksService.getLabelByIdFromList(
                     personTaskPair.personId,
                     peopleList
                 )}
             </strong>
             :{' '}
-            {PeopleTasksService.getLabelByIdFromList(
+            {TasksService.getLabelByIdFromList(
                 personTaskPair.taskId,
                 peopleTaskList
             )}
@@ -172,6 +170,8 @@ const PeopleTasks: React.FC<Props> = () => {
 
     return (
         <section className={styles['people-tasks']}>
+            <p className={styles['people-tasks__heading']}>Zadania osób</p>
+
             {dogTrainingContext.isDndLocked &&
                 renderDisplayPersonTaskRows(peopleTaskPairs)}
 
