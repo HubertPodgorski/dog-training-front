@@ -1,6 +1,7 @@
 import React, { useState, useContext, Fragment } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import PersonIcon from '@material-ui/icons/Person';
 import AddIcon from '@material-ui/icons/Add';
 import styles from './PeopleTasks.module.scss';
 import { peopleTaskList } from '../../consts/peopleTasks';
@@ -81,7 +82,7 @@ const renderPersonTaskRows = (
         >
             <CustomSelect
                 selectedValue={personTaskPair.personId}
-                options={PeopleTasksService.getPeopleListWithoutAlreadyChoosen(
+                options={PeopleTasksService.getPeopleListWithoutAlreadyChoosenExceptCurrent(
                     peopleList,
                     peopleTaskPairs,
                     personTaskPair.personId
@@ -144,13 +145,36 @@ const addNewTaskPair = (
     ]);
 };
 
+const renderDisplayPersonTaskRows = (peopleTaskPairs: TaskPair[]) =>
+    peopleTaskPairs.map((personTaskPair: TaskPair) => (
+        <div
+            key={personTaskPair.uuid}
+            className={styles['people-tasks__list-row']}
+        >
+            <PersonIcon />
+            <strong>
+                {PeopleTasksService.getLabelByIdFromList(
+                    personTaskPair.personId,
+                    peopleList
+                )}
+            </strong>
+            :{' '}
+            {PeopleTasksService.getLabelByIdFromList(
+                personTaskPair.taskId,
+                peopleTaskList
+            )}
+        </div>
+    ));
+
 const PeopleTasks: React.FC<Props> = () => {
     const dogTrainingContext = useContext(DogTrainingContext);
-    // TODO: set available people to not already choosen ones
     const [peopleTaskPairs, setPeopleTaskPairs] = useState([]);
 
     return (
-        <section>
+        <section className={styles['people-tasks']}>
+            {dogTrainingContext.isDndLocked &&
+                renderDisplayPersonTaskRows(peopleTaskPairs)}
+
             {!dogTrainingContext.isDndLocked && (
                 <Fragment>
                     {renderPersonTaskRows(peopleTaskPairs, setPeopleTaskPairs)}
