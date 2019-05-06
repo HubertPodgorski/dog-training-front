@@ -17,12 +17,11 @@ export default class PeopleTasksService {
         );
     }
 
-    static getPeopleListWithoutAlreadyChoosen(
+    static getPeopleListWithoutAlreadyChoosenExceptCurrent(
         allPeopleList: SelectOption[],
         currentPeopleTasks: TaskPair[],
         currentSelectPersonUid: string
     ): SelectOption[] {
-        console.log('currentSelectPersonUid', currentSelectPersonUid);
         return allPeopleList.filter(
             (person: SelectOption): boolean =>
                 !PeopleTasksService.isPersonAlreadyInTheList(
@@ -30,5 +29,11 @@ export default class PeopleTasksService {
                     currentPeopleTasks
                 ) || person.id === currentSelectPersonUid
         );
+    }
+
+    static getLabelByIdFromList(id: string, list: SelectOption[]): string {
+        const itemFound = list.find((option: SelectOption) => option.id === id);
+
+        return itemFound ? itemFound.label : '---';
     }
 }
