@@ -1,4 +1,6 @@
-export const peopleList = [
+import { SelectOption } from '../types/Select';
+
+export const peopleList: SelectOption[] = [
     {
         id: 'ed3bc88a-6f53-47bd-9f3e-b55c362c1242',
         label: 'Sebastian'
