@@ -11,25 +11,31 @@ import getUuid from 'uuid/v4';
 import { DogTrainingContext } from '../../App';
 import TasksService, { TaskPair } from '../../services/TasksService';
 
-interface Props {}
+interface Props {
+    savePeopleTasks: Function;
+    peopleTasks: TaskPair[];
+}
 
 const deletePersonTaskRow = (
     uuid: string,
     currentPeopleTasks: TaskPair[],
-    setPeopleTaskPairs: Function
+    setPeopleTaskPairs: Function,
+    savePeopleTasks: Function
 ): void => {
     const newPeopleTasks = currentPeopleTasks.filter(
         (personTaskPair: TaskPair): boolean => personTaskPair.uuid !== uuid
     );
 
     setPeopleTaskPairs(newPeopleTasks);
+    savePeopleTasks(newPeopleTasks);
 };
 
 const setPersonTaskByUid = (
     currentPeopleTasks: TaskPair[],
     personPairUid: string,
     newValue: string,
-    setPeopleTaskPairs: Function
+    setPeopleTaskPairs: Function,
+    savePeopleTasks: Function
 ): void => {
     const newPeopleTasks = currentPeopleTasks.map(
         (personTaskPair: TaskPair): TaskPair => {
@@ -45,13 +51,17 @@ const setPersonTaskByUid = (
     );
 
     setPeopleTaskPairs(newPeopleTasks);
+    if (canAddNewTaskPair(newPeopleTasks)) {
+        savePeopleTasks(newPeopleTasks);
+    }
 };
 
 const setPersonByUid = (
     currentPeopleTasks: TaskPair[],
     personPairUid: string,
     newValue: string,
-    setPeopleTaskPairs: Function
+    setPeopleTaskPairs: Function,
+    savePeopleTasks: Function
 ): void => {
     const newPeopleTasks = currentPeopleTasks.map(
         (personTaskPair: TaskPair): TaskPair => {
@@ -67,11 +77,15 @@ const setPersonByUid = (
     );
 
     setPeopleTaskPairs(newPeopleTasks);
+    if (canAddNewTaskPair(newPeopleTasks)) {
+        savePeopleTasks(newPeopleTasks);
+    }
 };
 
 const renderPersonTaskRows = (
     peopleTaskPairs: TaskPair[],
-    setPeopleTaskPairs: Function
+    setPeopleTaskPairs: Function,
+    savePeopleTasks: Function
 ) =>
     peopleTaskPairs.map((personTaskPair: TaskPair) => (
         <div
@@ -91,7 +105,8 @@ const renderPersonTaskRows = (
                         peopleTaskPairs,
                         personTaskPair.uuid,
                         newValue,
-                        setPeopleTaskPairs
+                        setPeopleTaskPairs,
+                        savePeopleTasks
                     )
                 }
             />
@@ -105,7 +120,8 @@ const renderPersonTaskRows = (
                         peopleTaskPairs,
                         personTaskPair.uuid,
                         newValue,
-                        setPeopleTaskPairs
+                        setPeopleTaskPairs,
+                        savePeopleTasks
                     )
                 }
             />
@@ -115,7 +131,8 @@ const renderPersonTaskRows = (
                     deletePersonTaskRow(
                         personTaskPair.uuid,
                         peopleTaskPairs,
-                        setPeopleTaskPairs
+                        setPeopleTaskPairs,
+                        savePeopleTasks
                     )
                 }
             >
@@ -164,9 +181,15 @@ const renderDisplayPersonTaskRows = (peopleTaskPairs: TaskPair[]) =>
         </div>
     ));
 
-const PeopleTasks: React.FC<Props> = () => {
+const PeopleTasks: React.FC<Props> = ({
+    savePeopleTasks,
+    peopleTasks
+}: {
+    savePeopleTasks: Function;
+    peopleTasks: TaskPair[];
+}) => {
     const dogTrainingContext = useContext(DogTrainingContext);
-    const [peopleTaskPairs, setPeopleTaskPairs] = useState([]);
+    const [peopleTaskPairs, setPeopleTaskPairs] = useState(peopleTasks);
 
     return (
         <section className={styles['people-tasks']}>
@@ -177,7 +200,11 @@ const PeopleTasks: React.FC<Props> = () => {
 
             {!dogTrainingContext.isDndLocked && (
                 <Fragment>
-                    {renderPersonTaskRows(peopleTaskPairs, setPeopleTaskPairs)}
+                    {renderPersonTaskRows(
+                        peopleTaskPairs,
+                        setPeopleTaskPairs,
+                        savePeopleTasks
+                    )}
                     <IconButton
                         onClick={() =>
                             addNewTaskPair(peopleTaskPairs, setPeopleTaskPairs)

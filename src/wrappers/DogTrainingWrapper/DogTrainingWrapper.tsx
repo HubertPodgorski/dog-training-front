@@ -24,10 +24,11 @@ class DogTrainingWrapper extends React.Component<Props, State> {
 
     componentDidMount() {
         http(apiRoutes.GET.trainingDogs).then(
-            (dogTrainingList: DogTraining[]) =>
+            (dogTrainingList: DogTraining[]) => {
                 this.setState({
                     dogTrainingList
-                })
+                });
+            }
         );
     }
 

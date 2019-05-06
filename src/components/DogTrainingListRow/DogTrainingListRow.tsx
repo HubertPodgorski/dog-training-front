@@ -15,6 +15,7 @@ import { httpMethods, http } from '../../helpers/http';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
 import DogTasks from '../DogTasks/DogTasks';
+import { TaskPair } from '../../services/TasksService';
 
 interface Props {
     dogInTraining: DogTraining;
@@ -25,6 +26,8 @@ interface State {
     isExpanded: boolean;
     trainingDescription: string;
     isSaving: boolean;
+    dogTasks: string[];
+    peopleTasks: TaskPair[];
 }
 
 const getIconBasedOnExpandState = (
@@ -42,7 +45,9 @@ class DogTrainingListRow extends React.Component<Props, State> {
         this.state = {
             isExpanded: false,
             trainingDescription: props.dogInTraining.trainingDescription,
-            isSaving: false
+            isSaving: false,
+            dogTasks: props.dogInTraining.dogTasks,
+            peopleTasks: props.dogInTraining.peopleTasks
         };
 
         this.onDescriptionChange$ = new Subject();
@@ -93,6 +98,49 @@ class DogTrainingListRow extends React.Component<Props, State> {
             }
         );
     }
+
+    saveDogTasks = (dogTasks: string[]): void => {
+        console.log('dogTasks', dogTasks);
+        this.setState(
+            {
+                isSaving: true,
+                dogTasks
+            },
+            () => {
+                http(
+                    apiRoutes.PUT.updateDogTasks(this.props.dogInTraining.id),
+                    httpMethods.PUT,
+                    {
+                        dogTasks
+                    }
+                ).then(() => {
+                    this.setState({ isSaving: false });
+                });
+            }
+        );
+    };
+
+    savePeopleTasks = (peopleTasks: TaskPair[]): void => {
+        this.setState(
+            {
+                isSaving: true,
+                peopleTasks
+            },
+            () => {
+                http(
+                    apiRoutes.PUT.updatePeopleTasks(
+                        this.props.dogInTraining.id
+                    ),
+                    httpMethods.PUT,
+                    {
+                        peopleTasks
+                    }
+                ).then(() => {
+                    this.setState({ isSaving: false });
+                });
+            }
+        );
+    };
 
     render() {
         return (
@@ -158,9 +206,15 @@ class DogTrainingListRow extends React.Component<Props, State> {
                                         />
                                     )}
 
-                                    <DogTasks />
+                                    <DogTasks
+                                        saveDogTasks={this.saveDogTasks}
+                                        dogTasks={this.state.dogTasks}
+                                    />
 
-                                    <PeopleTasks />
+                                    <PeopleTasks
+                                        savePeopleTasks={this.savePeopleTasks}
+                                        peopleTasks={this.state.peopleTasks}
+                                    />
                                 </Collapse>
                             </li>
                         )}

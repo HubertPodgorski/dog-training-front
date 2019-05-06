@@ -5,7 +5,10 @@ import CustomMultiselect from './CustomMultiselect/CustomMultiselect';
 import { dogTaskList } from '../../consts/dogTasks';
 import TasksService from '../../services/TasksService';
 
-interface Props {}
+interface Props {
+    saveDogTasks: Function;
+    dogTasks: string[];
+}
 
 const isOnlyOne = (list: any[]): boolean => list.length === 1;
 const isLast = (list: any[], index: number): boolean =>
@@ -22,9 +25,17 @@ const renderTasks = (selectedTasks: string[]) =>
         </span>
     ));
 
-const DogTasks: React.FC<Props> = () => {
+const DogTasks: React.FC<Props> = ({
+    saveDogTasks,
+    dogTasks
+}: {
+    saveDogTasks: Function;
+    dogTasks: string[];
+}) => {
     const dogTrainingContext = useContext(DogTrainingContext);
-    const [selectedDogTasks, setSelectedDogTasks] = useState<string[]>([]);
+    const [selectedDogTasks, setSelectedDogTasks] = useState<string[]>(
+        dogTasks
+    );
 
     return (
         <section className={styles['dog-tasks']}>
@@ -40,9 +51,10 @@ const DogTasks: React.FC<Props> = () => {
 
             {!dogTrainingContext.isDndLocked && (
                 <CustomMultiselect
-                    onChange={(newValue: string[]) =>
-                        setSelectedDogTasks(newValue)
-                    }
+                    onChange={(newValue: string[]) => {
+                        setSelectedDogTasks(newValue);
+                        saveDogTasks(newValue);
+                    }}
                     options={dogTaskList}
                     selectLabel="Zadania psa"
                     selectedValue={selectedDogTasks}

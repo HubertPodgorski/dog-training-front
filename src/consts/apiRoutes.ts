@@ -8,6 +8,10 @@ export const apiRoutes = {
     PUT: {
         changeOrder: appendApiPrefix('/training-dogs/order'),
         updateTrainingDescription: (id: string) =>
-            appendApiPrefix(`/training-dogs/${id}/people-data`)
+            appendApiPrefix(`/training-dogs/${id}/training-description`),
+        updateDogTasks: (id: string) =>
+            appendApiPrefix(`/training-dogs/${id}/dog-tasks`),
+        updatePeopleTasks: (id: string) =>
+            appendApiPrefix(`/training-dogs/${id}/people-tasks`)
     }
 };
