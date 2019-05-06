@@ -12,6 +12,8 @@ export const apiRoutes = {
         updateDogTasks: (id: string) =>
             appendApiPrefix(`/training-dogs/${id}/dog-tasks`),
         updatePeopleTasks: (id: string) =>
-            appendApiPrefix(`/training-dogs/${id}/people-tasks`)
+            appendApiPrefix(`/training-dogs/${id}/people-tasks`),
+        updateDogDisability: (id: string) =>
+            appendApiPrefix(`/training-dogs/${id}/dog-disability`)
     }
 };

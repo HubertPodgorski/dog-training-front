@@ -28,12 +28,17 @@ interface State {
     isSaving: boolean;
     dogTasks: string[];
     peopleTasks: TaskPair[];
+    isDisabled: boolean;
 }
 
 const getIconBasedOnExpandState = (
     isExpanded: boolean
 ): 'expand_less' | 'expand_more' =>
     isExpanded ? 'expand_less' : 'expand_more';
+
+const getIconBasedOnisDisabledState = (
+    isDisabled: boolean
+): 'check' | 'cancel' => (isDisabled ? 'check' : 'cancel');
 
 class DogTrainingListRow extends React.Component<Props, State> {
     onDescriptionChange$: Subject<string>;
@@ -47,7 +52,8 @@ class DogTrainingListRow extends React.Component<Props, State> {
             trainingDescription: props.dogInTraining.trainingDescription,
             isSaving: false,
             dogTasks: props.dogInTraining.dogTasks,
-            peopleTasks: props.dogInTraining.peopleTasks
+            peopleTasks: props.dogInTraining.peopleTasks,
+            isDisabled: props.dogInTraining.isDisabled
         };
 
         this.onDescriptionChange$ = new Subject();
@@ -142,6 +148,37 @@ class DogTrainingListRow extends React.Component<Props, State> {
         );
     };
 
+    toggleIsDisabled = (): void => {
+        this.setState(
+            state => ({
+                isSaving: true,
+                isDisabled: !state.isDisabled
+            }),
+            () => {
+                http(
+                    apiRoutes.PUT.updateDogDisability(
+                        this.props.dogInTraining.id
+                    ),
+                    httpMethods.PUT,
+                    {
+                        isDisabled: this.state.isDisabled
+                    }
+                ).then(() => {
+                    this.setState({ isSaving: false });
+                });
+            }
+        );
+    };
+
+    getClassNameBasedOnDisability(): string {
+        const baseClassName = styles['dog-training-list-row'];
+        if (this.state.isDisabled) {
+            return styles['dog-training-list-row--disabled'];
+        }
+
+        return baseClassName;
+    }
+
     render() {
         return (
             <DogTrainingContext.Consumer>
@@ -156,7 +193,7 @@ class DogTrainingListRow extends React.Component<Props, State> {
                                 ref={provided.innerRef}
                                 {...provided.dragHandleProps}
                                 {...provided.draggableProps}
-                                className={styles['dog-training-list-row']}
+                                className={this.getClassNameBasedOnDisability()}
                             >
                                 {this.state.isSaving && <LinearProgress />}
                                 <div
@@ -177,13 +214,40 @@ class DogTrainingListRow extends React.Component<Props, State> {
                                         {this.props.dogInTraining.dogName}
                                     </p>
 
-                                    <IconButton onClick={this.toggleIsExpanded}>
-                                        <Icon>
-                                            {getIconBasedOnExpandState(
-                                                this.state.isExpanded
-                                            )}
-                                        </Icon>
-                                    </IconButton>
+                                    <div>
+                                        {!dogTrainingContext.isDndLocked && (
+                                            <IconButton
+                                                onClick={this.toggleIsDisabled}
+                                                className={
+                                                    styles[
+                                                        'dog-training-list-row__icon-wrapper'
+                                                    ]
+                                                }
+                                            >
+                                                <Icon
+                                                    className={
+                                                        styles[
+                                                            'dog-training-list-row__icon'
+                                                        ]
+                                                    }
+                                                >
+                                                    {getIconBasedOnisDisabledState(
+                                                        this.state.isDisabled
+                                                    )}
+                                                </Icon>
+                                            </IconButton>
+                                        )}
+
+                                        <IconButton
+                                            onClick={this.toggleIsExpanded}
+                                        >
+                                            <Icon>
+                                                {getIconBasedOnExpandState(
+                                                    this.state.isExpanded
+                                                )}
+                                            </Icon>
+                                        </IconButton>
+                                    </div>
                                 </div>
 
                                 <Collapse in={this.state.isExpanded}>

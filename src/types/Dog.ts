@@ -7,4 +7,5 @@ export interface DogTraining {
     order: number;
     dogTasks: string[];
     peopleTasks: TaskPair[];
+    isDisabled: boolean;
 }
