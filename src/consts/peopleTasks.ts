@@ -18,5 +18,13 @@ export const peopleTaskList = [
     {
         id: '6b38a1a8-64dd-477c-84de-3e3b4beec658',
         label: 'Król/owa szarpaka'
+    },
+    {
+        id: 'fc703283-eb45-479a-8973-9a5792a8cc60',
+        label: 'Asysta przy hopce'
+    },
+    {
+        id: '448fcf25-f3c5-41f9-ab0a-277abf99ceda',
+        label: 'Pokazywanie piłki'
     }
 ];
