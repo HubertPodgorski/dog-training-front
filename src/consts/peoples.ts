@@ -30,7 +30,31 @@ export const peopleList: SelectOption[] = [
         label: 'Maga'
     },
     {
-        id: 'dfb90a3e-2a1f-4a1c-9bbf-9c409d3e5897',
+        id: '9ddd7fd6-f038-467d-9e0e-0bca029935a1',
+        label: 'Jagoda'
+    },
+    {
+        id: '1435c25f-d735-4fe3-8d24-d6aa114b8541',
+        label: 'Kamila'
+    },
+    {
+        id: 'bf4fad7a-5fa8-42d8-b348-5050879c2a0c',
+        label: 'Maga'
+    },
+    {
+        id: 'a86951fe-5f9d-48b8-9135-0471feea7429',
         label: 'Ola'
+    },
+    {
+        id: '6bbef541-e83d-44c6-8735-5deb48761c9c',
+        label: 'Mati'
+    },
+    {
+        id: '950afd7e-73bc-46cc-9b7b-e87d50533edf',
+        label: 'Żaneta'
+    },
+    {
+        id: '65c37a6f-40b3-404b-8a84-605d0832c8bf',
+        label: 'Agnieszka I'
     }
 ];
