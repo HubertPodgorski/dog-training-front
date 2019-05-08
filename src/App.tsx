@@ -10,6 +10,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { FaHandPaper, FaPen, FaLock } from 'react-icons/fa';
 import { GiJumpingDog, GiStrong } from 'react-icons/gi';
+import purple from '@material-ui/core/colors/purple';
+import red from '@material-ui/core/colors/red';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 interface Props {}
 
@@ -23,7 +26,14 @@ interface State {
     anchorEl: null | HTMLElement | ((element: HTMLElement) => HTMLElement);
 }
 
-const getColorBasedOnLockStaus = (isLocked: boolean): 'primary' | 'secondary' =>
+const menuIconsTheme = createMuiTheme({
+    palette: {
+        primary: purple,
+        secondary: red
+    }
+});
+
+const getColorBasedOnLockStaus = (isLocked: boolean): 'secondary' | 'primary' =>
     isLocked ? 'secondary' : 'primary';
 
 export const DogTrainingContext = React.createContext({
@@ -108,70 +118,82 @@ class App extends React.Component<Props, State> {
                         onClose={this.onMenuToggle}
                         className={styles['app-wrapper__menu']}
                         anchorEl={this.state.anchorEl}
+                        disableAutoFocusItem
                     >
                         <MenuItem onClick={this.onMenuToggle}>
-                            <IconButton
-                                onClick={this.onDndToggle}
-                                color={getColorBasedOnLockStaus(
-                                    this.state.isDndLocked
-                                )}
-                            >
-                                <Icon>
-                                    <FaHandPaper />
-                                </Icon>
-                            </IconButton>
+                            <MuiThemeProvider theme={menuIconsTheme}>
+                                <IconButton
+                                    onClick={this.onDndToggle}
+                                    color={getColorBasedOnLockStaus(
+                                        this.state.isDndLocked
+                                    )}
+                                >
+                                    <Icon>
+                                        <FaHandPaper />
+                                    </Icon>
+                                </IconButton>
+                            </MuiThemeProvider>
                         </MenuItem>
 
                         <MenuItem onClick={this.onMenuToggle}>
-                            <IconButton
-                                onClick={this.onDogTasksToggle}
-                                color={getColorBasedOnLockStaus(
-                                    this.state.isDogTasksEditingLocked
-                                )}
-                            >
-                                <Icon>
-                                    <GiJumpingDog />
-                                </Icon>
-                            </IconButton>
+                            <MuiThemeProvider theme={menuIconsTheme}>
+                                <IconButton
+                                    onClick={this.onDogTasksToggle}
+                                    color={getColorBasedOnLockStaus(
+                                        this.state.isDogTasksEditingLocked
+                                    )}
+                                >
+                                    <Icon>
+                                        <GiJumpingDog />
+                                    </Icon>
+                                </IconButton>
+                            </MuiThemeProvider>
                         </MenuItem>
 
                         <MenuItem onClick={this.onMenuToggle}>
-                            <IconButton
-                                onClick={this.onPeopleTasksToggle}
-                                color={getColorBasedOnLockStaus(
-                                    this.state.isPeopleTasksEditingLocked
-                                )}
-                            >
-                                <Icon>
-                                    <GiStrong />
-                                </Icon>
-                            </IconButton>
+                            <MuiThemeProvider theme={menuIconsTheme}>
+                                <IconButton
+                                    onClick={this.onPeopleTasksToggle}
+                                    color={getColorBasedOnLockStaus(
+                                        this.state.isPeopleTasksEditingLocked
+                                    )}
+                                >
+                                    <Icon>
+                                        <GiStrong />
+                                    </Icon>
+                                </IconButton>
+                            </MuiThemeProvider>
                         </MenuItem>
 
                         <MenuItem onClick={this.onMenuToggle}>
-                            <IconButton
-                                onClick={this.onTaskDescriptionToggle}
-                                color={getColorBasedOnLockStaus(
-                                    this.state.isTaskDescriptionEditingLocked
-                                )}
-                            >
-                                <Icon>
-                                    <FaPen />
-                                </Icon>
-                            </IconButton>
+                            <MuiThemeProvider theme={menuIconsTheme}>
+                                <IconButton
+                                    onClick={this.onTaskDescriptionToggle}
+                                    color={getColorBasedOnLockStaus(
+                                        this.state
+                                            .isTaskDescriptionEditingLocked
+                                    )}
+                                >
+                                    <Icon>
+                                        <FaPen />
+                                    </Icon>
+                                </IconButton>
+                            </MuiThemeProvider>
                         </MenuItem>
 
                         <MenuItem onClick={this.onMenuToggle}>
-                            <IconButton
-                                onClick={this.onDisablingToggle}
-                                color={getColorBasedOnLockStaus(
-                                    this.state.isDisablingLocked
-                                )}
-                            >
-                                <Icon>
-                                    <FaLock />
-                                </Icon>
-                            </IconButton>
+                            <MuiThemeProvider theme={menuIconsTheme}>
+                                <IconButton
+                                    onClick={this.onDisablingToggle}
+                                    color={getColorBasedOnLockStaus(
+                                        this.state.isDisablingLocked
+                                    )}
+                                >
+                                    <Icon>
+                                        <FaLock />
+                                    </Icon>
+                                </IconButton>
+                            </MuiThemeProvider>
                         </MenuItem>
                     </Menu>
 
