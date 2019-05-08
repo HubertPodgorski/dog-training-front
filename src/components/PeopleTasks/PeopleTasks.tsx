@@ -195,10 +195,10 @@ const PeopleTasks: React.FC<Props> = ({
         <section className={styles['people-tasks']}>
             <p className={styles['people-tasks__heading']}>Zadania osób</p>
 
-            {dogTrainingContext.isDndLocked &&
+            {dogTrainingContext.isPeopleTasksEditingLocked &&
                 renderDisplayPersonTaskRows(peopleTaskPairs)}
 
-            {!dogTrainingContext.isDndLocked && (
+            {!dogTrainingContext.isPeopleTasksEditingLocked && (
                 <Fragment>
                     {renderPersonTaskRows(
                         peopleTaskPairs,

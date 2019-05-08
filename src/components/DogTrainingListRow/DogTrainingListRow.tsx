@@ -106,7 +106,6 @@ class DogTrainingListRow extends React.Component<Props, State> {
     }
 
     saveDogTasks = (dogTasks: string[]): void => {
-        console.log('dogTasks', dogTasks);
         this.setState(
             {
                 isSaving: true,
@@ -216,7 +215,7 @@ class DogTrainingListRow extends React.Component<Props, State> {
                                     </p>
 
                                     <div>
-                                        {!dogTrainingContext.isDndLocked && (
+                                        {!dogTrainingContext.isDisablingLocked && (
                                             <IconButton
                                                 onClick={this.toggleIsDisabled}
                                                 className={
@@ -252,10 +251,10 @@ class DogTrainingListRow extends React.Component<Props, State> {
                                 </div>
 
                                 <Collapse in={this.state.isExpanded}>
-                                    {dogTrainingContext.isDndLocked && (
+                                    {dogTrainingContext.isTaskDescriptionEditingLocked && (
                                         <p>{this.state.trainingDescription}</p>
                                     )}
-                                    {!dogTrainingContext.isDndLocked && (
+                                    {!dogTrainingContext.isTaskDescriptionEditingLocked && (
                                         <TextField
                                             variant="outlined"
                                             multiline

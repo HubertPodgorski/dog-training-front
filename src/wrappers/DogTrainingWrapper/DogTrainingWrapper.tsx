@@ -62,7 +62,7 @@ class DogTrainingWrapper extends React.Component<Props, State> {
                     apiRoutes.PUT.changeOrder,
                     httpMethods.PUT,
                     TrainingService.getListOfIdsInUpdatedOrder(
-                        this.state.dogTrainingList
+                        updatedTrainigList
                     )
                 );
             }

@@ -43,13 +43,13 @@ const DogTasks: React.FC<Props> = ({
                 Zadania psa na trening
             </p>
 
-            {dogTrainingContext.isDndLocked && (
+            {dogTrainingContext.isDogTasksEditingLocked && (
                 <div className={styles['dog-tasks__list-wrapper']}>
                     {renderTasks(selectedDogTasks)}
                 </div>
             )}
 
-            {!dogTrainingContext.isDndLocked && (
+            {!dogTrainingContext.isDogTasksEditingLocked && (
                 <CustomMultiselect
                     onChange={(newValue: string[]) => {
                         setSelectedDogTasks(newValue);
