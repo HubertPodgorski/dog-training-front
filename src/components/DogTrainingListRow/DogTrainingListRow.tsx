@@ -211,6 +211,7 @@ class DogTrainingListRow extends React.Component<Props, State> {
                                         >
                                             <FaDog size="1em" />
                                         </span>
+
                                         {this.props.dogInTraining.dogName}
                                     </p>
 
