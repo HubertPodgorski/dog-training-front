@@ -50,5 +50,13 @@ export const peopleTaskList = [
     {
         id: 'd025f7be-bf05-45ac-aaf6-19458250295b',
         label: 'Zdjęcia/filmiki na fp'
+    },
+    {
+        id: 'fc703283-eb45-479a-8973-9a5792a8cc60',
+        label: 'Asysta przy hopce'
+    },
+    {
+        id: '448fcf25-f3c5-41f9-ab0a-277abf99ceda',
+        label: 'Pokazywanie piłki'
     }
 ];
