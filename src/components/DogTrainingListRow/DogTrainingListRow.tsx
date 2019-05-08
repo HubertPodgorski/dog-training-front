@@ -228,7 +228,7 @@ class DogTrainingListRow extends React.Component<Props, State> {
                                                 <Icon
                                                     className={
                                                         styles[
-                                                            'dog-training-list-row__icon'
+                                                            'dog-training-list-row__expand-icon'
                                                         ]
                                                     }
                                                 >
