@@ -106,7 +106,6 @@ class DogTrainingListRow extends React.Component<Props, State> {
     }
 
     saveDogTasks = (dogTasks: string[]): void => {
-        console.log('dogTasks', dogTasks);
         this.setState(
             {
                 isSaving: true,

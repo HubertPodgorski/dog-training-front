@@ -1,48 +1,28 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import styles from './DogTrainingWrapper.module.scss';
 import DogTrainingList from '../../components/DogTrainingList/DogTrainingList';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import Icon from '@material-ui/core/Icon';
 import Fab from '@material-ui/core/Fab';
-import { DogTraining } from '../../types/Dog';
 import TrainingService from '../../services/TrainingService';
 import { httpMethods, http } from '../../helpers/http';
 import { apiRoutes } from '../../consts/apiRoutes';
 
-interface Props {}
+const DogTrainingWrapper = () => {
+    const [dogTrainingList, setDogTrainingList] = useState([]);
+    const [isDogDataFetching, setIsDogDataFetching] = useState(false);
 
-interface State {
-    dogTrainingList: DogTraining[];
-    isDogDataFetching: boolean;
-}
-
-class DogTrainingWrapper extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-
-        this.state = {
-            dogTrainingList: [],
-            isDogDataFetching: false
-        };
-    }
-
-    componentDidMount() {
-        this.fetchDogData();
-    }
-
-    fetchDogData = (): void => {
-        this.setState({ isDogDataFetching: true });
-        http(apiRoutes.GET.trainingDogs).then(
-            (dogTrainingList: DogTraining[]) => {
-                this.setState({
-                    dogTrainingList,
-                    isDogDataFetching: false
-                });
-            }
-        );
+    const fetchDogData = (): void => {
+        setIsDogDataFetching(true);
+        http(apiRoutes.GET.trainingDogs).then((dogTrainingList: any) => {
+            setDogTrainingList(dogTrainingList);
+            setIsDogDataFetching(false);
+        });
     };
 
-    onDragEnd = (result: DropResult): void => {
+    useEffect(() => fetchDogData(), []);
+
+    const onDragEnd = (result: DropResult): void => {
         const { source, destination, draggableId } = result;
 
         if (!destination) {
@@ -56,56 +36,45 @@ class DogTrainingWrapper extends React.Component<Props, State> {
             return;
         }
 
-        const updatedTrainigList = TrainingService.getUpdatedList(
-            this.state.dogTrainingList,
+        const updatedTrainigList: any = TrainingService.getUpdatedList(
+            dogTrainingList,
             draggableId,
             source.index,
             destination.index
         );
 
-        this.setState(
-            {
-                dogTrainingList: updatedTrainigList
-            },
-            () => {
-                http(
-                    apiRoutes.PUT.changeOrder,
-                    httpMethods.PUT,
-                    TrainingService.getListOfIdsInUpdatedOrder(
-                        this.state.dogTrainingList
-                    )
-                );
-            }
+        setDogTrainingList(updatedTrainigList);
+
+        http(
+            apiRoutes.PUT.changeOrder,
+            httpMethods.PUT,
+            TrainingService.getListOfIdsInUpdatedOrder(updatedTrainigList)
         );
     };
 
-    getClassNameBasedOnFetchingStatus = (): string => {
+    const getClassNameBasedOnFetchingStatus = (): string => {
         const baseClass = 'dog-training-wrapper__refresh-icon';
-        return this.state.isDogDataFetching
+        return isDogDataFetching
             ? styles[`${baseClass}--rotating`]
             : styles[baseClass];
     };
 
-    render() {
-        return (
-            <Fragment>
-                <DragDropContext onDragEnd={this.onDragEnd}>
-                    <DogTrainingList
-                        dogTrainingList={this.state.dogTrainingList}
-                    />
-                </DragDropContext>
+    return (
+        <Fragment>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <DogTrainingList dogTrainingList={dogTrainingList} />
+            </DragDropContext>
 
-                <Fab
-                    color="primary"
-                    aria-label="refresh"
-                    onClick={this.fetchDogData}
-                    className={this.getClassNameBasedOnFetchingStatus()}
-                >
-                    <Icon>autorenew</Icon>
-                </Fab>
-            </Fragment>
-        );
-    }
-}
+            <Fab
+                color="primary"
+                aria-label="refresh"
+                onClick={fetchDogData}
+                className={getClassNameBasedOnFetchingStatus()}
+            >
+                <Icon>autorenew</Icon>
+            </Fab>
+        </Fragment>
+    );
+};
 
 export default DogTrainingWrapper;
