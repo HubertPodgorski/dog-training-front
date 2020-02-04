@@ -8,8 +8,9 @@ import { peopleTaskList } from '../../consts/peopleTasks';
 import CustomSelect from './CustomSelect/CustomSelect';
 import { peopleList } from '../../consts/peoples';
 import getUuid from 'uuid/v4';
-import { DogTrainingContext } from '../../App';
 import TasksService, { TaskPair } from '../../services/TasksService';
+import TrainingsContext from "../../TrainingsContext";
+import {views} from "../../consts/views";
 
 interface Props {
     savePeopleTasks: Function;
@@ -94,7 +95,7 @@ const renderPersonTaskRows = (
         >
             <CustomSelect
                 selectedValue={personTaskPair.personId}
-                options={TasksService.getPeopleListWithoutAlreadyChoosenExceptCurrent(
+                options={TasksService.getPeopleListWithoutAlreadyChosenExceptCurrent(
                     peopleList,
                     peopleTaskPairs,
                     personTaskPair.personId
@@ -181,24 +182,21 @@ const renderDisplayPersonTaskRows = (peopleTaskPairs: TaskPair[]) =>
         </div>
     ));
 
-const PeopleTasks: React.FC<Props> = ({
+const PeopleTasks = ({
     savePeopleTasks,
     peopleTasks
-}: {
-    savePeopleTasks: Function;
-    peopleTasks: TaskPair[];
-}) => {
-    const dogTrainingContext = useContext(DogTrainingContext);
+}: Props) => {
+    const trainingsContext = useContext(TrainingsContext);
     const [peopleTaskPairs, setPeopleTaskPairs] = useState(peopleTasks);
 
     return (
         <section className={styles['people-tasks']}>
             <p className={styles['people-tasks__heading']}>Zadania osób</p>
 
-            {dogTrainingContext.isDndLocked &&
+            {trainingsContext.currentView === views.listing &&
                 renderDisplayPersonTaskRows(peopleTaskPairs)}
 
-            {!dogTrainingContext.isDndLocked && (
+            {trainingsContext.currentView === views.configurator && (
                 <Fragment>
                     {renderPersonTaskRows(
                         peopleTaskPairs,

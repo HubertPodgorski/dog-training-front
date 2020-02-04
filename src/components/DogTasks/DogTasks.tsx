@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
 import styles from './DogTasks.module.scss';
-import { DogTrainingContext } from '../../App';
 import CustomMultiselect from './CustomMultiselect/CustomMultiselect';
 import { dogTaskList } from '../../consts/dogTasks';
 import TasksService from '../../services/TasksService';
+import TrainingsContext from "../../TrainingsContext";
+import {views} from "../../consts/views";
 
 interface Props {
     saveDogTasks: Function;
@@ -25,14 +26,11 @@ const renderTasks = (selectedTasks: string[]) =>
         </span>
     ));
 
-const DogTasks: React.FC<Props> = ({
+const DogTasks = ({
     saveDogTasks,
     dogTasks
-}: {
-    saveDogTasks: Function;
-    dogTasks: string[];
-}) => {
-    const dogTrainingContext = useContext(DogTrainingContext);
+}: Props) => {
+    const trainingsContext = useContext(TrainingsContext);
     const [selectedDogTasks, setSelectedDogTasks] = useState<string[]>(
         dogTasks
     );
@@ -43,13 +41,13 @@ const DogTasks: React.FC<Props> = ({
                 Zadania psa na trening
             </p>
 
-            {dogTrainingContext.isDndLocked && (
+            {trainingsContext.currentView === views.listing && (
                 <div className={styles['dog-tasks__list-wrapper']}>
                     {renderTasks(selectedDogTasks)}
                 </div>
             )}
 
-            {!dogTrainingContext.isDndLocked && (
+            {trainingsContext.currentView === views.configurator && (
                 <CustomMultiselect
                     onChange={(newValue: string[]) => {
                         setSelectedDogTasks(newValue);

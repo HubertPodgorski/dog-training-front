@@ -1,34 +1,25 @@
-import React from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import styles from './DogTrainingListRow.module.scss';
 import { DogTraining } from '../../types/Dog';
 import { Draggable } from 'react-beautiful-dnd';
-import { DogTrainingContext } from '../../App';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import TextField from '@material-ui/core/TextField';
 import { FaDog } from 'react-icons/fa';
-import { debounceTime } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { apiRoutes } from '../../consts/apiRoutes';
 import { httpMethods, http } from '../../helpers/http';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
 import DogTasks from '../DogTasks/DogTasks';
 import { TaskPair } from '../../services/TasksService';
+import TrainingsContext from '../../TrainingsContext';
+import {views} from "../../consts/views";
+import debounce from 'lodash.debounce'
 
 interface Props {
     dogInTraining: DogTraining;
     index: number;
-}
-
-interface State {
-    isExpanded: boolean;
-    trainingDescription: string;
-    isSaving: boolean;
-    dogTasks: string[];
-    peopleTasks: TaskPair[];
-    isDisabled: boolean;
 }
 
 const getIconBasedOnExpandState = (
@@ -36,257 +27,197 @@ const getIconBasedOnExpandState = (
 ): 'expand_less' | 'expand_more' =>
     isExpanded ? 'expand_less' : 'expand_more';
 
-const getIconBasedOnisDisabledState = (
+const getIconBasedOnIsDisabledState = (
     isDisabled: boolean
 ): 'check' | 'cancel' => (isDisabled ? 'check' : 'cancel');
 
-class DogTrainingListRow extends React.Component<Props, State> {
-    onDescriptionChange$: Subject<string>;
-    subscription: any;
+const DogTrainingListRow = ({ dogInTraining, index }: Props) => {
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [isDisabled, setIsDisabled] = useState<boolean>(
+        dogInTraining.isDisabled
+    );
+    const [trainingDescription, setTrainingDescription] = useState<string>(
+        dogInTraining.trainingDescription
+    );
+    const [isSaving, setIsSaving] = useState<boolean>(false);
+    const [dogTasks, setDogTasks] = useState<string[]>(dogInTraining.dogTasks);
+    const [peopleTasks, setPeopleTasks] = useState<TaskPair[]>(
+        dogInTraining.peopleTasks
+    );
 
-    constructor(props: Props) {
-        super(props);
+    const trainingsContext = useContext(TrainingsContext);
 
-        this.state = {
-            isExpanded: false,
-            trainingDescription: props.dogInTraining.trainingDescription,
-            isSaving: false,
-            dogTasks: props.dogInTraining.dogTasks,
-            peopleTasks: props.dogInTraining.peopleTasks,
-            isDisabled: props.dogInTraining.isDisabled
-        };
-
-        this.onDescriptionChange$ = new Subject();
-        this.subscription = this.onDescriptionChange$
-            .pipe(debounceTime(250))
-            .subscribe(() => {
-                this.saveDescription();
-            });
-    }
-
-    componentWillUnmount() {
-        if (this.onDescriptionChange$) {
-            this.onDescriptionChange$.unsubscribe();
-        }
-    }
-
-    onDescriptionChange = (e: any) => {
+    const onDescriptionChange = (e: any) => {
         const { value } = e.currentTarget;
-        this.setState({
-            trainingDescription: value
-        });
-        this.onDescriptionChange$.next(value);
+        setTrainingDescription(value);
+        debouncedSaveDescription(value);
     };
 
-    toggleIsExpanded = () => {
-        this.setState({
-            isExpanded: !this.state.isExpanded
-        });
+    const toggleIsExpanded = () => {
+        setIsExpanded(!isExpanded);
     };
 
-    saveDescription() {
-        this.setState(
+    const debouncedSaveDescription = useCallback(debounce(async (description: string) => {
+        await saveDescription(description)
+    }, 300), []);
+
+    const saveDescription = async (description: string) => {
+        setIsSaving(true);
+
+        await http(
+            apiRoutes.PUT.updateTrainingDescription(dogInTraining.id),
+            httpMethods.PUT,
             {
-                isSaving: true
-            },
-            () => {
-                http(
-                    apiRoutes.PUT.updateTrainingDescription(
-                        this.props.dogInTraining.id
-                    ),
-                    httpMethods.PUT,
-                    {
-                        trainingDescription: this.state.trainingDescription
-                    }
-                ).then(() => {
-                    this.setState({ isSaving: false });
-                });
+                trainingDescription: description
             }
         );
-    }
 
-    saveDogTasks = (dogTasks: string[]): void => {
-        this.setState(
+        setIsSaving(false);
+    };
+
+    const saveDogTasks = async (dogTasks: string[]) => {
+        setIsSaving(true);
+        setDogTasks(dogTasks);
+
+        await http(
+            apiRoutes.PUT.updateDogTasks(dogInTraining.id),
+            httpMethods.PUT,
             {
-                isSaving: true,
                 dogTasks
-            },
-            () => {
-                http(
-                    apiRoutes.PUT.updateDogTasks(this.props.dogInTraining.id),
-                    httpMethods.PUT,
-                    {
-                        dogTasks
-                    }
-                ).then(() => {
-                    this.setState({ isSaving: false });
-                });
             }
         );
+
+        setIsSaving(false);
     };
 
-    savePeopleTasks = (peopleTasks: TaskPair[]): void => {
-        this.setState(
+    const savePeopleTasks = async (peopleTasks: TaskPair[]) => {
+        setIsSaving(true);
+        setPeopleTasks(peopleTasks);
+
+        await http(
+            apiRoutes.PUT.updatePeopleTasks(dogInTraining.id),
+            httpMethods.PUT,
             {
-                isSaving: true,
                 peopleTasks
-            },
-            () => {
-                http(
-                    apiRoutes.PUT.updatePeopleTasks(
-                        this.props.dogInTraining.id
-                    ),
-                    httpMethods.PUT,
-                    {
-                        peopleTasks
-                    }
-                ).then(() => {
-                    this.setState({ isSaving: false });
-                });
             }
         );
+
+        setIsSaving(false);
     };
 
-    toggleIsDisabled = (): void => {
-        this.setState(
-            state => ({
-                isSaving: true,
-                isDisabled: !state.isDisabled
-            }),
-            () => {
-                http(
-                    apiRoutes.PUT.updateDogDisability(
-                        this.props.dogInTraining.id
-                    ),
-                    httpMethods.PUT,
-                    {
-                        isDisabled: this.state.isDisabled
-                    }
-                ).then(() => {
-                    this.setState({ isSaving: false });
-                });
+    const toggleIsDisabled = async () => {
+        setIsSaving(true);
+        setIsDisabled(!isDisabled);
+
+        await http(
+            apiRoutes.PUT.updateDogDisability(dogInTraining.id),
+            httpMethods.PUT,
+            {
+                isDisabled
             }
         );
+
+        setIsSaving(false);
     };
 
-    getClassNameBasedOnDisability(): string {
-        const baseClassName = styles['dog-training-list-row'];
-        if (this.state.isDisabled) {
-            return styles['dog-training-list-row--disabled'];
+    const getClassNameBasedOnDisability = (): string => {
+        const baseClassName = styles.row;
+        if (isDisabled) {
+            return styles.disabled;
         }
 
         return baseClassName;
-    }
+    };
 
-    render() {
-        return (
-            <DogTrainingContext.Consumer>
-                {dogTrainingContext => (
-                    <Draggable
-                        index={this.props.index}
-                        draggableId={this.props.dogInTraining.id}
-                        isDragDisabled={dogTrainingContext.isDndLocked}
+    return (
+        <div>
+            <Draggable
+                index={index}
+                draggableId={dogInTraining.id}
+                // TODO: move DND to configurator
+                isDragDisabled={false}
+            >
+                {provided => (
+                    <li
+                        ref={provided.innerRef}
+                        {...provided.dragHandleProps}
+                        {...provided.draggableProps}
+                        className={getClassNameBasedOnDisability()}
                     >
-                        {provided => (
-                            <li
-                                ref={provided.innerRef}
-                                {...provided.dragHandleProps}
-                                {...provided.draggableProps}
-                                className={this.getClassNameBasedOnDisability()}
-                            >
-                                {this.state.isSaving && <LinearProgress />}
-                                <div
+                        {isSaving && <LinearProgress />}
+                        <div className={styles.label}>
+                            <p>
+                                <span
                                     className={
-                                        styles['dog-training-list-row__label']
+                                        styles.icon
                                     }
                                 >
-                                    <p>
-                                        <span
+                                    <FaDog size="1em" />
+                                </span>
+
+                                {dogInTraining.dogName}
+                            </p>
+
+                            <div>
+                                {trainingsContext.currentView === views.configurator && (
+                                    <IconButton
+                                        onClick={toggleIsDisabled}
+                                        className={
+                                            styles.iconWrapper
+                                        }
+                                    >
+                                        <Icon
                                             className={
-                                                styles[
-                                                    'dog-training-list-row__icon'
-                                                ]
+                                                styles.expandIcon
                                             }
                                         >
-                                            <FaDog size="1em" />
-                                        </span>
+                                            {getIconBasedOnIsDisabledState(
+                                                isDisabled
+                                            )}
+                                        </Icon>
+                                    </IconButton>
+                                )}
 
-                                        {this.props.dogInTraining.dogName}
-                                    </p>
+                                <IconButton onClick={toggleIsExpanded}>
+                                    <Icon>
+                                        {getIconBasedOnExpandState(isExpanded)}
+                                    </Icon>
+                                </IconButton>
+                            </div>
+                        </div>
 
-                                    <div>
-                                        {!dogTrainingContext.isDndLocked && (
-                                            <IconButton
-                                                onClick={this.toggleIsDisabled}
-                                                className={
-                                                    styles[
-                                                        'dog-training-list-row__icon-wrapper'
-                                                    ]
-                                                }
-                                            >
-                                                <Icon
-                                                    className={
-                                                        styles[
-                                                            'dog-training-list-row__expand-icon'
-                                                        ]
-                                                    }
-                                                >
-                                                    {getIconBasedOnisDisabledState(
-                                                        this.state.isDisabled
-                                                    )}
-                                                </Icon>
-                                            </IconButton>
-                                        )}
+                        <Collapse in={isExpanded}>
+                            {trainingsContext.currentView === views.listing && (
+                                <p>{trainingDescription}</p>
+                            )}
 
-                                        <IconButton
-                                            onClick={this.toggleIsExpanded}
-                                        >
-                                            <Icon>
-                                                {getIconBasedOnExpandState(
-                                                    this.state.isExpanded
-                                                )}
-                                            </Icon>
-                                        </IconButton>
-                                    </div>
-                                </div>
+                            {trainingsContext.currentView === views.configurator && (
+                                <TextField
+                                    variant="outlined"
+                                    multiline
+                                    onChange={onDescriptionChange}
+                                    value={trainingDescription}
+                                    className={
+                                        styles.input
+                                    }
+                                />
+                            )}
 
-                                <Collapse in={this.state.isExpanded}>
-                                    {dogTrainingContext.isDndLocked && (
-                                        <p>{this.state.trainingDescription}</p>
-                                    )}
-                                    {!dogTrainingContext.isDndLocked && (
-                                        <TextField
-                                            variant="outlined"
-                                            multiline
-                                            onChange={this.onDescriptionChange}
-                                            value={
-                                                this.state.trainingDescription
-                                            }
-                                            className={
-                                                styles[
-                                                    'dog-training-list-row__input'
-                                                ]
-                                            }
-                                        />
-                                    )}
+                            <DogTasks
+                                saveDogTasks={saveDogTasks}
+                                dogTasks={dogTasks}
+                            />
 
-                                    <DogTasks
-                                        saveDogTasks={this.saveDogTasks}
-                                        dogTasks={this.state.dogTasks}
-                                    />
-
-                                    <PeopleTasks
-                                        savePeopleTasks={this.savePeopleTasks}
-                                        peopleTasks={this.state.peopleTasks}
-                                    />
-                                </Collapse>
-                            </li>
-                        )}
-                    </Draggable>
+                            <PeopleTasks
+                                savePeopleTasks={savePeopleTasks}
+                                peopleTasks={peopleTasks}
+                            />
+                        </Collapse>
+                    </li>
                 )}
-            </DogTrainingContext.Consumer>
-        );
-    }
-}
+            </Draggable>
+        </div>
+    );
+};
 
 export default DogTrainingListRow;

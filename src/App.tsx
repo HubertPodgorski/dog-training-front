@@ -1,58 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './App.module.scss';
 import Icon from '@material-ui/core/Icon';
 import Fab from '@material-ui/core/Fab';
 import '@atlaskit/css-reset';
-import DogTrainingWrapper from './wrappers/DogTrainingWrapper/DogTrainingWrapper';
+import DogTrainingListWrapper from './wrappers/DogTrainingListWrapper/DogTrainingListWrapper';
+import { TrainingsProvider } from './TrainingsContext';
+import DogTrainingConfiguratorWrapper from './wrappers/DogTrainingConfiguratorWrapper/DogTrainingConfiguratorWrapper';
+import { View, views } from './consts/views';
 
-interface Props {}
+const App = () => {
+    const [currentView, setCurrentView] = useState<View>('LISTING');
 
-interface State {
-    isDndLocked: boolean;
-}
-
-const getColorBasedOnLockStaus = (isLocked: boolean): 'primary' | 'secondary' =>
-    isLocked ? 'secondary' : 'primary';
-
-const getIconBasedOnLockStatus = (isLocked: boolean): 'lock' | 'lock_open' =>
-    isLocked ? 'lock' : 'lock_open';
-
-export const DogTrainingContext = React.createContext({ isDndLocked: true });
-
-class App extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-
-        this.state = {
-            isDndLocked: true
-        };
-    }
-
-    onLockToggle = (): void => {
-        this.setState({
-            isDndLocked: !this.state.isDndLocked
-        });
+    const onLockToggle = (): void => {
+        setCurrentView(
+            currentView === views.listing ? views.configurator : views.listing
+        );
     };
 
-    render() {
-        return (
-            <DogTrainingContext.Provider value={this.state}>
-                <section className={styles['app-wrapper']}>
-                    <Fab
-                        color={getColorBasedOnLockStaus(this.state.isDndLocked)}
-                        aria-label="lock-unlock"
-                        onClick={this.onLockToggle}
-                        className={styles['app-wrapper__lock-icon']}
-                    >
-                        <Icon>
-                            {getIconBasedOnLockStatus(this.state.isDndLocked)}
-                        </Icon>
-                    </Fab>
-                    <DogTrainingWrapper />
-                </section>
-            </DogTrainingContext.Provider>
-        );
-    }
-}
+    const getColorBasedOnView = (): 'primary' | 'secondary' =>
+        currentView === views.listing ? 'secondary' : 'primary';
+
+    const getIconBasedOnView = (): 'lock' | 'lock_open' =>
+        currentView === views.listing ? 'lock' : 'lock_open';
+
+    return (
+        <TrainingsProvider value={{currentView}}>
+            <section className={styles['app-wrapper']}>
+                <Fab
+                    color={getColorBasedOnView()}
+                    aria-label="lock-unlock"
+                    onClick={onLockToggle}
+                    className={styles['app-wrapper__lock-icon']}
+                >
+                    <Icon>{getIconBasedOnView()}</Icon>
+                </Fab>
+
+                {currentView === views.listing && <DogTrainingListWrapper />}
+
+                {currentView === views.configurator && (
+                    <DogTrainingConfiguratorWrapper />
+                )}
+            </section>
+        </TrainingsProvider>
+    );
+};
 
 export default App;

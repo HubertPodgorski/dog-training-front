@@ -17,7 +17,7 @@ export default class TasksService {
         );
     }
 
-    static getPeopleListWithoutAlreadyChoosenExceptCurrent(
+    static getPeopleListWithoutAlreadyChosenExceptCurrent(
         allPeopleList: SelectOption[],
         currentPeopleTasks: TaskPair[],
         currentSelectPersonUid: string

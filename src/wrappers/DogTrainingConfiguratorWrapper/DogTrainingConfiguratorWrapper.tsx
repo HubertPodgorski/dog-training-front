@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import styles from './DogTrainingWrapper.module.scss';
+import styles from './DogTrainingConfiguratorWrapper.module.scss';
 import DogTrainingList from '../../components/DogTrainingList/DogTrainingList';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import Icon from '@material-ui/core/Icon';
@@ -8,7 +8,7 @@ import TrainingService from '../../services/TrainingService';
 import { httpMethods, http } from '../../helpers/http';
 import { apiRoutes } from '../../consts/apiRoutes';
 
-const DogTrainingWrapper = () => {
+const DogTrainingConfiguratorWrapper = () => {
     const [dogTrainingList, setDogTrainingList] = useState([]);
     const [isDogDataFetching, setIsDogDataFetching] = useState(false);
 
@@ -77,4 +77,4 @@ const DogTrainingWrapper = () => {
     );
 };
 
-export default DogTrainingWrapper;
+export default DogTrainingConfiguratorWrapper;
