@@ -1,21 +1,21 @@
-import React, {useCallback, useContext, useState} from 'react';
-import styles from './DogTrainingListRow.module.scss';
-import { DogTraining } from '../../types/Dog';
-import { Draggable } from 'react-beautiful-dnd';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
-import TextField from '@material-ui/core/TextField';
-import { FaDog } from 'react-icons/fa';
-import { apiRoutes } from '../../consts/apiRoutes';
-import { httpMethods, http } from '../../helpers/http';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import PeopleTasks from '../PeopleTasks/PeopleTasks';
-import DogTasks from '../DogTasks/DogTasks';
-import { TaskPair } from '../../services/TasksService';
-import TrainingsContext from '../../TrainingsContext';
-import {views} from "../../consts/views";
-import debounce from 'lodash.debounce'
+import React, {useCallback, useContext, useState} from 'react'
+import {TaskPair} from "../../../services/TasksService";
+import TrainingsContext from "../../../TrainingsContext";
+import debounce from "lodash.debounce";
+import {http, httpMethods} from "../../../helpers/http";
+import {apiRoutes} from "../../../consts/apiRoutes";
+import styles from "./ExtendedConfiguratorTask.module.scss";
+import {Draggable} from "react-beautiful-dnd";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import {FaDog} from "react-icons/fa";
+import {views} from "../../../consts/views";
+import IconButton from "@material-ui/core/IconButton";
+import Icon from "@material-ui/core/Icon";
+import Collapse from "@material-ui/core/Collapse";
+import TextField from "@material-ui/core/TextField";
+import DogTasks from "../DogTasks/DogTasks";
+import PeopleTasks from "../PeopleTasks/PeopleTasks";
+import {DogTraining} from "../../../types/Dog";
 
 interface Props {
     dogInTraining: DogTraining;
@@ -31,7 +31,7 @@ const getIconBasedOnIsDisabledState = (
     isDisabled: boolean
 ): 'check' | 'cancel' => (isDisabled ? 'check' : 'cancel');
 
-const DogTrainingListRow = ({ dogInTraining, index }: Props) => {
+const ExtendedConfiguratorTask = ({ dogInTraining, index }: Props) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(
         dogInTraining.isDisabled
@@ -220,4 +220,5 @@ const DogTrainingListRow = ({ dogInTraining, index }: Props) => {
     );
 };
 
-export default DogTrainingListRow;
+export default ExtendedConfiguratorTask
+
