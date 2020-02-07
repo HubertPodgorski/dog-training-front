@@ -1,4 +1,4 @@
-import { SelectOption } from '../types/Select';
+import { SelectOption } from '../types';
 
 export const dogTaskList: SelectOption[] = [
     {

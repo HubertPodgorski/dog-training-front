@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './DogTasks.module.scss';
 import { dogTaskList } from '../../../consts/dogTasks';
-import TasksService from '../../../services/TasksService';
+import {getLabelByIdFromList} from "../../../services/TasksService";
 
 interface Props {
     dogTasks: string[];
@@ -22,7 +22,7 @@ const DogTasks = ({ dogTasks }: Props) => {
             <div className={styles.listWrapper}>
                 {dogTasks.map((taskId: string, index: number) => (
                     <span key={taskId}>
-                        {TasksService.getLabelByIdFromList(taskId, dogTaskList)}{' '}
+                        {getLabelByIdFromList(taskId, dogTaskList)}{' '}
                         {canRenderNextTaskSeparator(dogTasks, index) && ' // '}
                     </span>
                 ))}

@@ -1,5 +1,4 @@
 import React, {useCallback, useContext, useState} from 'react'
-import {TaskPair} from "../../../services/TasksService";
 import TrainingsContext from "../../../TrainingsContext";
 import debounce from "lodash.debounce";
 import {http, httpMethods} from "../../../helpers/http";
@@ -16,6 +15,7 @@ import TextField from "@material-ui/core/TextField";
 import DogTasks from "../DogTasks/DogTasks";
 import PeopleTasks from "../PeopleTasks/PeopleTasks";
 import {DogTraining} from "../../../types/Dog";
+import {PersonTask} from "../../../types";
 
 interface Props {
     dogInTraining: DogTraining;
@@ -41,7 +41,7 @@ const ExtendedConfiguratorTask = ({ dogInTraining, index }: Props) => {
     );
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [dogTasks, setDogTasks] = useState<string[]>(dogInTraining.dogTasks);
-    const [peopleTasks, setPeopleTasks] = useState<TaskPair[]>(
+    const [peopleTasks, setPeopleTasks] = useState<PersonTask[]>(
         dogInTraining.peopleTasks
     );
 
@@ -90,7 +90,7 @@ const ExtendedConfiguratorTask = ({ dogInTraining, index }: Props) => {
         setIsSaving(false);
     };
 
-    const savePeopleTasks = async (peopleTasks: TaskPair[]) => {
+    const savePeopleTasks = async (peopleTasks: PersonTask[]) => {
         setIsSaving(true);
         setPeopleTasks(peopleTasks);
 

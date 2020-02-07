@@ -7,88 +7,35 @@ import { peopleTaskList } from '../../../consts/peopleTasks';
 import CustomSelect from './CustomSelect/CustomSelect';
 import { peopleList } from '../../../consts/peoples';
 import getUuid from 'uuid/v4';
-import TasksService, { TaskPair } from '../../../services/TasksService';
+import { PersonTask } from '../../../types';
+import {
+    canAddNewTaskPair,
+    getPeopleListWithoutAlreadyChosenExceptCurrent,
+    setPersonByUid,
+    setPersonTaskByUid
+} from '../../../services/TasksService';
 
 interface Props {
     savePeopleTasks: Function;
-    peopleTasks: TaskPair[];
+    peopleTasks: PersonTask[];
 }
 
 const deletePersonTaskRow = (
     uuid: string,
-    currentPeopleTasks: TaskPair[],
+    currentPeopleTasks: PersonTask[],
     setPeopleTaskPairs: Function,
     savePeopleTasks: Function
 ): void => {
     const newPeopleTasks = currentPeopleTasks.filter(
-        (personTaskPair: TaskPair): boolean => personTaskPair.uuid !== uuid
+        (personTaskPair: PersonTask): boolean => personTaskPair.uuid !== uuid
     );
 
     setPeopleTaskPairs(newPeopleTasks);
     savePeopleTasks(newPeopleTasks);
 };
 
-const setPersonTaskByUid = (
-    currentPeopleTasks: TaskPair[],
-    personPairUid: string,
-    newValue: string,
-    setPeopleTaskPairs: Function,
-    savePeopleTasks: Function
-): void => {
-    const newPeopleTasks = currentPeopleTasks.map(
-        (personTaskPair: TaskPair): TaskPair => {
-            if (personTaskPair.uuid === personPairUid) {
-                return {
-                    ...personTaskPair,
-                    taskId: newValue
-                };
-            }
-
-            return personTaskPair;
-        }
-    );
-
-    setPeopleTaskPairs(newPeopleTasks);
-    if (canAddNewTaskPair(newPeopleTasks)) {
-        savePeopleTasks(newPeopleTasks);
-    }
-};
-
-const setPersonByUid = (
-    currentPeopleTasks: TaskPair[],
-    personPairUid: string,
-    newValue: string,
-    setPeopleTaskPairs: Function,
-    savePeopleTasks: Function
-): void => {
-    const newPeopleTasks = currentPeopleTasks.map(
-        (personTaskPair: TaskPair): TaskPair => {
-            if (personTaskPair.uuid === personPairUid) {
-                return {
-                    ...personTaskPair,
-                    personId: newValue
-                };
-            }
-
-            return personTaskPair;
-        }
-    );
-
-    setPeopleTaskPairs(newPeopleTasks);
-    if (canAddNewTaskPair(newPeopleTasks)) {
-        savePeopleTasks(newPeopleTasks);
-    }
-};
-
-const canAddNewTaskPair = (peopleTaskPairs: TaskPair[]): boolean =>
-    peopleTaskPairs.every((peopleTaskPair: TaskPair): boolean => {
-        const { uuid, personId, taskId } = peopleTaskPair;
-
-        return Boolean(uuid && personId && taskId);
-    });
-
 const addNewTaskPair = (
-    peopleTaskPairs: TaskPair[],
+    peopleTaskPairs: PersonTask[],
     setTaskPairs: Function
 ): void => {
     setTaskPairs([
@@ -104,20 +51,21 @@ const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
         <section className={styles['people-tasks']}>
             <p className={styles['people-tasks__heading']}>Zadania osób</p>
 
-            {peopleTaskPairs.map((personTaskPair: TaskPair) => (
+            {peopleTaskPairs.map((personTaskPair: PersonTask) => (
                 <div
                     key={personTaskPair.uuid}
                     className={styles['people-tasks__row-wrapper']}
                 >
                     <CustomSelect
                         selectedValue={personTaskPair.personId}
-                        options={TasksService.getPeopleListWithoutAlreadyChosenExceptCurrent(
+                        options={getPeopleListWithoutAlreadyChosenExceptCurrent(
                             peopleList,
                             peopleTaskPairs,
                             personTaskPair.personId
                         )}
                         selectLabel="Osoba"
                         onChange={(newValue: string) =>
+                            // TODO: check if can be simplified
                             setPersonByUid(
                                 peopleTaskPairs,
                                 personTaskPair.uuid,
@@ -133,6 +81,7 @@ const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
                         options={peopleTaskList}
                         selectLabel="Zadanie"
                         onChange={(newValue: string) =>
+                            // TODO: check if can be simplified
                             setPersonTaskByUid(
                                 peopleTaskPairs,
                                 personTaskPair.uuid,
