@@ -12,7 +12,7 @@ interface Props {
     setTaskList: (taskList: ExtendedTask[]) => void;
 }
 
-const Configure = ({ setTaskList }: Props) => {
+const Configurator = ({ setTaskList }: Props) => {
     const {taskList} = useContext(TrainingsContext);
 
     const onDragEnd = (result: DropResult): void => {
@@ -52,4 +52,4 @@ const Configure = ({ setTaskList }: Props) => {
     );
 };
 
-export default Configure;
+export default Configurator;

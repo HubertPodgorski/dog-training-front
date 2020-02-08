@@ -12,7 +12,8 @@ import Collapse from '@material-ui/core/Collapse';
 import TextField from '@material-ui/core/TextField';
 import DogTasks from '../DogTasks/DogTasks';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
-import { ExtendedTask, PersonTask } from '../../../types';
+import { Dog, ExtendedTask, PersonTask } from '../../../types';
+import Dogs from "../Dogs/Dogs";
 
 interface Props {
     task: ExtendedTask;
@@ -31,6 +32,7 @@ const ConfiguratorTask = ({ task, index }: Props) => {
     );
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [dogTasks, setDogTasks] = useState<string[]>(task.tasks);
+    const [selectedDogs, setSelectedDogs] = useState<Dog[]>(task.dogs);
 
     const [peopleTasks, setPeopleTasks] = useState<PersonTask[]>(
         task.peopleTasks
@@ -67,6 +69,22 @@ const ConfiguratorTask = ({ task, index }: Props) => {
         setIsSaving(false);
     };
 
+    const saveDogs = async (dogs: Dog[]) => {
+        console.log('dogs => ', dogs);
+        setIsSaving(true);
+        setSelectedDogs(dogs);
+
+        // await http(
+        //     apiRoutes.PUT.updateDogs(task.id),
+        //     httpMethods.PUT,
+        //     {
+        //         dogs
+        //     }
+        // );
+
+        setIsSaving(false);
+    };
+
     const saveDogTasks = async (dogTasks: string[]) => {
         setIsSaving(true);
         setDogTasks(dogTasks);
@@ -81,7 +99,6 @@ const ConfiguratorTask = ({ task, index }: Props) => {
     const savePeopleTasks = async (peopleTasks: PersonTask[]) => {
         setIsSaving(true);
 
-        console.log("peopleTasks => ", peopleTasks);
         await http(apiRoutes.PUT.updatePeopleTasks(task.id), httpMethods.PUT, {
             peopleTasks
         });
@@ -111,13 +128,17 @@ const ConfiguratorTask = ({ task, index }: Props) => {
                         {isSaving && <LinearProgress />}
 
                         <div className={styles.label}>
-                            <p>
-                                <span className={styles.icon}>
-                                    <FaDog size="1em" />
-                                </span>
+                            <div>
+                                {task.dogs.map(dog => (
+                                    <div key={dog.id}>
+                                        <span className={styles.icon}>
+                                            <FaDog size="1em" />
+                                        </span>
 
-                                {task.dogs[0].name}
-                            </p>
+                                        {dog.name}
+                                    </div>
+                                ))}
+                            </div>
 
                             <div>
                                 <IconButton
@@ -139,6 +160,8 @@ const ConfiguratorTask = ({ task, index }: Props) => {
                         </div>
 
                         <Collapse in={isExpanded}>
+                            <Dogs selectedDogs={selectedDogs.map((selectedDog) => selectedDog.id)} saveDogs={saveDogs} />
+
                             <TextField
                                 variant="outlined"
                                 multiline

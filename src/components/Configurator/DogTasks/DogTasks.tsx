@@ -23,7 +23,7 @@ const DogTasks = ({ saveDogTasks, dogTasks }: Props) => {
                     saveDogTasks(newValue);
                 }}
                 options={dogTaskList}
-                selectLabel="Zadania psa"
+                selectLabel="Zadania psów"
                 selectedValue={selectedDogTasks}
             />
         </section>

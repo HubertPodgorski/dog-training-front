@@ -5,17 +5,18 @@ import Fab from '@material-ui/core/Fab';
 import '@atlaskit/css-reset';
 import Display from './components/Display/Display';
 import { TrainingsProvider } from './TrainingsContext';
-import Configure from './components/Configure/Configure';
+import Configurator from './components/Configurator/Configurator';
 import { View, views } from './consts/views';
 import { http } from './helpers/http';
 import { apiRoutes } from './consts/apiRoutes';
-import { ExtendedTask } from './types';
+import {Dog, ExtendedTask} from './types';
 import { mapOldTypeToNewShape } from './helpers/mappers';
 
 const App = () => {
     const [currentView, setCurrentView] = useState<View>('LISTING');
     const [isDogDataFetching, setIsDogDataFetching] = useState(false);
     const [taskList, setTaskList] = useState<ExtendedTask[]>([]);
+    const [dogs, setDogs] = useState<Dog[]>([{name: 'Winter', id: '1asdkasd'},{name: 'Enter', id: 'lkajsdljaksd'}]);
 
     const fetchDogData = async () => {
         setIsDogDataFetching(true);
@@ -23,6 +24,10 @@ const App = () => {
         setTaskList(mapOldTypeToNewShape(dogTrainingList));
         setIsDogDataFetching(false);
     };
+
+    // TODO: fetch dog list and save to context
+    // TODO: fetch people list and save to context ???
+    // TODO: fetch tasks list and save to context ???
 
     useEffect(() => {
         fetchDogData();
@@ -42,7 +47,7 @@ const App = () => {
         currentView === views.listing ? 'lock' : 'lock_open';
 
     return (
-        <TrainingsProvider value={{ currentView, taskList }}>
+        <TrainingsProvider value={{ currentView, taskList, dogs }}>
             <section className={styles.wrapper}>
                 <Fab
                     color="primary"
@@ -69,7 +74,7 @@ const App = () => {
                 {currentView === views.listing && <Display />}
 
                 {currentView === views.configurator && (
-                    <Configure setTaskList={setTaskList} />
+                    <Configurator setTaskList={setTaskList} />
                 )}
             </section>
         </TrainingsProvider>
