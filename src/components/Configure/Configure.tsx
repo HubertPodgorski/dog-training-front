@@ -1,17 +1,20 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import TrainingService from '../../services/TrainingService';
 import { httpMethods, http } from '../../helpers/http';
 import { apiRoutes } from '../../consts/apiRoutes';
-import ExtendedConfiguratorTaskList from './ExtendedConfiguratorTaskList/ExtendedConfiguratorTaskList';
-import { DogTraining } from '../../types/Dog';
+import ConfiguratorTaskList from './ConfiguratorTaskList/ConfiguratorTaskList';
+import {ExtendedTask} from "../../types";
+import TrainingsContext from "../../TrainingsContext";
+import {mapOldTypeToNewShape} from "../../helpers/mappers";
+import {getListOfIdsInUpdatedOrder, getUpdatedOrderList} from "../../services/TrainingService";
 
 interface Props {
-    dogTrainingList: DogTraining[];
-    setDogTrainingList: (dogTrainingList: DogTraining[]) => void;
+    setTaskList: (taskList: ExtendedTask[]) => void;
 }
 
-const Configure = ({ dogTrainingList, setDogTrainingList }: Props) => {
+const Configure = ({ setTaskList }: Props) => {
+    const {taskList} = useContext(TrainingsContext);
+
     const onDragEnd = (result: DropResult): void => {
         const { source, destination, draggableId } = result;
 
@@ -26,25 +29,25 @@ const Configure = ({ dogTrainingList, setDogTrainingList }: Props) => {
             return;
         }
 
-        const updatedTrainingList: any = TrainingService.getUpdatedList(
-            dogTrainingList,
+        const updatedTrainingList: any = getUpdatedOrderList(
+            taskList,
             draggableId,
             source.index,
             destination.index
         );
 
-        setDogTrainingList(updatedTrainingList);
+        setTaskList(mapOldTypeToNewShape(updatedTrainingList));
 
         http(
             apiRoutes.PUT.changeOrder,
             httpMethods.PUT,
-            TrainingService.getListOfIdsInUpdatedOrder(updatedTrainingList)
+            getListOfIdsInUpdatedOrder(updatedTrainingList)
         );
     };
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <ExtendedConfiguratorTaskList dogTrainingList={dogTrainingList} />
+            <ConfiguratorTaskList />
         </DragDropContext>
     );
 };

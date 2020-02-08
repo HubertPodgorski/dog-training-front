@@ -10,7 +10,7 @@ interface Props {
     options: SelectOption[];
     selectedValue: string;
     selectLabel: string;
-    onChange: Function;
+    onChange: (id: string, name: string) => void;
 }
 
 const CustomSelect = ({
@@ -23,7 +23,7 @@ const CustomSelect = ({
         <InputLabel htmlFor="name-disabled">{selectLabel}</InputLabel>
         <Select
             value={selectedValue}
-            onChange={e => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value, e.target.name)}
             name={selectLabel}
         >
             {options.map((option: SelectOption) => (

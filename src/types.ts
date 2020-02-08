@@ -9,12 +9,10 @@ export interface ExtendedTask {
 
 export interface Dog {
     name: string,
-    // TODO: check if correct type
     id: string
 }
 
 export interface PersonTask {
-    // TODO: check if needed
     uuid: string
     taskName: string
     taskId: string

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import styles from './ExtendedTask.module.scss';
+import styles from './Task.module.scss';
 import { FaDog } from 'react-icons/fa';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import Collapse from '@material-ui/core/Collapse';
 import DogTasks from '../DogTasks/DogTasks';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
-import { DogTraining } from '../../../types/Dog';
+import { ExtendedTask as ExtendedTaskType } from '../../../types';
 
 interface Props {
-    dogInTraining: DogTraining;
+    task: ExtendedTaskType;
 }
 
 const getIconBasedOnExpandState = (
@@ -17,7 +17,7 @@ const getIconBasedOnExpandState = (
 ): 'expand_less' | 'expand_more' =>
     isExpanded ? 'expand_less' : 'expand_more';
 
-const ExtendedTask = ({ dogInTraining}: Props) => {
+const Task = ({ task }: Props) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
     const toggleIsExpanded = () => {
@@ -28,13 +28,17 @@ const ExtendedTask = ({ dogInTraining}: Props) => {
         <div>
             <li className={styles.row}>
                 <div className={styles.label}>
-                    <p>
-                        <span className={styles.icon}>
-                            <FaDog size="1em" />
-                        </span>
+                    <div>
+                        {task.dogs.map(dog => (
+                            <div key={dog.id}>
+                                <span className={styles.icon}>
+                                    <FaDog size="1em" />
+                                </span>
 
-                        {dogInTraining.dogName}
-                    </p>
+                                {dog.name}
+                            </div>
+                        ))}
+                    </div>
 
                     <div>
                         <IconButton onClick={toggleIsExpanded}>
@@ -44,15 +48,15 @@ const ExtendedTask = ({ dogInTraining}: Props) => {
                 </div>
 
                 <Collapse in={isExpanded}>
-                    <p>{dogInTraining.trainingDescription}</p>
+                    <p>{task.description}</p>
 
-                    <DogTasks dogTasks={dogInTraining.dogTasks} />
+                    <DogTasks dogTasks={task.tasks} />
 
-                    <PeopleTasks peopleTasks={dogInTraining.peopleTasks} />
+                    <PeopleTasks peopleTasks={task.peopleTasks} />
                 </Collapse>
             </li>
         </div>
     );
 };
 
-export default ExtendedTask;
+export default Task;

@@ -1,13 +1,6 @@
 import React from 'react';
-import ExtendedTaskList from './ExtendedTaskList/ExtendedTaskList';
-import { DogTraining } from '../../types/Dog';
+import TaskList from './TaskList/TaskList';
 
-interface Props {
-    dogTrainingList: DogTraining[];
-}
-
-const Display = ({ dogTrainingList }: Props) => (
-    <ExtendedTaskList dogTrainingList={dogTrainingList} />
-);
+const Display = () => <TaskList />;
 
 export default Display;

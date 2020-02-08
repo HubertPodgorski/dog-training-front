@@ -9,25 +9,27 @@ import Configure from './components/Configure/Configure';
 import { View, views } from './consts/views';
 import { http } from './helpers/http';
 import { apiRoutes } from './consts/apiRoutes';
-import { DogTraining } from './types/Dog';
+import { ExtendedTask } from './types';
+import { mapOldTypeToNewShape } from './helpers/mappers';
 
 const App = () => {
     const [currentView, setCurrentView] = useState<View>('LISTING');
     const [isDogDataFetching, setIsDogDataFetching] = useState(false);
-    // TODO: set it in context
-    const [dogTrainingList, setDogTrainingList] = useState<DogTraining[]>([]);
+    const [taskList, setTaskList] = useState<ExtendedTask[]>([]);
 
-    const fetchDogData = (): void => {
+    const fetchDogData = async () => {
         setIsDogDataFetching(true);
-        http(apiRoutes.GET.trainingDogs).then((dogTrainingList: any) => {
-            setDogTrainingList(dogTrainingList);
-            setIsDogDataFetching(false);
-        });
+        const dogTrainingList = await http(apiRoutes.GET.trainingDogs);
+        setTaskList(mapOldTypeToNewShape(dogTrainingList));
+        setIsDogDataFetching(false);
     };
 
-    useEffect(() => fetchDogData(), []);
+    useEffect(() => {
+        fetchDogData();
+    }, []);
 
     const onLockToggle = (): void => {
+        fetchDogData();
         setCurrentView(
             currentView === views.listing ? views.configurator : views.listing
         );
@@ -40,13 +42,17 @@ const App = () => {
         currentView === views.listing ? 'lock' : 'lock_open';
 
     return (
-        <TrainingsProvider value={{ currentView }}>
+        <TrainingsProvider value={{ currentView, taskList }}>
             <section className={styles.wrapper}>
                 <Fab
                     color="primary"
                     aria-label="refresh"
                     onClick={fetchDogData}
-                    className={isDogDataFetching ? styles.refreshIconRotating : styles.refreshIcon}
+                    className={
+                        isDogDataFetching
+                            ? styles.refreshIconRotating
+                            : styles.refreshIcon
+                    }
                 >
                     <Icon>autorenew</Icon>
                 </Fab>
@@ -60,15 +66,10 @@ const App = () => {
                     <Icon>{getIconBasedOnView()}</Icon>
                 </Fab>
 
-                {currentView === views.listing && (
-                    <Display dogTrainingList={dogTrainingList} />
-                )}
+                {currentView === views.listing && <Display />}
 
                 {currentView === views.configurator && (
-                    <Configure
-                        dogTrainingList={dogTrainingList}
-                        setDogTrainingList={setDogTrainingList}
-                    />
+                    <Configure setTaskList={setTaskList} />
                 )}
             </section>
         </TrainingsProvider>
