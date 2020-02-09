@@ -24,3 +24,13 @@ export interface SelectOption {
     id: string;
     label: string;
 }
+
+export interface Person {
+    name: string,
+    id: string
+}
+
+export interface DogTask {
+    name: string,
+    id: string
+}

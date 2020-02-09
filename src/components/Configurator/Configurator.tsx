@@ -5,7 +5,6 @@ import { apiRoutes } from '../../consts/apiRoutes';
 import ConfiguratorTaskList from './ConfiguratorTaskList/ConfiguratorTaskList';
 import {ExtendedTask} from "../../types";
 import TrainingsContext from "../../TrainingsContext";
-import {mapOldTypeToNewShape} from "../../helpers/mappers";
 import {getListOfIdsInUpdatedOrder, getUpdatedOrderList} from "../../services/TrainingService";
 
 interface Props {
@@ -36,7 +35,7 @@ const Configurator = ({ setTaskList }: Props) => {
             destination.index
         );
 
-        setTaskList(mapOldTypeToNewShape(updatedTrainingList));
+        setTaskList(updatedTrainingList);
 
         http(
             apiRoutes.PUT.changeOrder,

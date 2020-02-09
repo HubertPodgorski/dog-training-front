@@ -13,7 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import DogTasks from '../DogTasks/DogTasks';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
 import { Dog, ExtendedTask, PersonTask } from '../../../types';
-import Dogs from "../Dogs/Dogs";
+import Dogs from '../Dogs/Dogs';
 
 interface Props {
     task: ExtendedTask;
@@ -33,7 +33,6 @@ const ConfiguratorTask = ({ task, index }: Props) => {
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [dogTasks, setDogTasks] = useState<string[]>(task.tasks);
     const [selectedDogs, setSelectedDogs] = useState<Dog[]>(task.dogs);
-
     const [peopleTasks, setPeopleTasks] = useState<PersonTask[]>(
         task.peopleTasks
     );
@@ -59,10 +58,10 @@ const ConfiguratorTask = ({ task, index }: Props) => {
         setIsSaving(true);
 
         await http(
-            apiRoutes.PUT.updateTrainingDescription(task.id),
+            apiRoutes.PUT.updateTaskDescription(task.id),
             httpMethods.PUT,
             {
-                trainingDescription: description
+                description
             }
         );
 
@@ -70,28 +69,25 @@ const ConfiguratorTask = ({ task, index }: Props) => {
     };
 
     const saveDogs = async (dogs: Dog[]) => {
-        console.log('dogs => ', dogs);
         setIsSaving(true);
-        setSelectedDogs(dogs);
 
-        // await http(
-        //     apiRoutes.PUT.updateDogs(task.id),
-        //     httpMethods.PUT,
-        //     {
-        //         dogs
-        //     }
-        // );
+        await http(apiRoutes.PUT.updateTaskDogs(task.id), httpMethods.PUT, {
+            dogs
+        });
+
+        setSelectedDogs(dogs);
 
         setIsSaving(false);
     };
 
     const saveDogTasks = async (dogTasks: string[]) => {
         setIsSaving(true);
-        setDogTasks(dogTasks);
 
         await http(apiRoutes.PUT.updateDogTasks(task.id), httpMethods.PUT, {
             dogTasks
         });
+
+        setDogTasks(dogTasks);
 
         setIsSaving(false);
     };
@@ -160,7 +156,12 @@ const ConfiguratorTask = ({ task, index }: Props) => {
                         </div>
 
                         <Collapse in={isExpanded}>
-                            <Dogs selectedDogs={selectedDogs.map((selectedDog) => selectedDog.id)} saveDogs={saveDogs} />
+                            <Dogs
+                                selectedDogs={selectedDogs.map(
+                                    selectedDog => selectedDog.id
+                                )}
+                                saveDogs={saveDogs}
+                            />
 
                             <TextField
                                 variant="outlined"

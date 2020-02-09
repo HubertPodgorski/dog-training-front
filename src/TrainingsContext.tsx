@@ -1,20 +1,23 @@
 import React from 'react';
 import { View, views } from './consts/views';
-import {Dog, ExtendedTask} from './types';
+import { Dog, ExtendedTask, PersonTask, Person, DogTask } from './types';
 
 interface TrainingsContextType {
     currentView: View;
     taskList: ExtendedTask[];
-    dogs: Dog[]
+    dogs: Dog[];
+    people: Person[];
+    peopleTasks: PersonTask[];
+    dogTasks: DogTask[];
 }
 
 const TrainingsContext = React.createContext<TrainingsContextType>({
     currentView: views.listing,
     taskList: [],
-    dogs: [
-        { name: 'Winter', id: '1asdkasd' },
-        { name: 'Enter', id: 'lkajsdljaksd' }
-    ]
+    dogs: [],
+    people: [],
+    peopleTasks: [],
+    dogTasks: []
 });
 
 export const TrainingsProvider = TrainingsContext.Provider;
