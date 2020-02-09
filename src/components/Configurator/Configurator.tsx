@@ -1,18 +1,22 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { httpMethods, http } from '../../helpers/http';
 import { apiRoutes } from '../../consts/apiRoutes';
 import ConfiguratorTaskList from './ConfiguratorTaskList/ConfiguratorTaskList';
-import {ExtendedTask} from "../../types";
-import TrainingsContext from "../../TrainingsContext";
-import {getListOfIdsInUpdatedOrder, getUpdatedOrderList} from "../../services/TrainingService";
+import { ExtendedTask } from '../../types';
+import TrainingsContext from '../../TrainingsContext';
+import {
+    getListOfIdsInUpdatedOrder,
+    getUpdatedOrderList
+} from '../../services/TrainingService';
 
 interface Props {
     setTaskList: (taskList: ExtendedTask[]) => void;
+    fetchTaskList: () => void;
 }
 
-const Configurator = ({ setTaskList }: Props) => {
-    const {taskList} = useContext(TrainingsContext);
+const Configurator = ({ setTaskList, fetchTaskList }: Props) => {
+    const { taskList } = useContext(TrainingsContext);
 
     const onDragEnd = (result: DropResult): void => {
         const { source, destination, draggableId } = result;
@@ -46,7 +50,7 @@ const Configurator = ({ setTaskList }: Props) => {
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <ConfiguratorTaskList />
+            <ConfiguratorTaskList fetchTaskList={fetchTaskList} />
         </DragDropContext>
     );
 };

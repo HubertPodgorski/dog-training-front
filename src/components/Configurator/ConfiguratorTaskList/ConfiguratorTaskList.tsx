@@ -5,7 +5,11 @@ import ConfiguratorTask from '../ConfiguratorTask/ConfiguratorTask';
 import TrainingsContext from '../../../TrainingsContext';
 import { ExtendedTask } from '../../../types';
 
-const ConfiguratorTaskList = () => {
+interface Props {
+    fetchTaskList: () => void;
+}
+
+const ConfiguratorTaskList = ({ fetchTaskList }: Props) => {
     const { taskList } = useContext(TrainingsContext);
 
     return (
@@ -21,6 +25,7 @@ const ConfiguratorTaskList = () => {
                             key={task.id}
                             task={task}
                             index={index}
+                            fetchTaskList={fetchTaskList}
                         />
                     ))}
                     {provided.placeholder}

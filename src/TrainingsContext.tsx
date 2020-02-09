@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, views } from './consts/views';
-import { Dog, ExtendedTask, PersonTask, Person, DogTask } from './types';
+import { Dog, ExtendedTask, Person, DogTask } from './types';
 
 interface TrainingsContextType {
     currentView: View;
     taskList: ExtendedTask[];
     dogs: Dog[];
     people: Person[];
-    peopleTasks: PersonTask[];
+    peopleTasks: { name: string; id: string }[];
     dogTasks: DogTask[];
 }
 

@@ -18,6 +18,7 @@ import Dogs from '../Dogs/Dogs';
 interface Props {
     task: ExtendedTask;
     index: number;
+    fetchTaskList: () => void;
 }
 
 const getIconBasedOnExpandState = (
@@ -25,7 +26,7 @@ const getIconBasedOnExpandState = (
 ): 'expand_less' | 'expand_more' =>
     isExpanded ? 'expand_less' : 'expand_more';
 
-const ConfiguratorTask = ({ task, index }: Props) => {
+const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [taskDescription, setTaskDescription] = useState<string>(
         task.description
@@ -84,7 +85,7 @@ const ConfiguratorTask = ({ task, index }: Props) => {
         setIsSaving(true);
 
         await http(apiRoutes.PUT.updateDogTasks(task.id), httpMethods.PUT, {
-            dogTasks
+            tasks: dogTasks
         });
 
         setDogTasks(dogTasks);
@@ -104,8 +105,10 @@ const ConfiguratorTask = ({ task, index }: Props) => {
         setIsSaving(false);
     };
 
-    // TODO: remove task
-    const removeTask = () => {};
+    const deleteTask = async () => {
+        await http(apiRoutes.DELETE.deleteTask(task.id), httpMethods.DELETE);
+        fetchTaskList();
+    };
 
     return (
         <div>
@@ -139,7 +142,7 @@ const ConfiguratorTask = ({ task, index }: Props) => {
                             <div>
                                 <IconButton
                                     // TODO: remove task
-                                    onClick={removeTask}
+                                    onClick={deleteTask}
                                     className={styles.iconWrapper}
                                 >
                                     <Icon className={styles.expandIcon}>

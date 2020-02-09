@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import styles from './PeopleTasks.module.scss';
-import { peopleTaskList } from '../../../consts/peopleTasks';
 import CustomSelect from './CustomSelect/CustomSelect';
-import { peopleList } from '../../../consts/peoples';
 import getUuid from 'uuid/v4';
-import { PersonTask, SelectOption } from '../../../types';
+import { Person, PersonTask, SelectOption } from '../../../types';
 import {
     canAddNewTaskPair,
     isPersonAlreadyInTheList
 } from '../../../services/TasksService';
+import TrainingsContext from '../../../TrainingsContext';
 
 interface Props {
     savePeopleTasks: (peopleTasks: PersonTask[]) => void;
@@ -19,6 +18,10 @@ interface Props {
 }
 
 const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
+    const { people: peopleList, peopleTasks: peopleTaskList } = useContext(
+        TrainingsContext
+    );
+
     const [peopleTaskPairs, setPeopleTaskPairs] = useState<PersonTask[]>(
         peopleTasks
     );
@@ -26,11 +29,13 @@ const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
     const getPeopleListWithoutAlreadyChosenExceptCurrent = (
         personTask: PersonTask
     ) =>
-        peopleList.filter(
-            (person: SelectOption): boolean =>
-                !isPersonAlreadyInTheList(person.id, peopleTaskPairs) ||
-                person.id === personTask.personId
-        );
+        peopleList
+            .filter(
+                (person: Person): boolean =>
+                    !isPersonAlreadyInTheList(person.id, peopleTaskPairs) ||
+                    person.id === personTask.personId
+            )
+            .map(person => ({ id: person.id, label: person.name }));
 
     const addNewTaskPair = (): void => {
         setPeopleTaskPairs([
@@ -54,7 +59,11 @@ const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
         savePeopleTasks(newPeopleTasks);
     };
 
-    const setPersonByUid = (uuid: string, newPersonId: string, newPersonName: string): void => {
+    const setPersonByUid = (
+        uuid: string,
+        newPersonId: string,
+        newPersonName: string
+    ): void => {
         const newPeopleTasks = peopleTasks.map(
             (personTask: PersonTask): PersonTask => {
                 if (personTask.uuid === uuid) {
@@ -76,7 +85,11 @@ const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
         }
     };
 
-    const setPersonTaskByUid = (uuid: string, newTaskId: string, newTaskName: string): void => {
+    const setPersonTaskByUid = (
+        uuid: string,
+        newTaskId: string,
+        newTaskName: string
+    ): void => {
         const newPeopleTasks = peopleTasks.map(
             (personTask: PersonTask): PersonTask => {
                 if (personTask.uuid === uuid) {
@@ -102,27 +115,39 @@ const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
             <p className={styles.heading}>Zadania osób</p>
 
             {peopleTaskPairs.map((personTask: PersonTask) => (
-                <div
-                    key={personTask.uuid}
-                    className={styles.rowWrapper}
-                >
+                <div key={personTask.uuid} className={styles.rowWrapper}>
                     <CustomSelect
                         selectedValue={personTask.personId}
                         options={getPeopleListWithoutAlreadyChosenExceptCurrent(
                             personTask
                         )}
                         selectLabel="Osoba"
-                        onChange={(newPersonId: string, newPersonName: string) =>
-                            setPersonByUid(personTask.uuid, newPersonId, newPersonName)
+                        onChange={(
+                            newPersonId: string,
+                            newPersonName: string
+                        ) =>
+                            setPersonByUid(
+                                personTask.uuid,
+                                newPersonId,
+                                newPersonName
+                            )
                         }
                     />
 
                     <CustomSelect
                         selectedValue={personTask.taskId}
-                        options={peopleTaskList}
+                        // TODO: make mapper for that
+                        options={peopleTaskList.map(personTask => ({
+                            id: personTask.id,
+                            label: personTask.name
+                        }))}
                         selectLabel="Zadanie"
                         onChange={(newTaskId: string, newTaskName: string) =>
-                            setPersonTaskByUid(personTask.uuid, newTaskId, newTaskName)
+                            setPersonTaskByUid(
+                                personTask.uuid,
+                                newTaskId,
+                                newTaskName
+                            )
                         }
                     />
 

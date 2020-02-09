@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './DogTasks.module.scss';
 import CustomMultiselect from './CustomMultiselect/CustomMultiselect';
-import { dogTaskList } from '../../../consts/dogTasks';
+import TrainingsContext from '../../../TrainingsContext';
 
 interface Props {
     saveDogTasks: Function;
@@ -9,6 +9,8 @@ interface Props {
 }
 
 const DogTasks = ({ saveDogTasks, dogTasks }: Props) => {
+    const { dogTasks: dogTaskList } = useContext(TrainingsContext);
+
     const [selectedDogTasks, setSelectedDogTasks] = useState<string[]>(
         dogTasks
     );
@@ -22,7 +24,10 @@ const DogTasks = ({ saveDogTasks, dogTasks }: Props) => {
                     setSelectedDogTasks(newValue);
                     saveDogTasks(newValue);
                 }}
-                options={dogTaskList}
+                options={dogTaskList.map(dogTask => ({
+                    id: dogTask.id,
+                    label: dogTask.name
+                }))}
                 selectLabel="Zadania psów"
                 selectedValue={selectedDogTasks}
             />

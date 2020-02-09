@@ -7,31 +7,32 @@ import Display from './components/Display/Display';
 import { TrainingsProvider } from './TrainingsContext';
 import Configurator from './components/Configurator/Configurator';
 import { View, views } from './consts/views';
-import { http } from './helpers/http';
+import { http, httpMethods } from './helpers/http';
 import { apiRoutes } from './consts/apiRoutes';
 import { Dog, DogTask, ExtendedTask, Person, PersonTask } from './types';
 import useAsyncEffect from './hooks/useAsyncEffect';
 
 const App = () => {
     const [currentView, setCurrentView] = useState<View>('LISTING');
-    const [isDogDataFetching, setIsDogDataFetching] = useState(false);
+    const [isDataFetching, setIsDataFetching] = useState(false);
     const [taskList, setTaskList] = useState<ExtendedTask[]>([]);
     const [dogs, setDogs] = useState<Dog[]>([]);
     const [people, setPeople] = useState<Person[]>([]);
-    const [peopleTasks, setPeopleTasks] = useState<PersonTask[]>([]);
+    // TODO: make type for that and reuse
+    const [peopleTasks, setPeopleTasks] = useState<{name: string, id: string}[]>([]);
     const [dogTasks, setDogTasks] = useState<DogTask[]>([]);
 
-    const fetchDogData = async () => {
-        setIsDogDataFetching(true);
+    const fetchTaskList = async () => {
+        setIsDataFetching(true);
         const fetchedTaskList = await http(apiRoutes.GET.tasks);
         setTaskList(fetchedTaskList);
-        setIsDogDataFetching(false);
+        setIsDataFetching(false);
     };
 
     // TODO: install axios
 
     const fetchResourceData = async () => {
-        setIsDogDataFetching(true);
+        setIsDataFetching(true);
 
         const fetchedResourceData = await http(apiRoutes.GET.allResources);
 
@@ -40,20 +41,35 @@ const App = () => {
         setPeopleTasks(fetchedResourceData.peopleTasks);
         setDogTasks(fetchedResourceData.dogTasks);
 
-        setIsDogDataFetching(false);
+        setIsDataFetching(false);
     };
 
     useAsyncEffect(async () => {
-        await fetchDogData();
+        await fetchTaskList();
 
         await fetchResourceData();
     }, []);
 
-    const onLockToggle = (): void => {
-        fetchDogData();
+    const onLockToggle = async () => {
+        await fetchTaskList();
+
         setCurrentView(
             currentView === views.listing ? views.configurator : views.listing
         );
+    };
+
+    const addTask = async () => {
+        setIsDataFetching(true);
+
+        await http(apiRoutes.POST.addTask, httpMethods.POST, {
+            dogs: [],
+            description: '',
+            order: taskList.length + 1,
+            tasks: [],
+            peopleTasks: []
+        });
+
+        await fetchTaskList();
     };
 
     const getColorBasedOnView = (): 'primary' | 'secondary' =>
@@ -77,9 +93,9 @@ const App = () => {
                 <Fab
                     color="primary"
                     aria-label="refresh"
-                    onClick={fetchDogData}
+                    onClick={fetchTaskList}
                     className={
-                        isDogDataFetching
+                        isDataFetching
                             ? styles.refreshIconRotating
                             : styles.refreshIcon
                     }
@@ -99,7 +115,13 @@ const App = () => {
                 {currentView === views.listing && <Display />}
 
                 {currentView === views.configurator && (
-                    <Configurator setTaskList={setTaskList} />
+                    <>
+                        <Fab color="primary" aria-label="add" onClick={addTask}>
+                            <Icon>add</Icon>
+                        </Fab>
+
+                        <Configurator setTaskList={setTaskList} fetchTaskList={fetchTaskList} />
+                    </>
                 )}
             </section>
         </TrainingsProvider>
