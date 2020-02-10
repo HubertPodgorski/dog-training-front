@@ -5,7 +5,6 @@ import { apiRoutes } from '../../../consts/apiRoutes';
 import styles from './ConfiguratorTask.module.scss';
 import { Draggable } from 'react-beautiful-dnd';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { FaDog } from 'react-icons/fa';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import Collapse from '@material-ui/core/Collapse';
