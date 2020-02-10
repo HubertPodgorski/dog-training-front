@@ -4,7 +4,7 @@ export interface ExtendedTask {
     description: string
     id: string
     order: number
-    tasks: string[]
+    tasks: DogTask[]
 }
 
 export interface Dog {
@@ -22,7 +22,7 @@ export interface PersonTask {
 
 export interface SelectOption {
     id: string;
-    label: string;
+    name: string;
 }
 
 export interface Person {

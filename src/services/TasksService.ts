@@ -1,4 +1,4 @@
-import { SelectOption, PersonTask } from '../types';
+import { PersonTask } from '../types';
 
 export const isPersonAlreadyInTheList = (
     personUuid: string,
@@ -9,18 +9,9 @@ export const isPersonAlreadyInTheList = (
     );
 };
 
-export const getLabelByIdFromList = (
-    id: string,
-    list: SelectOption[]
-): string => {
-    const itemFound = list.find((option: SelectOption) => option.id === id);
-
-    return itemFound ? itemFound.label : '---';
-};
-
 export const canAddNewTaskPair = (peopleTaskPairs: PersonTask[]): boolean =>
     peopleTaskPairs.every((peopleTaskPair: PersonTask): boolean => {
-        const { uuid, personId, taskId } = peopleTaskPair;
+        const { uuid, personId, personName, taskName,  taskId } = peopleTaskPair;
 
-        return Boolean(uuid && personId && taskId);
+        return Boolean(uuid && personId && taskId && personName && taskName);
     });

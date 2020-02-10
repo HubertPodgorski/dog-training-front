@@ -1,9 +1,9 @@
 import React from 'react';
-import styles from './DogTasks.module.scss';
-import {getLabelByIdFromList} from "../../../services/TasksService";
+import styles from './DogTasks.module.scss'
+import { DogTask } from '../../../types';
 
 interface Props {
-    dogTasks: string[];
+    dogTasks: DogTask[];
 }
 
 const isOnlyOne = (list: any[]): boolean => list.length === 1;
@@ -19,9 +19,9 @@ const DogTasks = ({ dogTasks }: Props) => {
             <p className={styles.heading}>Zadania psa na trening</p>
 
             <div className={styles.listWrapper}>
-                {dogTasks.map((dogTask: string, index: number) => (
-                    <span key={dogTask}>
-                        {dogTask}{' '}
+                {dogTasks.map((dogTask: DogTask, index: number) => (
+                    <span key={dogTask.id}>
+                        {dogTask.name}{' '}
                         {canRenderNextTaskSeparator(dogTasks, index) && ' // '}
                     </span>
                 ))}

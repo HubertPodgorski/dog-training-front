@@ -7,7 +7,15 @@
     color: $main-font-color;
     padding-top: 60px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.addNewIcon {
+    position: fixed !important;
+    right: 85px;
+    top: 15px;
+    z-index: 2;
 }
 
 .lockIcon {

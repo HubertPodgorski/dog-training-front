@@ -9,7 +9,7 @@ import Configurator from './components/Configurator/Configurator';
 import { View, views } from './consts/views';
 import { http, httpMethods } from './helpers/http';
 import { apiRoutes } from './consts/apiRoutes';
-import { Dog, DogTask, ExtendedTask, Person, PersonTask } from './types';
+import { Dog, DogTask, ExtendedTask, Person } from './types';
 import useAsyncEffect from './hooks/useAsyncEffect';
 
 const App = () => {
@@ -19,7 +19,9 @@ const App = () => {
     const [dogs, setDogs] = useState<Dog[]>([]);
     const [people, setPeople] = useState<Person[]>([]);
     // TODO: make type for that and reuse
-    const [peopleTasks, setPeopleTasks] = useState<{name: string, id: string}[]>([]);
+    const [peopleTasks, setPeopleTasks] = useState<
+        { name: string; id: string }[]
+    >([]);
     const [dogTasks, setDogTasks] = useState<DogTask[]>([]);
 
     const fetchTaskList = async () => {
@@ -90,38 +92,47 @@ const App = () => {
             }}
         >
             <section className={styles.wrapper}>
-                <Fab
-                    color="primary"
-                    aria-label="refresh"
-                    onClick={fetchTaskList}
-                    className={
-                        isDataFetching
-                            ? styles.refreshIconRotating
-                            : styles.refreshIcon
-                    }
-                >
-                    <Icon>autorenew</Icon>
-                </Fab>
+                <div className={styles.buttons}>
+                    <Fab
+                        color="primary"
+                        aria-label="refresh"
+                        onClick={fetchTaskList}
+                        className={
+                            isDataFetching
+                                ? styles.refreshIconRotating
+                                : styles.refreshIcon
+                        }
+                    >
+                        <Icon>autorenew</Icon>
+                    </Fab>
 
-                <Fab
-                    color={getColorBasedOnView()}
-                    aria-label="lock-unlock"
-                    onClick={onLockToggle}
-                    className={styles.lockIcon}
-                >
-                    <Icon>{getIconBasedOnView()}</Icon>
-                </Fab>
-
-                {currentView === views.listing && <Display />}
-
-                {currentView === views.configurator && (
-                    <>
-                        <Fab color="primary" aria-label="add" onClick={addTask}>
+                    {currentView === views.configurator && (
+                        <Fab
+                            color="primary"
+                            aria-label="add"
+                            onClick={addTask}
+                            className={styles.addNewIcon}
+                        >
                             <Icon>add</Icon>
                         </Fab>
+                    )}
 
-                        <Configurator setTaskList={setTaskList} fetchTaskList={fetchTaskList} />
-                    </>
+                    <Fab
+                        color={getColorBasedOnView()}
+                        aria-label="lock-unlock"
+                        onClick={onLockToggle}
+                        className={styles.lockIcon}
+                    >
+                        <Icon>{getIconBasedOnView()}</Icon>
+                    </Fab>
+                </div>
+
+                {currentView === views.listing && <Display />}
+                {currentView === views.configurator && (
+                    <Configurator
+                        setTaskList={setTaskList}
+                        fetchTaskList={fetchTaskList}
+                    />
                 )}
             </section>
         </TrainingsProvider>

@@ -2,17 +2,18 @@ import React, { useContext, useState } from 'react';
 import styles from './DogTasks.module.scss';
 import CustomMultiselect from './CustomMultiselect/CustomMultiselect';
 import TrainingsContext from '../../../TrainingsContext';
+import { DogTask } from '../../../types';
 
 interface Props {
-    saveDogTasks: Function;
-    dogTasks: string[];
+    saveDogTasks: (dogTasks: DogTask[]) => void;
+    dogTasks: DogTask[];
 }
 
 const DogTasks = ({ saveDogTasks, dogTasks }: Props) => {
     const { dogTasks: dogTaskList } = useContext(TrainingsContext);
 
     const [selectedDogTasks, setSelectedDogTasks] = useState<string[]>(
-        dogTasks
+        dogTasks.map(dogTask => dogTask.id)
     );
 
     return (
@@ -20,14 +21,16 @@ const DogTasks = ({ saveDogTasks, dogTasks }: Props) => {
             <p className={styles.heading}>Zadania psa na trening</p>
 
             <CustomMultiselect
-                onChange={(newValue: string[]) => {
-                    setSelectedDogTasks(newValue);
-                    saveDogTasks(newValue);
+                onChange={(newDogTaskIds: string[]) => {
+                    setSelectedDogTasks(newDogTaskIds);
+
+                    const newDogTasksSelected = dogTaskList.filter(dogTask =>
+                        newDogTaskIds.includes(dogTask.id)
+                    );
+
+                    saveDogTasks(newDogTasksSelected);
                 }}
-                options={dogTaskList.map(dogTask => ({
-                    id: dogTask.id,
-                    label: dogTask.name
-                }))}
+                options={dogTaskList}
                 selectLabel="Zadania psów"
                 selectedValue={selectedDogTasks}
             />

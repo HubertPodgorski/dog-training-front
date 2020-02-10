@@ -6,13 +6,14 @@ import TrainingsContext from '../../../TrainingsContext';
 
 interface Props {
     saveDogs: (dogs: Dog[]) => void;
-    selectedDogs: string[];
+    selectedDogs: Dog[];
 }
 
 const Dogs = ({ saveDogs, selectedDogs }: Props) => {
     const { dogs } = useContext(TrainingsContext);
-    const [innerSelectedDogs, setInnerSelectedDogs] = useState<string[]>(
-        selectedDogs
+
+    const [innerSelectedDogs, setInnerSelectedDogs] = useState(
+        selectedDogs.map(dog => dog.id)
     );
 
     return (
@@ -22,23 +23,14 @@ const Dogs = ({ saveDogs, selectedDogs }: Props) => {
             <CustomMultiselect
                 onChange={(newSelectedDogs: string[]) => {
                     setInnerSelectedDogs(newSelectedDogs);
-                    const newDogs: Dog[] = newSelectedDogs
-                        .map(selectedDogId => {
-                            const dogFound = dogs.find(
-                                dog => dog.id === selectedDogId
-                            );
 
-                            if (dogFound) {
-                                return dogFound;
-                            }
-
-                            return undefined;
-                        })
-                        .filter((dog: Dog | undefined) => dog !== undefined) as Dog[];
+                    const newDogs: Dog[] = dogs.filter(dog =>
+                        newSelectedDogs.includes(dog.id)
+                    );
 
                     saveDogs(newDogs);
                 }}
-                options={dogs.map(dog => ({ id: dog.id, label: dog.name }))}
+                options={dogs}
                 selectLabel="Psy"
                 selectedValues={innerSelectedDogs}
             />

@@ -25,37 +25,33 @@ const Task = ({ task }: Props) => {
     };
 
     return (
-        <div>
-            <li className={styles.row}>
-                <div className={styles.label}>
-                    <div>
-                        {task.dogs.map(dog => (
-                            <div key={dog.id}>
-                                <span className={styles.icon}>
-                                    <FaDog size="1em" />
-                                </span>
+        <li className={styles.row}>
+            <div className={styles.label}>
+                <div className={styles.dogs}>
+                    {task.dogs.length === 0 && <>Brak wybranych psów do tego zadania</>}
 
-                                {dog.name}
-                            </div>
-                        ))}
-                    </div>
-
-                    <div>
-                        <IconButton onClick={toggleIsExpanded}>
-                            <Icon>{getIconBasedOnExpandState(isExpanded)}</Icon>
-                        </IconButton>
-                    </div>
+                    {task.dogs.map((dog, index) => (
+                        <div key={dog.id} className={styles.dog}>
+                            {dog.name} {index !== (task.dogs.length - 1) && '//'}
+                        </div>
+                    ))}
                 </div>
 
-                <Collapse in={isExpanded}>
-                    <p>{task.description}</p>
+                <div>
+                    <IconButton onClick={toggleIsExpanded}>
+                        <Icon>{getIconBasedOnExpandState(isExpanded)}</Icon>
+                    </IconButton>
+                </div>
+            </div>
 
-                    <DogTasks dogTasks={task.tasks} />
+            <Collapse in={isExpanded}>
+                <p className={styles.description}>{task.description}</p>
 
-                    <PeopleTasks peopleTasks={task.peopleTasks} />
-                </Collapse>
-            </li>
-        </div>
+                <DogTasks dogTasks={task.tasks} />
+
+                <PeopleTasks peopleTasks={task.peopleTasks} />
+            </Collapse>
+        </li>
     );
 };
 

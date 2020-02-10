@@ -12,7 +12,7 @@ import Collapse from '@material-ui/core/Collapse';
 import TextField from '@material-ui/core/TextField';
 import DogTasks from '../DogTasks/DogTasks';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
-import { Dog, ExtendedTask, PersonTask } from '../../../types';
+import { Dog, DogTask, ExtendedTask, PersonTask } from '../../../types';
 import Dogs from '../Dogs/Dogs';
 
 interface Props {
@@ -32,7 +32,7 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
         task.description
     );
     const [isSaving, setIsSaving] = useState<boolean>(false);
-    const [dogTasks, setDogTasks] = useState<string[]>(task.tasks);
+    const [dogTasks, setDogTasks] = useState<DogTask[]>(task.tasks);
     const [selectedDogs, setSelectedDogs] = useState<Dog[]>(task.dogs);
     const [peopleTasks, setPeopleTasks] = useState<PersonTask[]>(
         task.peopleTasks
@@ -81,7 +81,7 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
         setIsSaving(false);
     };
 
-    const saveDogTasks = async (dogTasks: string[]) => {
+    const saveDogTasks = async (dogTasks: DogTask[]) => {
         setIsSaving(true);
 
         await http(apiRoutes.PUT.updateDogTasks(task.id), httpMethods.PUT, {
@@ -111,7 +111,6 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
     };
 
     return (
-        <div>
             <Draggable
                 index={index}
                 draggableId={task.id}
@@ -127,21 +126,18 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
                         {isSaving && <LinearProgress />}
 
                         <div className={styles.label}>
-                            <div>
-                                {task.dogs.map(dog => (
-                                    <div key={dog.id}>
-                                        <span className={styles.icon}>
-                                            <FaDog size="1em" />
-                                        </span>
+                            <div className={styles.dogs}>
+                                {task.dogs.length === 0 && <>Brak wybranych psów do tego zadania</>}
 
-                                        {dog.name}
+                                {task.dogs.map((dog, index) => (
+                                    <div key={dog.id} className={styles.dog}>
+                                        {dog.name} {index !== (task.dogs.length - 1) && '//'}
                                     </div>
                                 ))}
                             </div>
 
-                            <div>
+                            <div className={styles.buttons}>
                                 <IconButton
-                                    // TODO: remove task
                                     onClick={deleteTask}
                                     className={styles.iconWrapper}
                                 >
@@ -160,9 +156,7 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
 
                         <Collapse in={isExpanded}>
                             <Dogs
-                                selectedDogs={selectedDogs.map(
-                                    selectedDog => selectedDog.id
-                                )}
+                                selectedDogs={selectedDogs}
                                 saveDogs={saveDogs}
                             />
 
@@ -187,7 +181,6 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
                     </li>
                 )}
             </Draggable>
-        </div>
     );
 };
 

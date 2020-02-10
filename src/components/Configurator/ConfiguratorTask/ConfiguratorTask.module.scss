@@ -7,6 +7,25 @@
   transition: all 150ms ease-in-out;
 }
 
+.buttons {
+  display: flex;
+  align-items: center;
+}
+
+.dogs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.dog {
+  margin-right: 10px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
 .disabled {
   @extend .row;
   background: rgba(#d3d3d3, 0.2);

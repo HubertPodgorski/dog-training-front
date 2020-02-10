@@ -29,7 +29,7 @@ const CustomMultiselect = ({
         >
             {options.map((option: SelectOption) => (
                 <MenuItem key={option.id} value={option.id}>
-                    {option.label}
+                    {option.name}
                 </MenuItem>
             ))}
         </Select>
