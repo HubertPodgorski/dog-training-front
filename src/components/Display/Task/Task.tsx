@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './Task.module.scss';
-import { FaDog } from 'react-icons/fa';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import Collapse from '@material-ui/core/Collapse';

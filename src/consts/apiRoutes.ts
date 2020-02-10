@@ -1,5 +1,6 @@
 const devPrefix = 'http://localhost:3001/api';
-const appendApiPrefix = (suffix: string): string => `${devPrefix}${suffix}`;
+const prodPrefix = process.env.REACT_APP_API_PREFIX;
+const appendApiPrefix = (suffix: string): string => `${prodPrefix}${suffix}`;
 
 export const apiRoutes = {
     GET: {
