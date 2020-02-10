@@ -1,0 +1,21 @@
+@import '../../../styles/consts/colors';
+
+.wrapper {
+    font-size: 20px;
+    padding: 10px 0;
+}
+
+.heading {
+    border-top: 1px solid rgba($main-bg, 0.2);
+    font-size: 14px;
+    font-style: italic;
+}
+
+.rowWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    max-width: 500px;
+    flex-wrap: wrap;
+}

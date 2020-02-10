@@ -1,4 +1,4 @@
-import { TaskPair } from '../services/TasksService';
+import { PersonTask } from '../types';
 
 export interface DogTraining {
     id: string;
@@ -6,6 +6,6 @@ export interface DogTraining {
     trainingDescription: string;
     order: number;
     dogTasks: string[];
-    peopleTasks: TaskPair[];
+    peopleTasks: PersonTask[];
     isDisabled: boolean;
 }

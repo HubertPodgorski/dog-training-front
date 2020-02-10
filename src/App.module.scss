@@ -1,18 +1,51 @@
 @import './styles/consts/colors.scss';
 
-.app-wrapper {
+.wrapper {
     background: $main-bg;
     box-sizing: border-box;
     min-height: 100vh;
     color: $main-font-color;
     padding-top: 60px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
 
-    &__lock-icon {
-        position: fixed !important;
-        right: 15px;
-        top: 15px;
-        z-index: 2;
+.addNewIcon {
+    position: fixed !important;
+    right: 85px;
+    top: 15px;
+    z-index: 2;
+}
+
+.lockIcon {
+    position: fixed !important;
+    right: 15px;
+    top: 15px;
+    z-index: 2;
+}
+
+.refreshIcon {
+    position: fixed !important;
+    left: 15px;
+    top: 15px;
+    z-index: 2;
+    transition: transform 1s ease-in-out;
+}
+
+.refreshIconRotating {
+    @extend .refreshIcon;
+    animation: animateIcon 1s linear infinite;
+}
+
+@keyframes animateIcon {
+    0% {
+        transform: rotateZ(0);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+    50% {
+        transform: rotateZ(180deg);
     }
 }

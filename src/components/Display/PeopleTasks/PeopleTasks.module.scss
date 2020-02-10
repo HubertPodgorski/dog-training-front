@@ -1,0 +1,23 @@
+@import '../../../styles/consts/colors';
+
+.wrapper {
+    font-size: 20px;
+    padding: 10px 0;
+}
+
+.heading {
+    border-top: 1px solid rgba($main-bg, 0.2);
+    font-size: 14px;
+    font-style: italic;
+}
+
+.listRow {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: 5px;
+
+    @media screen and(max-width: 450px) {
+        margin-left: 0;
+    }
+}

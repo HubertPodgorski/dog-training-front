@@ -1,39 +1,17 @@
-import { SelectOption } from '../types/Select';
+import { PersonTask } from '../types';
 
-export interface TaskPair {
-    uuid: string;
-    personId: string;
-    taskId: string;
-}
+export const isPersonAlreadyInTheList = (
+    personUuid: string,
+    currentPeopleTasks: PersonTask[]
+): boolean => {
+    return currentPeopleTasks.some((personTask: PersonTask): boolean =>
+        personTask.personId ? personTask.personId === personUuid : false
+    );
+};
 
-export default class TasksService {
-    static isPersonAlreadyInTheList(
-        personUuid: string,
-        currentPeopleTasks: TaskPair[]
-    ): boolean {
-        return currentPeopleTasks.some(
-            (personTask: TaskPair): boolean =>
-                personTask.personId ? personTask.personId === personUuid : false
-        );
-    }
+export const canAddNewTaskPair = (peopleTaskPairs: PersonTask[]): boolean =>
+    peopleTaskPairs.every((peopleTaskPair: PersonTask): boolean => {
+        const { uuid, personId, personName, taskName,  taskId } = peopleTaskPair;
 
-    static getPeopleListWithoutAlreadyChoosenExceptCurrent(
-        allPeopleList: SelectOption[],
-        currentPeopleTasks: TaskPair[],
-        currentSelectPersonUid: string
-    ): SelectOption[] {
-        return allPeopleList.filter(
-            (person: SelectOption): boolean =>
-                !TasksService.isPersonAlreadyInTheList(
-                    person.id,
-                    currentPeopleTasks
-                ) || person.id === currentSelectPersonUid
-        );
-    }
-
-    static getLabelByIdFromList(id: string, list: SelectOption[]): string {
-        const itemFound = list.find((option: SelectOption) => option.id === id);
-
-        return itemFound ? itemFound.label : '---';
-    }
-}
+        return Boolean(uuid && personId && taskId && personName && taskName);
+    });

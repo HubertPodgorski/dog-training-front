@@ -1,19 +1,25 @@
-const appendApiPrefix = (suffix: string): string =>
-    `${process.env.REACT_APP_API_PREFIX}${suffix}`;
+const devPrefix = 'http://localhost:3001/api';
+const appendApiPrefix = (suffix: string): string => `${devPrefix}${suffix}`;
 
 export const apiRoutes = {
     GET: {
-        trainingDogs: appendApiPrefix('/training-dogs')
+        tasks: appendApiPrefix('/tasks'),
+        allResources: appendApiPrefix('/resources/all')
     },
     PUT: {
-        changeOrder: appendApiPrefix('/training-dogs/order'),
-        updateTrainingDescription: (id: string) =>
-            appendApiPrefix(`/training-dogs/${id}/training-description`),
+        changeOrder: appendApiPrefix('/tasks/order'),
+        updateTaskDescription: (id: string) =>
+            appendApiPrefix(`/tasks/${id}/description`),
+        updateTaskDogs: (id: string) => appendApiPrefix(`/tasks/${id}/dogs`),
         updateDogTasks: (id: string) =>
-            appendApiPrefix(`/training-dogs/${id}/dog-tasks`),
+            appendApiPrefix(`/tasks/${id}/dog-tasks`),
         updatePeopleTasks: (id: string) =>
-            appendApiPrefix(`/training-dogs/${id}/people-tasks`),
-        updateDogDisability: (id: string) =>
-            appendApiPrefix(`/training-dogs/${id}/dog-disability`)
+            appendApiPrefix(`/tasks/${id}/people-tasks`)
+    },
+    POST: {
+        addTask: appendApiPrefix('/tasks')
+    },
+    DELETE: {
+        deleteTask: (id: string) => appendApiPrefix(`/tasks/${id}`)
     }
 };
