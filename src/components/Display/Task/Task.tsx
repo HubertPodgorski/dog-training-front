@@ -9,6 +9,7 @@ import { ExtendedTask as ExtendedTaskType } from '../../../types';
 
 interface Props {
     task: ExtendedTaskType;
+    index: number;
 }
 
 const getIconBasedOnExpandState = (
@@ -16,39 +17,56 @@ const getIconBasedOnExpandState = (
 ): 'expand_less' | 'expand_more' =>
     isExpanded ? 'expand_less' : 'expand_more';
 
-const Task = ({ task }: Props) => {
+const Task = ({ task, index }: Props) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
     const toggleIsExpanded = () => {
         setIsExpanded(!isExpanded);
     };
 
+    const showExpandButton =
+        task.description ||
+        task.tasks.length > 0 ||
+        task.peopleTasks.length > 0;
+
     return (
         <li className={styles.row}>
             <div className={styles.label}>
                 <div className={styles.dogs}>
-                    {task.dogs.length === 0 && <>Brak wybranych psów do tego zadania</>}
+                    {task.dogs.length !== 0 && (
+                        <div className={styles.index}>#{index + 1}</div>
+                    )}
+
+                    {task.dogs.length === 0 && (
+                        <>Brak wybranych psów do tego zadania</>
+                    )}
 
                     {task.dogs.map((dog, index) => (
                         <div key={dog.id} className={styles.dog}>
-                            {dog.name} {index !== (task.dogs.length - 1) && '//'}
+                            {dog.name} {index !== task.dogs.length - 1 && '//'}
                         </div>
                     ))}
                 </div>
 
-                <div>
-                    <IconButton onClick={toggleIsExpanded}>
-                        <Icon>{getIconBasedOnExpandState(isExpanded)}</Icon>
-                    </IconButton>
+                {task.description && (
+                    <div className={styles.description}>{task.description}</div>
+                )}
+
+                <div className={styles.expandButtonWrapper}>
+                    {showExpandButton && (
+                        <IconButton onClick={toggleIsExpanded}>
+                            <Icon>{getIconBasedOnExpandState(isExpanded)}</Icon>
+                        </IconButton>
+                    )}
                 </div>
             </div>
 
             <Collapse in={isExpanded}>
-                <p className={styles.description}>{task.description}</p>
+                {task.tasks.length > 0 && <DogTasks dogTasks={task.tasks} />}
 
-                <DogTasks dogTasks={task.tasks} />
-
-                <PeopleTasks peopleTasks={task.peopleTasks} />
+                {task.peopleTasks.length > 0 && (
+                    <PeopleTasks peopleTasks={task.peopleTasks} />
+                )}
             </Collapse>
         </li>
     );

@@ -10,17 +10,18 @@
 }
 
 .dogs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    grid-area: dogs;
 }
 
 .dog {
-  margin-right: 10px;
+    margin-right: 10px;
 
-  &:last-child {
-    margin-right: 0;
-  }
+    &:last-child {
+        margin-right: 0;
+    }
 }
 
 .disabled {
@@ -31,11 +32,16 @@
 }
 
 .label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    grid-column-gap: 4px;
+    grid-row-gap: 4px;
+    grid-template-areas:
+        'dogs expandButton'
+        'description expandButton';
     font-size: 20px;
     color: inherit !important;
+  align-items: center;
 }
 
 .iconWrapper {
@@ -55,6 +61,19 @@
     width: 100%;
 }
 
+.index {
+    border: 1px solid #333;
+    padding: 4px;
+    background: #555;
+    color: #fff;
+    border-radius: 6px;
+    margin-right: 8px;
+}
+
 .description {
-    border-top: 1px solid rgba($main-bg, 0.2);
+    grid-area: description;
+}
+
+.expandButtonWrapper {
+    grid-area: expandButton;
 }

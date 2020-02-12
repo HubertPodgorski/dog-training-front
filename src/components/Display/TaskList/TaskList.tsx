@@ -9,8 +9,8 @@ const TaskList = () => {
 
     return (
         <ul className={styles.list}>
-            {taskList.map((task: ExtendedTaskType) => (
-                <Task key={task.id} task={task} />
+            {taskList.map((task: ExtendedTaskType, index: number) => (
+                <Task key={task.id} task={task} index={index}/>
             ))}
         </ul>
     );
