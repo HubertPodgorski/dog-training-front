@@ -126,11 +126,11 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
 
                         <div className={styles.label}>
                             <div className={styles.dogs}>
-                                {task.dogs.length === 0 && <>Brak wybranych psów do tego zadania</>}
+                                {selectedDogs.length === 0 && <>Brak wybranych psów do tego zadania</>}
 
-                                {task.dogs.map((dog, index) => (
+                                {selectedDogs.map((dog, index) => (
                                     <div key={dog.id} className={styles.dog}>
-                                        {dog.name} {index !== (task.dogs.length - 1) && '//'}
+                                        {dog.name} {index !== (selectedDogs.length - 1) && '//'}
                                     </div>
                                 ))}
                             </div>
