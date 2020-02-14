@@ -6,6 +6,8 @@ import Collapse from '@material-ui/core/Collapse';
 import DogTasks from '../DogTasks/DogTasks';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
 import { ExtendedTask as ExtendedTaskType } from '../../../types';
+import Dog from '../Dog/Dog';
+import Section from '../../Section/Section';
 
 interface Props {
     task: ExtendedTaskType;
@@ -41,10 +43,8 @@ const Task = ({ task, index }: Props) => {
                         <>Brak wybranych psów do tego zadania</>
                     )}
 
-                    {task.dogs.map((dog, index) => (
-                        <div key={dog.id} className={styles.dog}>
-                            {dog.name} {index !== task.dogs.length - 1 && '//'}
-                        </div>
+                    {task.dogs.map(dog => (
+                        <Dog name={dog.name} key={dog.id} />
                     ))}
                 </div>
 
@@ -62,10 +62,16 @@ const Task = ({ task, index }: Props) => {
             </div>
 
             <Collapse in={isExpanded}>
-                {task.tasks.length > 0 && <DogTasks dogTasks={task.tasks} />}
+                {task.tasks.length > 0 && (
+                    <Section name="Zadania psów" spacingTop>
+                        <DogTasks dogTasks={task.tasks} />
+                    </Section>
+                )}
 
                 {task.peopleTasks.length > 0 && (
-                    <PeopleTasks peopleTasks={task.peopleTasks} />
+                    <Section name="Zadania ludzi" spacingTop>
+                        <PeopleTasks peopleTasks={task.peopleTasks} />
+                    </Section>
                 )}
             </Collapse>
         </li>

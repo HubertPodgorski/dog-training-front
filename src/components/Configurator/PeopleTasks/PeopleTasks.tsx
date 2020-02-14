@@ -107,8 +107,6 @@ const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
 
     return (
         <section className={styles.wrapper}>
-            <p className={styles.heading}>Zadania osób</p>
-
             {peopleTaskPairs.map((personTask: PersonTask) => (
                 <div key={personTask.uuid} className={styles.rowWrapper}>
                     <CustomSelect

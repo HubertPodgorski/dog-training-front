@@ -16,8 +16,6 @@ const canRenderNextTaskSeparator = (list: any[], index: number): boolean =>
 const DogTasks = ({ dogTasks }: Props) => {
     return (
         <section className={styles.wrapper}>
-            <p className={styles.heading}>Zadania psa na trening</p>
-
             <div className={styles.listWrapper}>
                 {dogTasks.map((dogTask: DogTask, index: number) => (
                     <span key={dogTask.id}>

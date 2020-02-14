@@ -1,0 +1,14 @@
+@import '../../../styles/consts/colors';
+
+.wrapper {
+  padding: 4px 8px;
+  border: 1px solid $main-bg;
+  border-radius: 6px;
+  margin-right: 12px;
+  font-weight: 500;
+  margin-top: 8px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}

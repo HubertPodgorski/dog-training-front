@@ -18,8 +18,6 @@ const DogTasks = ({ saveDogTasks, dogTasks }: Props) => {
 
     return (
         <section className={styles.wrapper}>
-            <p className={styles.heading}>Zadania psa na trening</p>
-
             <CustomMultiselect
                 onChange={(newDogTaskIds: string[]) => {
                     setSelectedDogTasks(newDogTaskIds);

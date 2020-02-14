@@ -13,6 +13,7 @@ import DogTasks from '../DogTasks/DogTasks';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
 import { Dog, DogTask, ExtendedTask, PersonTask } from '../../../types';
 import Dogs from '../Dogs/Dogs';
+import Section from '../../Section/Section';
 
 interface Props {
     task: ExtendedTask;
@@ -110,55 +111,57 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
     };
 
     return (
-            <Draggable
-                index={index}
-                draggableId={task.id}
-                isDragDisabled={false}
-            >
-                {provided => (
-                    <li
-                        ref={provided.innerRef}
-                        {...provided.dragHandleProps}
-                        {...provided.draggableProps}
-                        className={styles.row}
-                    >
-                        {isSaving && <LinearProgress />}
+        <Draggable index={index} draggableId={task.id} isDragDisabled={false}>
+            {provided => (
+                <li
+                    ref={provided.innerRef}
+                    {...provided.dragHandleProps}
+                    {...provided.draggableProps}
+                    className={styles.row}
+                >
+                    {isSaving && <LinearProgress />}
 
-                        <div className={styles.label}>
-                            <div className={styles.dogs}>
-                                {selectedDogs.length === 0 && <>Brak wybranych psów do tego zadania</>}
+                    <div className={styles.label}>
+                        <div className={styles.dogs}>
+                            {selectedDogs.length === 0 && (
+                                <>Brak wybranych psów do tego zadania</>
+                            )}
 
-                                {selectedDogs.map((dog, index) => (
-                                    <div key={dog.id} className={styles.dog}>
-                                        {dog.name} {index !== (selectedDogs.length - 1) && '//'}
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className={styles.buttons}>
-                                <IconButton
-                                    onClick={deleteTask}
-                                    className={styles.iconWrapper}
-                                >
-                                    <Icon className={styles.expandIcon}>
-                                        cancel
-                                    </Icon>
-                                </IconButton>
-
-                                <IconButton onClick={toggleIsExpanded}>
-                                    <Icon>
-                                        {getIconBasedOnExpandState(isExpanded)}
-                                    </Icon>
-                                </IconButton>
-                            </div>
+                            {selectedDogs.map((dog, index) => (
+                                <div key={dog.id} className={styles.dog}>
+                                    {dog.name}{' '}
+                                    {index !== selectedDogs.length - 1 && '//'}
+                                </div>
+                            ))}
                         </div>
 
-                        <Collapse in={isExpanded}>
+                        <div className={styles.buttons}>
+                            <IconButton
+                                onClick={deleteTask}
+                                className={styles.iconWrapper}
+                            >
+                                <Icon className={styles.expandIcon}>
+                                    cancel
+                                </Icon>
+                            </IconButton>
+
+                            <IconButton onClick={toggleIsExpanded}>
+                                <Icon>
+                                    {getIconBasedOnExpandState(isExpanded)}
+                                </Icon>
+                            </IconButton>
+                        </div>
+                    </div>
+
+                    <Collapse in={isExpanded}>
+                        <Section name="Wybierz psy">
                             <Dogs
                                 selectedDogs={selectedDogs}
                                 saveDogs={saveDogs}
                             />
+                        </Section>
 
+                        <Section name="Opis">
                             <TextField
                                 variant="outlined"
                                 multiline
@@ -166,20 +169,25 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
                                 value={taskDescription}
                                 className={styles.input}
                             />
+                        </Section>
 
+                        <Section name="Zadania psów">
                             <DogTasks
                                 saveDogTasks={saveDogTasks}
                                 dogTasks={dogTasks}
                             />
+                        </Section>
 
+                        <Section name="Zadania ludzi">
                             <PeopleTasks
                                 savePeopleTasks={savePeopleTasks}
                                 peopleTasks={peopleTasks}
                             />
-                        </Collapse>
-                    </li>
-                )}
-            </Draggable>
+                        </Section>
+                    </Collapse>
+                </li>
+            )}
+        </Draggable>
     );
 };
 

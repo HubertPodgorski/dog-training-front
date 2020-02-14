@@ -18,8 +18,6 @@ const Dogs = ({ saveDogs, selectedDogs }: Props) => {
 
     return (
         <section className={styles.wrapper}>
-            <p className={styles.heading}>Psy</p>
-
             <CustomMultiselect
                 onChange={(newSelectedDogs: string[]) => {
                     setInnerSelectedDogs(newSelectedDogs);

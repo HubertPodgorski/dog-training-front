@@ -9,8 +9,6 @@ interface Props {
 
 const PeopleTasks = ({ peopleTasks }: Props) => (
     <section className={styles.wrapper}>
-        <p className={styles.heading}>Zadania osób</p>
-
         {peopleTasks.map((personTask: PersonTask) => (
             <div
                 key={personTask.uuid}
@@ -18,11 +16,9 @@ const PeopleTasks = ({ peopleTasks }: Props) => (
             >
                 <PersonIcon />
                 <strong>
-                    {/*TODO: CHECK WHERE IT IS SAVED TO DISPLAY THOSE NAMES*/}
                     {personTask.personName}
                 </strong>
                 :{' '}
-                {/*TODO: CHECK WHERE IT IS SAVED TO DISPLAY THOSE NAMES*/}
                 {personTask.taskName}
             </div>
         ))}

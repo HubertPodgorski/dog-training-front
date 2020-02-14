@@ -1,0 +1,27 @@
+@import '../../styles/consts/colors';
+
+.sectionWrapper {
+  border-radius: 5px;
+  padding: 8px;
+  border: 1px solid $main-bg;
+  position: relative;
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.name {
+  position: absolute;
+  top: -15px;
+  background: $main-font-color;
+  left: 10px;
+  padding: 4px;
+}
+
+.spacingTop {
+  margin-top: 16px;
+
+  margin-bottom: 0;
+}

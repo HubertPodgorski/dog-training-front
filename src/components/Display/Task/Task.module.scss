@@ -4,7 +4,7 @@
     padding: 10px;
     border-radius: 5px;
     background: #d3d3d3;
-    color: #333;
+    color: $main-bg;
 
     transition: all 150ms ease-in-out;
 }
@@ -12,16 +12,8 @@
 .dogs {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: baseline;
     grid-area: dogs;
-}
-
-.dog {
-    margin-right: 10px;
-
-    &:last-child {
-        margin-right: 0;
-    }
 }
 
 .disabled {
@@ -62,7 +54,7 @@
 }
 
 .index {
-    border: 1px solid #333;
+    border: 1px solid $main-bg;
     padding: 4px;
     background: #555;
     color: #fff;
