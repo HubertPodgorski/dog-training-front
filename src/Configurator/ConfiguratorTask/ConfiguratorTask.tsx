@@ -21,7 +21,6 @@ import { getDogNamesByOrder } from '../helpers';
 interface Props {
     task: ExtendedTask;
     index: number;
-    fetchTaskList: () => void;
 }
 
 const getIconBasedOnExpandState = (
@@ -29,8 +28,8 @@ const getIconBasedOnExpandState = (
 ): 'expand_less' | 'expand_more' =>
     isExpanded ? 'expand_less' : 'expand_more';
 
-const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
-    const { dogs, taskList } = useContext(TrainingsContext);
+const ConfiguratorTask = ({ task, index }: Props) => {
+    const { dogs, taskList, fetchTaskList } = useContext(TrainingsContext);
 
     const [column, setColumn] = useState<'left' | 'right'>(task.column);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -73,6 +72,8 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
             }
         );
 
+        await fetchTaskList();
+
         setIsSaving(false);
     };
 
@@ -84,6 +85,8 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
         });
 
         setSelectedDogs(dogs);
+
+        await fetchTaskList();
 
         setIsSaving(false);
     };
@@ -97,6 +100,8 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
 
         setDogTasks(dogTasks);
 
+        await fetchTaskList();
+
         setIsSaving(false);
     };
 
@@ -108,6 +113,8 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
         });
 
         setPeopleTasks(peopleTasks);
+
+        await fetchTaskList();
 
         setIsSaving(false);
     };
@@ -121,6 +128,8 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
 
         setOrder(order);
 
+        await fetchTaskList();
+
         setIsSaving(false);
     };
 
@@ -133,12 +142,15 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
 
         setColumn(column);
 
+        await fetchTaskList();
+
         setIsSaving(false);
     };
 
     const deleteTask = async () => {
         await http(apiRoutes.DELETE.deleteTask(task.id), httpMethods.DELETE);
-        fetchTaskList();
+
+        await fetchTaskList();
     };
 
     return (
