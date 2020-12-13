@@ -1,31 +1,30 @@
 import React from 'react';
-import styles from './CustomMultiselect.module.scss';
+import styles from './CustomSelect.module.scss';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
-import { SelectOption } from '../../../../types';
+import { SelectOption } from '../../../types';
 
 interface Props {
     options: SelectOption[];
-    selectedValue: string[];
+    selectedValue: string;
     selectLabel: string;
-    onChange: Function;
+    onChange: (id: string) => void;
 }
 
-const CustomMultiselect = ({
+const CustomSelect = ({
     options,
     selectedValue,
     selectLabel,
     onChange
 }: Props) => (
-    <FormControl className={styles['multiselect']}>
+    <FormControl className={styles['select']}>
         <InputLabel htmlFor="name-disabled">{selectLabel}</InputLabel>
         <Select
             value={selectedValue}
             onChange={e => onChange(e.target.value)}
             name={selectLabel}
-            multiple
         >
             {options.map((option: SelectOption) => (
                 <MenuItem key={option.id} value={option.id}>
@@ -36,4 +35,4 @@ const CustomMultiselect = ({
     </FormControl>
 );
 
-export default CustomMultiselect;
+export default CustomSelect;

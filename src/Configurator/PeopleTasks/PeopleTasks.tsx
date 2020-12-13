@@ -5,12 +5,9 @@ import AddIcon from '@material-ui/icons/Add';
 import styles from './PeopleTasks.module.scss';
 import CustomSelect from './CustomSelect/CustomSelect';
 import getUuid from 'uuid/v4';
-import { Person, PersonTask } from '../../../types';
-import {
-    canAddNewTaskPair,
-    isPersonAlreadyInTheList
-} from '../../../services/TasksService';
-import TrainingsContext from '../../../TrainingsContext';
+import { Person, PersonTask } from '../../types';
+import TrainingsContext from '../../TrainingsContext';
+import {canAddNewTaskPair, isPersonAlreadyInTheList} from "../helpers";
 
 interface Props {
     savePeopleTasks: (peopleTasks: PersonTask[]) => void;

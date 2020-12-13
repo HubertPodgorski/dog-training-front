@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
 import styles from './App.module.scss';
-import Icon from '@material-ui/core/Icon';
-import Fab from '@material-ui/core/Fab';
 import '@atlaskit/css-reset';
 import { TrainingsProvider } from './TrainingsContext';
-import Configurator from './components/Configurator/Configurator';
-import { View, views } from './consts/views';
 import { http, httpMethods } from './helpers/http';
-import { apiRoutes } from './consts/apiRoutes';
-import { Dog, DogTask, ExtendedTask, Person } from './types';
+import { apiRoutes } from './helpers/apiRoutes';
+import {Dog, DogTask, ExtendedTask, Person} from './types';
 import useAsyncEffect from './hooks/useAsyncEffect';
-import MainList from "./MainList/MainList";
+import Router from "./Router";
 
 const App = () => {
-    const [currentView, setCurrentView] = useState<View>('LISTING');
     const [isDataFetching, setIsDataFetching] = useState(false);
     const [taskList, setTaskList] = useState<ExtendedTask[]>([]);
     const [dogs, setDogs] = useState<Dog[]>([]);
@@ -52,14 +47,6 @@ const App = () => {
         await fetchResourceData();
     }, []);
 
-    const onLockToggle = async () => {
-        await fetchTaskList();
-
-        setCurrentView(
-            currentView === views.listing ? views.configurator : views.listing
-        );
-    };
-
     const addTask = async () => {
         setIsDataFetching(true);
 
@@ -74,66 +61,25 @@ const App = () => {
         await fetchTaskList();
     };
 
-    const getColorBasedOnView = (): 'primary' | 'secondary' =>
-        currentView === views.listing ? 'secondary' : 'primary';
-
-    const getIconBasedOnView = (): 'lock' | 'lock_open' =>
-        currentView === views.listing ? 'lock' : 'lock_open';
-
     return (
         <TrainingsProvider
             value={{
-                currentView,
+                dataFetching: isDataFetching,
                 taskList,
                 dogs,
                 people,
                 peopleTasks,
-                dogTasks
+                dogTasks,
+                fetchTaskList: () => fetchTaskList(),
+                setTaskList: (taskList: ExtendedTask[]) => setTaskList(taskList),
+                setDogs: (dogs: Dog[]) => setDogs(dogs),
+                setPeople: (people: Person[]) => setPeople(people),
+                setPeopleTasks: (peopleTasks: { name: string; id: string }[]) => setPeopleTasks(peopleTasks),
+                addNewTask: () => addTask()
             }}
         >
             <section className={styles.wrapper}>
-                <div className={styles.buttons}>
-                    <Fab
-                        color="primary"
-                        aria-label="refresh"
-                        onClick={fetchTaskList}
-                        className={
-                            isDataFetching
-                                ? styles.refreshIconRotating
-                                : styles.refreshIcon
-                        }
-                    >
-                        <Icon>autorenew</Icon>
-                    </Fab>
-
-                    {currentView === views.configurator && (
-                        <Fab
-                            color="primary"
-                            aria-label="add"
-                            onClick={addTask}
-                            className={styles.addNewIcon}
-                        >
-                            <Icon>add</Icon>
-                        </Fab>
-                    )}
-
-                    <Fab
-                        color={getColorBasedOnView()}
-                        aria-label="lock-unlock"
-                        onClick={onLockToggle}
-                        className={styles.lockIcon}
-                    >
-                        <Icon>{getIconBasedOnView()}</Icon>
-                    </Fab>
-                </div>
-
-                {currentView === views.listing && <MainList />}
-                {currentView === views.configurator && (
-                    <Configurator
-                        setTaskList={setTaskList}
-                        fetchTaskList={fetchTaskList}
-                    />
-                )}
+                <Router/>
             </section>
         </TrainingsProvider>
     );

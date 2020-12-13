@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import styles from './Dogs.module.scss';
 import CustomMultiselect from './CustomMultiselect/CustomMultiselect';
-import { Dog } from '../../../types';
-import TrainingsContext from '../../../TrainingsContext';
+import { Dog } from '../../types';
+import TrainingsContext from '../../TrainingsContext';
 
 interface Props {
     saveDogs: (dogs: Dog[]) => void;
