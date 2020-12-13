@@ -5,7 +5,6 @@ import Task from '../components/Display/Task/Task';
 import TrainingsContext from '../TrainingsContext';
 import RefreshButton from '../components/buttons/RefreshButton/RefreshButton';
 import LockButton from '../components/buttons/LockButton/LockButton';
-import CalendarButton from '../components/buttons/CalendarButton/CalendarButton';
 
 const MainList = () => {
     const { taskList } = useContext(TrainingsContext);
