@@ -31,6 +31,7 @@ const getIconBasedOnExpandState = (
 const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
     const { dogs } = useContext(TrainingsContext);
 
+    const [column, setColumn] = useState<'left' | 'right'>(task.column);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [taskDescription, setTaskDescription] = useState<string>(
         task.description
@@ -122,6 +123,18 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
         setIsSaving(false);
     };
 
+    const saveTaskColumn = async (column: 'left' | 'right') => {
+        setIsSaving(true);
+
+        await http(apiRoutes.PUT.updateTaskColumn(task.id), httpMethods.PUT, {
+            column,
+        });
+
+        setColumn(column);
+
+        setIsSaving(false);
+    };
+
     const deleteTask = async () => {
         await http(apiRoutes.DELETE.deleteTask(task.id), httpMethods.DELETE);
         fetchTaskList();
@@ -182,6 +195,22 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
                                 }))}
                                 selectLabel="Kolejność"
                                 selectedValue={`${order}`}
+                            />
+                        </Section>
+
+                        <Section name="Kolumna">
+                            <CustomSelect
+                                onChange={async (column) =>
+                                    await saveTaskColumn(
+                                        column as 'left' | 'right'
+                                    )
+                                }
+                                options={[
+                                    { id: 'left', name: 'Lewa' },
+                                    { id: 'right', name: 'Prawa' },
+                                ]}
+                                selectLabel="Kolumna"
+                                selectedValue={column}
                             />
                         </Section>
 

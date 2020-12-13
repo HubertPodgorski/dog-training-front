@@ -5,9 +5,12 @@ import Task from '../components/Display/Task/Task';
 import TrainingsContext from '../TrainingsContext';
 import RefreshButton from '../components/buttons/RefreshButton/RefreshButton';
 import LockButton from '../components/buttons/LockButton/LockButton';
+import classnames from 'classnames';
 
 const MainList = () => {
     const { taskList } = useContext(TrainingsContext);
+
+    const hasTwoColumns = !!taskList.find(({ column }) => column === 'right');
 
     return (
         <div className={styles.wrapper}>
@@ -17,21 +20,46 @@ const MainList = () => {
                 <LockButton variant="listing" />
             </div>
 
-            <ul className={styles.list}>
-                {taskList
-                    .sort((a, b) => {
-                        if (a.order < b.order) {
-                            return -1;
-                        } else if (a.order > b.order) {
-                            return 1;
-                        }
+            <div
+                className={classnames(styles.columns, {
+                    [styles.singleColumn]: !hasTwoColumns,
+                })}
+            >
+                <ul className={styles.list}>
+                    {taskList
+                        .filter(({ column }) => column === 'left')
+                        .sort((a, b) => {
+                            if (a.order < b.order) {
+                                return -1;
+                            } else if (a.order > b.order) {
+                                return 1;
+                            }
 
-                        return 0;
-                    })
-                    .map((task: ExtendedTaskType) => (
-                        <Task key={task.id} task={task} />
-                    ))}
-            </ul>
+                            return 0;
+                        })
+                        .map((task: ExtendedTaskType) => (
+                            <Task key={task.id} task={task} />
+                        ))}
+                </ul>
+                {hasTwoColumns && (
+                    <ul className={styles.list}>
+                        {taskList
+                            .filter(({ column }) => column === 'right')
+                            .sort((a, b) => {
+                                if (a.order < b.order) {
+                                    return -1;
+                                } else if (a.order > b.order) {
+                                    return 1;
+                                }
+
+                                return 0;
+                            })
+                            .map((task: ExtendedTaskType) => (
+                                <Task key={task.id} task={task} />
+                            ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 };

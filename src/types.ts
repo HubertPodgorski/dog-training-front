@@ -1,23 +1,24 @@
 export interface ExtendedTask {
-    dogs: Dog[],
-    peopleTasks: PersonTask[]
-    description: string
-    id: string
-    order: number
-    tasks: DogTask[]
+    dogs: Dog[];
+    peopleTasks: PersonTask[];
+    description: string;
+    id: string;
+    order: number;
+    tasks: DogTask[];
+    column: 'left' | 'right';
 }
 
 export interface Dog {
-    name: string,
-    id: string
+    name: string;
+    id: string;
 }
 
 export interface PersonTask {
-    uuid: string
-    taskName: string
-    taskId: string
-    personId: string
-    personName: string
+    uuid: string;
+    taskName: string;
+    taskId: string;
+    personId: string;
+    personName: string;
 }
 
 export interface SelectOption {
@@ -26,13 +27,13 @@ export interface SelectOption {
 }
 
 export interface Person {
-    name: string,
-    id: string
+    name: string;
+    id: string;
 }
 
 export interface DogTask {
-    name: string,
-    id: string
+    name: string;
+    id: string;
 }
 
 export interface DogTraining {
