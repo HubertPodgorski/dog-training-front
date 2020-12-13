@@ -36,7 +36,7 @@ const Task = ({ task, index }: Props) => {
             <div className={styles.label}>
                 <div className={styles.dogs}>
                     {task.dogs.length !== 0 && (
-                        <div className={styles.index}>#{index + 1}</div>
+                        <div className={styles.index}>#{index}</div>
                     )}
 
                     {task.dogs.length === 0 && (

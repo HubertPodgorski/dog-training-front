@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import debounce from 'lodash.debounce';
 import { http, httpMethods } from '../../../helpers/http';
 import { apiRoutes } from '../../../consts/apiRoutes';
@@ -14,6 +14,8 @@ import PeopleTasks from '../PeopleTasks/PeopleTasks';
 import { Dog, DogTask, ExtendedTask, PersonTask } from '../../../types';
 import Dogs from '../Dogs/Dogs';
 import Section from '../../Section/Section';
+import CustomSelect from "../PeopleTasks/CustomSelect/CustomSelect";
+import TrainingsContext from "../../../TrainingsContext";
 
 interface Props {
     task: ExtendedTask;
@@ -34,9 +36,13 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [dogTasks, setDogTasks] = useState<DogTask[]>(task.tasks);
     const [selectedDogs, setSelectedDogs] = useState<Dog[]>(task.dogs);
+    const [order, setOrder] = useState<number>(index + 1);
     const [peopleTasks, setPeopleTasks] = useState<PersonTask[]>(
         task.peopleTasks
     );
+
+    const { dogs } = useContext(TrainingsContext);
+
 
     const onDescriptionChange = (e: any) => {
         const { value } = e.currentTarget;
@@ -54,6 +60,20 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
         }, 300),
         []
     );
+
+    const saveOrder = async (newOrder: number) => {
+        setIsSaving(true);
+
+        await http(
+            apiRoutes.PUT.updateTaskOrder(task.id),
+            httpMethods.PUT,
+            {
+                order: newOrder
+            }
+        );
+
+        setIsSaving(false);
+    };
 
     const saveDescription = async (description: string) => {
         setIsSaving(true);
@@ -154,6 +174,23 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
                     </div>
 
                     <Collapse in={isExpanded}>
+                        <Section name="Kolejność">
+                            <CustomSelect
+                                selectedValue={`${order}`}
+                                options={dogs.map((_, index) => {
+                                    const orderOption = `${index + 1}`
+                                    return ({id: orderOption, name: orderOption})
+                                })}
+                                selectLabel="Kolejność"
+                                onChange={(newOrder: string) => {
+                                    setOrder(+newOrder);
+
+                                    saveOrder(+newOrder)
+                                }
+                                }
+                            />
+                        </Section>
+
                         <Section name="Wybierz psy">
                             <Dogs
                                 selectedDogs={selectedDogs}
