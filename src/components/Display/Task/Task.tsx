@@ -11,7 +11,6 @@ import Section from '../../Section/Section';
 
 interface Props {
     task: ExtendedTaskType;
-    index: number;
 }
 
 const getIconBasedOnExpandState = (
@@ -19,7 +18,7 @@ const getIconBasedOnExpandState = (
 ): 'expand_less' | 'expand_more' =>
     isExpanded ? 'expand_less' : 'expand_more';
 
-const Task = ({ task, index }: Props) => {
+const Task = ({ task }: Props) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
     const toggleIsExpanded = () => {
@@ -36,20 +35,24 @@ const Task = ({ task, index }: Props) => {
             <div className={styles.label}>
                 <div className={styles.dogs}>
                     {task.dogs.length !== 0 && (
-                        <div className={styles.index}>#{index}</div>
+                        <div className={styles.index}>#{task.order}</div>
                     )}
 
                     {task.dogs.length === 0 && (
                         <>Brak wybranych psów do tego zadania</>
                     )}
 
-                    {task.dogs.map(dog => (
+                    {task.dogs.map((dog) => (
                         <Dog name={dog.name} key={dog.id} />
                     ))}
                 </div>
 
                 {task.description && (
-                    <div className={styles.description}>{task.tasks.map(({name}) => <div>{name}</div>)}</div>
+                    <div className={styles.description}>
+                        {task.tasks.map(({ name }) => (
+                            <div>{name}</div>
+                        ))}
+                    </div>
                 )}
 
                 <div className={styles.expandButtonWrapper}>
