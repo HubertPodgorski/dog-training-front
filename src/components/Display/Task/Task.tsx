@@ -49,7 +49,7 @@ const Task = ({ task, index }: Props) => {
                 </div>
 
                 {task.description && (
-                    <div className={styles.description}>{task.description}</div>
+                    <div className={styles.description}>{task.tasks.map(({name}) => <div>{name}</div>)}</div>
                 )}
 
                 <div className={styles.expandButtonWrapper}>

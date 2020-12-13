@@ -3,7 +3,6 @@ import styles from './App.module.scss';
 import Icon from '@material-ui/core/Icon';
 import Fab from '@material-ui/core/Fab';
 import '@atlaskit/css-reset';
-import Display from './components/Display/Display';
 import { TrainingsProvider } from './TrainingsContext';
 import Configurator from './components/Configurator/Configurator';
 import { View, views } from './consts/views';
@@ -11,6 +10,7 @@ import { http, httpMethods } from './helpers/http';
 import { apiRoutes } from './consts/apiRoutes';
 import { Dog, DogTask, ExtendedTask, Person } from './types';
 import useAsyncEffect from './hooks/useAsyncEffect';
+import MainList from "./MainList/MainList";
 
 const App = () => {
     const [currentView, setCurrentView] = useState<View>('LISTING');
@@ -127,7 +127,7 @@ const App = () => {
                     </Fab>
                 </div>
 
-                {currentView === views.listing && <Display />}
+                {currentView === views.listing && <MainList />}
                 {currentView === views.configurator && (
                     <Configurator
                         setTaskList={setTaskList}

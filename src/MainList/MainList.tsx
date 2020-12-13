@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import styles from './TaskList.module.scss';
-import { ExtendedTask as ExtendedTaskType } from '../../../types';
-import Task from '../Task/Task';
-import TrainingsContext from '../../../TrainingsContext';
+import styles from './MainList.module.scss';
+import { ExtendedTask as ExtendedTaskType } from '../types';
+import Task from '../components/Display/Task/Task';
+import TrainingsContext from '../TrainingsContext';
 
-const TaskList = () => {
+const MainList = () => {
     const { taskList } = useContext(TrainingsContext);
 
     return (
@@ -16,4 +16,4 @@ const TaskList = () => {
     );
 };
 
-export default TaskList;
+export default MainList;
