@@ -8,6 +8,7 @@ import PeopleTasks from '../PeopleTasks/PeopleTasks';
 import { ExtendedTask as ExtendedTaskType } from '../../../types';
 import Dog from '../Dog/Dog';
 import Section from '../../Section/Section';
+import classnames from 'classnames';
 
 interface Props {
     task: ExtendedTaskType;
@@ -30,8 +31,14 @@ const Task = ({ task }: Props) => {
         task.tasks.length > 0 ||
         task.peopleTasks.length > 0;
 
+    console.log('task.order % 2 => ', task.order % 2);
     return (
-        <li className={styles.row}>
+        <li
+            className={classnames(styles.row, {
+                [styles.colorEven]: task.order % 2 === 0,
+                [styles.colorOdd]: task.order % 2 === 1,
+            })}
+        >
             <div className={styles.label}>
                 <div className={styles.dogs}>
                     {task.dogs.length !== 0 && (

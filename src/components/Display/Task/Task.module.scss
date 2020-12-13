@@ -16,6 +16,15 @@
     grid-area: dogs;
 }
 
+.colorOdd {
+    background: rgb(214, 223, 40);
+}
+
+.colorEven {
+    color: $main-font-color;
+    background: rgb(241, 91, 102);
+}
+
 .disabled {
     @extend .row;
     background: rgba(#d3d3d3, 0.2);
