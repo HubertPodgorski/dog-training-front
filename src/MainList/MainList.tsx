@@ -13,7 +13,7 @@ const MainList = () => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.buttons}>
-                <CalendarButton/>
+                {/*<CalendarButton/>*/}
                 <RefreshButton/>
                 <LockButton variant='listing'/>
             </div>
