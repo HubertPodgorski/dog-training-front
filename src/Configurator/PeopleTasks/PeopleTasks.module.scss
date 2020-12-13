@@ -1,0 +1,15 @@
+@import '../../styles/consts/colors';
+
+.wrapper {
+    font-size: 20px;
+    padding: 10px 0;
+}
+
+.rowWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    max-width: 500px;
+    flex-wrap: wrap;
+}
