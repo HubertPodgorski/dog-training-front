@@ -1,6 +1,6 @@
-import {ExtendedTask, PersonTask} from "../types";
-import _cloneDeep from "lodash/cloneDeep";
-import {DogTraining} from "../types";
+import { ExtendedTask, PersonTask } from '../types';
+import _cloneDeep from 'lodash/cloneDeep';
+import { DogTraining } from '../types';
 
 export const isPersonAlreadyInTheList = (
     personUuid: string,
@@ -13,7 +13,7 @@ export const isPersonAlreadyInTheList = (
 
 export const canAddNewTaskPair = (peopleTaskPairs: PersonTask[]): boolean =>
     peopleTaskPairs.every((peopleTaskPair: PersonTask): boolean => {
-        const { uuid, personId, personName, taskName,  taskId } = peopleTaskPair;
+        const { uuid, personId, personName, taskName, taskId } = peopleTaskPair;
 
         return Boolean(uuid && personId && taskId && personName && taskName);
     });
@@ -40,7 +40,7 @@ export const getUpdatedOrderList = (
     return newList.map(
         (task: ExtendedTask, index: number): ExtendedTask => ({
             ...task,
-            order: index
+            order: index,
         })
     );
 };
@@ -56,8 +56,25 @@ export const getListOfIdsInUpdatedOrder = (
             ...currentList,
             {
                 id: dogInTraining.id,
-                order: dogInTraining.order
-            }
+                order: dogInTraining.order,
+            },
         ],
         []
     );
+
+export const getDogNamesByOrder = (
+    taskList: ExtendedTask[],
+    orderToFind: number
+): string => {
+    const tasks = taskList.filter(({ order }) => order === orderToFind);
+
+    if (!tasks.length) {
+        return '=> Brak psów';
+    }
+
+    const dogNames = tasks.flatMap(({ dogs }) =>
+        dogs.flatMap(({ name }) => name)
+    );
+
+    return ` => ${dogNames.join(' // ')}`;
+};

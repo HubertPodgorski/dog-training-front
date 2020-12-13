@@ -16,6 +16,7 @@ import Dogs from '../Dogs/Dogs';
 import Section from '../../components/Section/Section';
 import CustomSelect from '../PeopleTasks/CustomSelect/CustomSelect';
 import TrainingsContext from '../../TrainingsContext';
+import { getDogNamesByOrder } from '../helpers';
 
 interface Props {
     task: ExtendedTask;
@@ -29,7 +30,7 @@ const getIconBasedOnExpandState = (
     isExpanded ? 'expand_less' : 'expand_more';
 
 const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
-    const { dogs } = useContext(TrainingsContext);
+    const { dogs, taskList } = useContext(TrainingsContext);
 
     const [column, setColumn] = useState<'left' | 'right'>(task.column);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -191,7 +192,10 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
                                 }
                                 options={dogs.map((_, index) => ({
                                     id: `${index + 1}`,
-                                    name: `${index + 1}`,
+                                    name: `${index + 1}  ${getDogNamesByOrder(
+                                        taskList,
+                                        index + 1
+                                    )}`,
                                 }))}
                                 selectLabel="Kolejność"
                                 selectedValue={`${order}`}
