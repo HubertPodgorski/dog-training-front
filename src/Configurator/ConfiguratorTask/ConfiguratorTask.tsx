@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import debounce from 'lodash.debounce';
 import { http, httpMethods } from '../../helpers/http';
 import { apiRoutes } from '../../helpers/apiRoutes';
@@ -14,6 +14,8 @@ import PeopleTasks from '../PeopleTasks/PeopleTasks';
 import { Dog, DogTask, ExtendedTask, PersonTask } from '../../types';
 import Dogs from '../Dogs/Dogs';
 import Section from '../../components/Section/Section';
+import CustomSelect from '../PeopleTasks/CustomSelect/CustomSelect';
+import TrainingsContext from '../../TrainingsContext';
 
 interface Props {
     task: ExtendedTask;
@@ -27,6 +29,8 @@ const getIconBasedOnExpandState = (
     isExpanded ? 'expand_less' : 'expand_more';
 
 const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
+    const { dogs } = useContext(TrainingsContext);
+
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [taskDescription, setTaskDescription] = useState<string>(
         task.description
@@ -34,6 +38,7 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [dogTasks, setDogTasks] = useState<DogTask[]>(task.tasks);
     const [selectedDogs, setSelectedDogs] = useState<Dog[]>(task.dogs);
+    const [order, setOrder] = useState<number>(task.order);
     const [peopleTasks, setPeopleTasks] = useState<PersonTask[]>(
         task.peopleTasks
     );
@@ -62,7 +67,7 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
             apiRoutes.PUT.updateTaskDescription(task.id),
             httpMethods.PUT,
             {
-                description
+                description,
             }
         );
 
@@ -73,7 +78,7 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
         setIsSaving(true);
 
         await http(apiRoutes.PUT.updateTaskDogs(task.id), httpMethods.PUT, {
-            dogs
+            dogs,
         });
 
         setSelectedDogs(dogs);
@@ -85,7 +90,7 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
         setIsSaving(true);
 
         await http(apiRoutes.PUT.updateDogTasks(task.id), httpMethods.PUT, {
-            tasks: dogTasks
+            tasks: dogTasks,
         });
 
         setDogTasks(dogTasks);
@@ -97,10 +102,22 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
         setIsSaving(true);
 
         await http(apiRoutes.PUT.updatePeopleTasks(task.id), httpMethods.PUT, {
-            peopleTasks
+            peopleTasks,
         });
 
         setPeopleTasks(peopleTasks);
+
+        setIsSaving(false);
+    };
+
+    const saveTaskOrder = async (order: number) => {
+        setIsSaving(true);
+
+        await http(apiRoutes.PUT.updateTaskOrder(task.id), httpMethods.PUT, {
+            order,
+        });
+
+        setOrder(order);
 
         setIsSaving(false);
     };
@@ -112,7 +129,7 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
 
     return (
         <Draggable index={index} draggableId={task.id} isDragDisabled={false}>
-            {provided => (
+            {(provided) => (
                 <li
                     ref={provided.innerRef}
                     {...provided.dragHandleProps}
@@ -154,6 +171,20 @@ const ConfiguratorTask = ({ task, index, fetchTaskList }: Props) => {
                     </div>
 
                     <Collapse in={isExpanded}>
+                        <Section name="Kolejność">
+                            <CustomSelect
+                                onChange={async (order) =>
+                                    await saveTaskOrder(+order)
+                                }
+                                options={dogs.map((_, index) => ({
+                                    id: `${index + 1}`,
+                                    name: `${index + 1}`,
+                                }))}
+                                selectLabel="Kolejność"
+                                selectedValue={`${order}`}
+                            />
+                        </Section>
+
                         <Section name="Wybierz psy">
                             <Dogs
                                 selectedDogs={selectedDogs}
