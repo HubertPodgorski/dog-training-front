@@ -3,7 +3,6 @@ import styles from './Task.module.scss';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import Collapse from '@material-ui/core/Collapse';
-import DogTasks from '../DogTasks/DogTasks';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
 import { ExtendedTask as ExtendedTaskType } from '../../../types';
 import Dog from '../Dog/Dog';
@@ -26,12 +25,8 @@ const Task = ({ task }: Props) => {
         setIsExpanded(!isExpanded);
     };
 
-    const showExpandButton =
-        task.description ||
-        task.tasks.length > 0 ||
-        task.peopleTasks.length > 0;
+    const showExpandButton = task.description || task.peopleTasks.length > 0;
 
-    console.log('task.order % 2 => ', task.order % 2);
     return (
         <li
             className={classnames(styles.row, {
@@ -54,10 +49,10 @@ const Task = ({ task }: Props) => {
                     ))}
                 </div>
 
-                {task.description && (
+                {!!task.tasks.length && (
                     <div className={styles.description}>
-                        {task.tasks.map(({ name }) => (
-                            <div>{name}</div>
+                        {task.tasks.map(({ id, name }) => (
+                            <div key={id}>{name}</div>
                         ))}
                     </div>
                 )}
@@ -72,9 +67,9 @@ const Task = ({ task }: Props) => {
             </div>
 
             <Collapse in={isExpanded}>
-                {task.tasks.length > 0 && (
-                    <Section name="Zadania psów" spacingTop>
-                        <DogTasks dogTasks={task.tasks} />
+                {!!task.description.length && (
+                    <Section name="Opis" spacingTop>
+                        {task.description}
                     </Section>
                 )}
 
