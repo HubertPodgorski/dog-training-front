@@ -2,37 +2,47 @@ import React, { useContext } from 'react';
 import styles from './ConfiguratorTaskList.module.scss';
 import { Droppable } from 'react-beautiful-dnd';
 import ConfiguratorTask from '../ConfiguratorTask/ConfiguratorTask';
-import TrainingsContext, { TrainingsConsumer } from '../../TrainingsContext';
+import TrainingsContext from '../../TrainingsContext';
 import { ExtendedTask } from '../../types';
+import classnames from 'classnames';
 
-const ConfiguratorTaskList = () => {
+interface Props {
+    order: number;
+}
+
+const ConfiguratorTaskList = ({ order }: Props) => {
     const { taskList } = useContext(TrainingsContext);
 
     return (
-        <TrainingsConsumer>
-            {({ fetchTaskList }) => (
-                <Droppable droppableId="extended-task-list">
-                    {(provided) => (
-                        <ul
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                            className={styles.list}
-                        >
-                            {taskList.map(
-                                (task: ExtendedTask, index: number) => (
-                                    <ConfiguratorTask
-                                        key={task.id}
-                                        task={task}
-                                        index={index}
-                                    />
-                                )
-                            )}
-                            {provided.placeholder}
-                        </ul>
-                    )}
-                </Droppable>
-            )}
-        </TrainingsConsumer>
+        <>
+            <Droppable droppableId={`${order}`}>
+                {(provided, droppableSnapshot) => (
+                    <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className={classnames(styles.list, {
+                            [styles.onDragOver]:
+                                droppableSnapshot.isDraggingOver,
+                        })}
+                    >
+                        <div>#{order}</div>
+
+                        {taskList
+                            .filter(
+                                ({ order: innerOrder }) => order === innerOrder
+                            )
+                            .map((task: ExtendedTask, index: number) => (
+                                <ConfiguratorTask
+                                    key={task.id}
+                                    task={task}
+                                    index={index}
+                                />
+                            ))}
+                        {provided.placeholder}
+                    </div>
+                )}
+            </Droppable>
+        </>
     );
 };
 

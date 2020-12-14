@@ -4,16 +4,16 @@ import { httpMethods, http } from '../helpers/http';
 import { apiRoutes } from '../helpers/apiRoutes';
 import ConfiguratorTaskList from './ConfiguratorTaskList/ConfiguratorTaskList';
 import { ExtendedTask } from '../types';
-import TrainingsContext, {TrainingsConsumer} from '../TrainingsContext';
-import styles from './Configurator.module.scss'
-import LockButton from "../components/buttons/LockButton/LockButton";
-import AddNewTaskButton from "../components/buttons/AddNewTaskButton/AddNewTaskButton";
-import {getListOfIdsInUpdatedOrder, getUpdatedOrderList} from "./helpers";
+import TrainingsContext, { TrainingsConsumer } from '../TrainingsContext';
+import styles from './Configurator.module.scss';
+import LockButton from '../components/buttons/LockButton/LockButton';
+import AddNewTaskButton from '../components/buttons/AddNewTaskButton/AddNewTaskButton';
+import { getOrderList } from './helpers';
 
 const Configurator = () => {
-    const { taskList } = useContext(TrainingsContext);
+    const { taskList, setTaskList } = useContext(TrainingsContext);
 
-    const onDragEnd = async (result: DropResult, setTaskList: (taskList: ExtendedTask[]) => void): Promise<void> => {
+    const onDragEnd = async (result: DropResult): Promise<void> => {
         const { source, destination, draggableId } = result;
 
         if (!destination) {
@@ -27,36 +27,59 @@ const Configurator = () => {
             return;
         }
 
-        const updatedTrainingList: any = getUpdatedOrderList(
-            taskList,
-            draggableId,
-            source.index,
-            destination.index
-        );
+        const taskToUpdate = taskList.find(({ id }) => id === draggableId);
 
-        setTaskList(updatedTrainingList);
+        if (!taskToUpdate) {
+            return;
+        }
+
+        const newOrder = +destination.droppableId;
+
+        console.log('source => ', source);
+        console.log('destination => ', destination);
+        console.log('taskToUpdate => ', taskToUpdate);
+
+        const updatedTaskList: ExtendedTask[] = [
+            ...taskList.filter(({ id }) => id !== taskToUpdate.id),
+            { ...taskToUpdate, order: newOrder },
+        ];
+
+        console.log('updatedTaskList => ', updatedTaskList);
+
+        setTaskList(updatedTaskList);
 
         await http(
-            apiRoutes.PUT.changeOrder,
+            apiRoutes.PUT.updateTaskOrder(taskToUpdate.id),
             httpMethods.PUT,
-            getListOfIdsInUpdatedOrder(updatedTrainingList)
+            {
+                order: newOrder,
+            }
         );
     };
 
     return (
         <TrainingsConsumer>
-            {({setTaskList}) => <div className={styles.wrapper}>
-                <div className={styles.buttons}>
-                    <AddNewTaskButton/>
+            {({ setTaskList }) => (
+                <div className={styles.wrapper}>
+                    <div className={styles.buttons}>
+                        <AddNewTaskButton />
 
-                    <LockButton  variant='configurator'/>
+                        <LockButton variant="configurator" />
+                    </div>
+
+                    <DragDropContext
+                        onDragEnd={async (values) => {
+                            console.log('values => ', values);
+                            // TODO: update orders
+                            await onDragEnd(values);
+                        }}
+                    >
+                        {getOrderList(taskList).map((order) => (
+                            <ConfiguratorTaskList order={order} key={order} />
+                        ))}
+                    </DragDropContext>
                 </div>
-
-
-                <DragDropContext onDragEnd={(values) => onDragEnd(values, setTaskList)}>
-                    <ConfiguratorTaskList />
-                </DragDropContext>
-            </div>}
+            )}
         </TrainingsConsumer>
     );
 };
