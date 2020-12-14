@@ -4,6 +4,7 @@ import { Droppable } from 'react-beautiful-dnd';
 import ConfiguratorTask from '../ConfiguratorTask/ConfiguratorTask';
 import TrainingsContext, { TrainingsConsumer } from '../../TrainingsContext';
 import { ExtendedTask } from '../../types';
+import classnames from 'classnames';
 
 interface Props {
     order: number;
@@ -15,11 +16,14 @@ const ConfiguratorTaskList = ({ order }: Props) => {
     return (
         <>
             <Droppable droppableId={`${order}`}>
-                {(provided) => (
+                {(provided, droppableSnapshot) => (
                     <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        className={styles.list}
+                        className={classnames(styles.list, {
+                            [styles.onDragOver]:
+                                droppableSnapshot.isDraggingOver,
+                        })}
                     >
                         <div>#{order}</div>
 
