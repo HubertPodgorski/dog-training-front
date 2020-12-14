@@ -156,7 +156,7 @@ const ConfiguratorTask = ({ task, index }: Props) => {
     return (
         <Draggable index={index} draggableId={task.id} isDragDisabled={false}>
             {(provided) => (
-                <li
+                <div
                     ref={provided.innerRef}
                     {...provided.dragHandleProps}
                     {...provided.draggableProps}
@@ -261,7 +261,7 @@ const ConfiguratorTask = ({ task, index }: Props) => {
                             />
                         </Section>
                     </Collapse>
-                </li>
+                </div>
             )}
         </Draggable>
     );

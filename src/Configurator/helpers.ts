@@ -1,4 +1,4 @@
-import { ExtendedTask, PersonTask } from '../types';
+import { Dog, ExtendedTask, PersonTask } from '../types';
 import _cloneDeep from 'lodash/cloneDeep';
 import { DogTraining } from '../types';
 
@@ -17,6 +17,9 @@ export const canAddNewTaskPair = (peopleTaskPairs: PersonTask[]): boolean =>
 
         return Boolean(uuid && personId && taskId && personName && taskName);
     });
+
+export const getOrderList = (taskList: ExtendedTask[]): number[] =>
+    taskList.map((_, index) => index + 1);
 
 export const getUpdatedOrderList = (
     currentList: ExtendedTask[],
