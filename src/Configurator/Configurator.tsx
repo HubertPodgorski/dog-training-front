@@ -35,16 +35,10 @@ const Configurator = () => {
 
         const newOrder = +destination.droppableId;
 
-        console.log('source => ', source);
-        console.log('destination => ', destination);
-        console.log('taskToUpdate => ', taskToUpdate);
-
         const updatedTaskList: ExtendedTask[] = [
             ...taskList.filter(({ id }) => id !== taskToUpdate.id),
             { ...taskToUpdate, order: newOrder },
         ];
-
-        console.log('updatedTaskList => ', updatedTaskList);
 
         setTaskList(updatedTaskList);
 
@@ -58,29 +52,23 @@ const Configurator = () => {
     };
 
     return (
-        <TrainingsConsumer>
-            {({ setTaskList }) => (
-                <div className={styles.wrapper}>
-                    <div className={styles.buttons}>
-                        <AddNewTaskButton />
+        <div className={styles.wrapper}>
+            <div className={styles.buttons}>
+                <AddNewTaskButton />
 
-                        <LockButton variant="configurator" />
-                    </div>
+                <LockButton variant="configurator" />
+            </div>
 
-                    <DragDropContext
-                        onDragEnd={async (values) => {
-                            console.log('values => ', values);
-                            // TODO: update orders
-                            await onDragEnd(values);
-                        }}
-                    >
-                        {getOrderList(taskList).map((order) => (
-                            <ConfiguratorTaskList order={order} key={order} />
-                        ))}
-                    </DragDropContext>
-                </div>
-            )}
-        </TrainingsConsumer>
+            <DragDropContext
+                onDragEnd={async (values) => {
+                    await onDragEnd(values);
+                }}
+            >
+                {getOrderList(taskList).map((order) => (
+                    <ConfiguratorTaskList order={order} key={order} />
+                ))}
+            </DragDropContext>
+        </div>
     );
 };
 
