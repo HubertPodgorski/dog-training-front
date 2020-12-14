@@ -4,7 +4,7 @@ import { httpMethods, http } from '../helpers/http';
 import { apiRoutes } from '../helpers/apiRoutes';
 import ConfiguratorTaskList from './ConfiguratorTaskList/ConfiguratorTaskList';
 import { ExtendedTask } from '../types';
-import TrainingsContext, { TrainingsConsumer } from '../TrainingsContext';
+import TrainingsContext from '../TrainingsContext';
 import styles from './Configurator.module.scss';
 import LockButton from '../components/buttons/LockButton/LockButton';
 import AddNewTaskButton from '../components/buttons/AddNewTaskButton/AddNewTaskButton';
