@@ -1,4 +1,4 @@
-import { Dog, ExtendedTask, PersonTask } from '../types';
+import { ExtendedTask, PersonTask } from '../types';
 import _cloneDeep from 'lodash/cloneDeep';
 import { DogTraining } from '../types';
 
