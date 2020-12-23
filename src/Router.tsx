@@ -3,19 +3,13 @@ import MainList from './MainList/MainList';
 import Configurator from './Configurator/Configurator';
 import React from 'react';
 import Calendar from './Calendar/Calendar';
-import Dogs from './Dogs/Dogs';
-import DogTasks from './DogTasks/DogTasks';
-import PeopleTasks from './PeopleTasks/PeopleTasks';
-import People from './People/People';
+import ResourcePanel from './ResourcePanel/ResourcePanel';
 
 export const routePaths = {
     list: '/list',
     configurator: '/configurator',
     calendar: '/calendar',
-    dogs: '/dogs',
-    dogTasks: '/dogTasks',
-    peopleTasks: '/peopleTasks',
-    people: '/people',
+    resourcePanel: '/resourcePanel',
 };
 
 const Router = () => (
@@ -30,17 +24,8 @@ const Router = () => (
             <Route path={routePaths.calendar}>
                 <Calendar />
             </Route>
-            <Route path={routePaths.dogs}>
-                <Dogs />
-            </Route>
-            <Route path={routePaths.dogTasks}>
-                <DogTasks />
-            </Route>
-            <Route path={routePaths.peopleTasks}>
-                <PeopleTasks />
-            </Route>
-            <Route path={routePaths.people}>
-                <People />
+            <Route path={routePaths.resourcePanel}>
+                <ResourcePanel />
             </Route>
             <Route path="/">
                 <MainList />

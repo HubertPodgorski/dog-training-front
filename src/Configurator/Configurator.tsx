@@ -6,9 +6,8 @@ import ConfiguratorTaskList from './ConfiguratorTaskList/ConfiguratorTaskList';
 import { ExtendedTask } from '../types';
 import TrainingsContext from '../TrainingsContext';
 import styles from './Configurator.module.scss';
-import LockButton from '../components/buttons/LockButton/LockButton';
-import AddNewTaskButton from '../components/buttons/AddNewTaskButton/AddNewTaskButton';
 import { getOrderList } from './helpers';
+import ButtonBar from '../components/ButtonBar/ButtonBar';
 
 const Configurator = () => {
     const { taskList, setTaskList } = useContext(TrainingsContext);
@@ -52,23 +51,20 @@ const Configurator = () => {
     };
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.buttons}>
-                <AddNewTaskButton />
-
-                <LockButton variant="configurator" />
+        <>
+            <ButtonBar />
+            <div className={styles.wrapper}>
+                <DragDropContext
+                    onDragEnd={async (values) => {
+                        await onDragEnd(values);
+                    }}
+                >
+                    {getOrderList(taskList).map((order) => (
+                        <ConfiguratorTaskList order={order} key={order} />
+                    ))}
+                </DragDropContext>
             </div>
-
-            <DragDropContext
-                onDragEnd={async (values) => {
-                    await onDragEnd(values);
-                }}
-            >
-                {getOrderList(taskList).map((order) => (
-                    <ConfiguratorTaskList order={order} key={order} />
-                ))}
-            </DragDropContext>
-        </div>
+        </>
     );
 };
 
