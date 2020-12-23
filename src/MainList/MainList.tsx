@@ -38,7 +38,11 @@ const MainList = () => {
                             return 0;
                         })
                         .map((task: ExtendedTaskType) => (
-                            <Task key={task.id} task={task} />
+                            <Task
+                                key={task.id}
+                                task={task}
+                                hasTwoColumns={hasTwoColumns}
+                            />
                         ))}
                 </ul>
                 {hasTwoColumns && (
@@ -55,7 +59,11 @@ const MainList = () => {
                                 return 0;
                             })
                             .map((task: ExtendedTaskType) => (
-                                <Task key={task.id} task={task} />
+                                <Task
+                                    key={task.id}
+                                    task={task}
+                                    hasTwoColumns={hasTwoColumns}
+                                />
                             ))}
                     </ul>
                 )}

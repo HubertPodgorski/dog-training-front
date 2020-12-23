@@ -11,6 +11,7 @@ import classnames from 'classnames';
 
 interface Props {
     task: ExtendedTaskType;
+    hasTwoColumns: boolean;
 }
 
 const getIconBasedOnExpandState = (
@@ -18,7 +19,7 @@ const getIconBasedOnExpandState = (
 ): 'expand_less' | 'expand_more' =>
     isExpanded ? 'expand_less' : 'expand_more';
 
-const Task = ({ task }: Props) => {
+const Task = ({ task, hasTwoColumns }: Props) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
     const toggleIsExpanded = () => {
@@ -32,6 +33,7 @@ const Task = ({ task }: Props) => {
             className={classnames(styles.row, {
                 [styles.colorEven]: task.order % 2 === 0,
                 [styles.colorOdd]: task.order % 2 === 1,
+                [styles.twoColumns]: hasTwoColumns,
             })}
         >
             <div className={styles.label}>
@@ -45,7 +47,11 @@ const Task = ({ task }: Props) => {
                     )}
 
                     {task.dogs.map((dog) => (
-                        <Dog name={dog.name} key={dog.id} />
+                        <Dog
+                            name={dog.name}
+                            key={dog.id}
+                            hasTwoColumns={hasTwoColumns}
+                        />
                     ))}
                 </div>
 

@@ -1,6 +1,6 @@
 .wrapper {
   width: 100%;
-  padding-top: 60px;
+  padding-top: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,9 +24,14 @@
   grid-column-gap: 20px;
   width: calc(100% - 40px);
   padding: 0 20px;
+  
+  @media screen and (max-width: 800px) {
+    padding: 0;
+    grid-column-gap: 10px;
+    width: calc(100% - 20px);
+  }
 }
 
 .singleColumn {
   grid-template-columns: 1fr;
-  width: calc(100% - 20px);
 }
