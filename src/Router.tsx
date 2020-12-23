@@ -3,6 +3,10 @@ import MainList from './MainList/MainList';
 import Configurator from './Configurator/Configurator';
 import React from 'react';
 import Calendar from './Calendar/Calendar';
+import Dogs from './Dogs/Dogs';
+import DogTasks from './DogTasks/DogTasks';
+import PeopleTasks from './PeopleTasks/PeopleTasks';
+import People from './People/People';
 
 export const routePaths = {
     list: '/list',
