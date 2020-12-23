@@ -4,9 +4,9 @@ import '@atlaskit/css-reset';
 import { TrainingsProvider } from './TrainingsContext';
 import { http, httpMethods } from './helpers/http';
 import { apiRoutes } from './helpers/apiRoutes';
-import {Dog, DogTask, ExtendedTask, Person} from './types';
+import { Dog, DogTask, ExtendedTask, Person } from './types';
 import useAsyncEffect from './hooks/useAsyncEffect';
-import Router from "./Router";
+import Router from './Router';
 
 const App = () => {
     const [isDataFetching, setIsDataFetching] = useState(false);
@@ -55,7 +55,7 @@ const App = () => {
             description: '',
             order: taskList.length + 1,
             tasks: [],
-            peopleTasks: []
+            peopleTasks: [],
         });
 
         await fetchTaskList();
@@ -71,15 +71,18 @@ const App = () => {
                 peopleTasks,
                 dogTasks,
                 fetchTaskList: () => fetchTaskList(),
-                setTaskList: (taskList: ExtendedTask[]) => setTaskList(taskList),
+                setTaskList: (taskList: ExtendedTask[]) =>
+                    setTaskList(taskList),
                 setDogs: (dogs: Dog[]) => setDogs(dogs),
                 setPeople: (people: Person[]) => setPeople(people),
-                setPeopleTasks: (peopleTasks: { name: string; id: string }[]) => setPeopleTasks(peopleTasks),
-                addNewTask: () => addTask()
+                setPeopleTasks: (peopleTasks: { name: string; id: string }[]) =>
+                    setPeopleTasks(peopleTasks),
+                addNewTask: () => addTask(),
+                fetchResourceData: () => fetchResourceData(),
             }}
         >
             <section className={styles.wrapper}>
-                <Router/>
+                <Router />
             </section>
         </TrainingsProvider>
     );

@@ -2,18 +2,19 @@ import React from 'react';
 import { Dog, ExtendedTask, Person, DogTask } from './types';
 
 interface TrainingsContextType {
-    dataFetching: boolean
+    dataFetching: boolean;
     taskList: ExtendedTask[];
     dogs: Dog[];
     people: Person[];
     peopleTasks: { name: string; id: string }[];
     dogTasks: DogTask[];
-    fetchTaskList: () => Promise<void>,
-    setTaskList: (taskList: ExtendedTask[]) => void,
-    setDogs: (dogs: Dog[]) => void,
-    setPeople: (people: Person[]) => void,
-    setPeopleTasks: (peopleTasks: { name: string; id: string }[]) => void,
-    addNewTask: () => Promise<void>
+    fetchTaskList: () => Promise<void>;
+    setTaskList: (taskList: ExtendedTask[]) => void;
+    setDogs: (dogs: Dog[]) => void;
+    setPeople: (people: Person[]) => void;
+    setPeopleTasks: (peopleTasks: { name: string; id: string }[]) => void;
+    addNewTask: () => Promise<void>;
+    fetchResourceData: () => Promise<void>;
 }
 
 const TrainingsContext = React.createContext<TrainingsContextType>({
@@ -28,7 +29,8 @@ const TrainingsContext = React.createContext<TrainingsContextType>({
     setDogs: (dogs: Dog[]) => {},
     setPeople: (people: Person[]) => {},
     setPeopleTasks: (peopleTasks: { name: string; id: string }[]) => {},
-    addNewTask: ()  => new Promise(() => {})
+    addNewTask: () => new Promise(() => {}),
+    fetchResourceData: () => new Promise(() => {}),
 });
 
 export const TrainingsProvider = TrainingsContext.Provider;

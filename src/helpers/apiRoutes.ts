@@ -22,8 +22,19 @@ export const apiRoutes = {
     },
     POST: {
         addTask: appendApiPrefix('/tasks'),
+        addPerson: appendApiPrefix('/resources/people'),
+        addPersonTask: appendApiPrefix('/resources/people-tasks'),
+        addDog: appendApiPrefix('/resources/dogs'),
+        addDogTask: appendApiPrefix('/resources/dog-tasks'),
     },
     DELETE: {
         deleteTask: (id: string) => appendApiPrefix(`/tasks/${id}`),
+        deletePerson: (id: string) =>
+            appendApiPrefix(`/resources/people/${id}`),
+        deletePersonTask: (id: string) =>
+            appendApiPrefix(`/resources/people-tasks/${id}`),
+        deleteDog: (id: string) => appendApiPrefix(`/resources/dogs/${id}`),
+        deleteDogTask: (id: string) =>
+            appendApiPrefix(`/resources/dog-tasks/${id}`),
     },
 };
