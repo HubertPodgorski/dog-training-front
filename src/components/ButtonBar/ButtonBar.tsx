@@ -3,6 +3,7 @@ import RefreshButton from '../buttons/RefreshButton/RefreshButton';
 import ResourcePanelButton from '../buttons/ResourcePanelButton/ResourcePanelButton';
 import LockButton from '../buttons/LockButton/LockButton';
 import styles from './ButtonBar.module.scss';
+import AddNewTaskButton from '../buttons/AddNewTaskButton/AddNewTaskButton';
 
 interface Props {
     variant?: 'listing' | 'configurator';
@@ -19,6 +20,7 @@ const ButtonBar = ({ variant = 'configurator' }: Props) => {
                 <>
                     {/*<CalendarButton />*/}
                     <ResourcePanelButton />
+                    <AddNewTaskButton />
                     <LockButton variant="configurator" />
                 </>
             )}
