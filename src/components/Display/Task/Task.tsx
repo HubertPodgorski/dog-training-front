@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import styles from './Task.module.scss';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
@@ -12,6 +12,8 @@ import classnames from 'classnames';
 interface Props {
     task: ExtendedTaskType;
     hasTwoColumns: boolean;
+    className?: string;
+    style?: CSSProperties;
 }
 
 const getIconBasedOnExpandState = (
@@ -19,7 +21,7 @@ const getIconBasedOnExpandState = (
 ): 'expand_less' | 'expand_more' =>
     isExpanded ? 'expand_less' : 'expand_more';
 
-const Task = ({ task, hasTwoColumns }: Props) => {
+const Task = ({ task, hasTwoColumns, className, style }: Props) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
     const toggleIsExpanded = () => {
@@ -30,11 +32,16 @@ const Task = ({ task, hasTwoColumns }: Props) => {
 
     return (
         <li
-            className={classnames(styles.row, {
-                [styles.colorEven]: task.order % 2 === 0,
-                [styles.colorOdd]: task.order % 2 === 1,
-                [styles.twoColumns]: hasTwoColumns,
-            })}
+            className={classnames(
+                styles.row,
+                {
+                    [styles.colorEven]: task.order % 2 === 0,
+                    [styles.colorOdd]: task.order % 2 === 1,
+                    [styles.twoColumns]: hasTwoColumns,
+                },
+                className
+            )}
+            style={style}
         >
             <div className={styles.label}>
                 <div className={styles.dogs}>
