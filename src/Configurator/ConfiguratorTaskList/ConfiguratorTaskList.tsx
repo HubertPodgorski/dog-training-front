@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './ConfiguratorTaskList.module.scss';
 import { Droppable } from 'react-beautiful-dnd';
 import ConfiguratorTask from '../ConfiguratorTask/ConfiguratorTask';
 import TrainingsContext from '../../TrainingsContext';
 import { ExtendedTask } from '../../types';
 import classnames from 'classnames';
+import classNames from 'classnames';
 
 interface Props {
     order: number;
@@ -12,6 +13,13 @@ interface Props {
 
 const ConfiguratorTaskList = ({ order }: Props) => {
     const { taskList } = useContext(TrainingsContext);
+    const [list, setList] = useState<ExtendedTask[]>([]);
+
+    useEffect(() => {
+        setList(
+            taskList.filter(({ order: innerOrder }) => order === innerOrder)
+        );
+    }, [taskList]);
 
     return (
         <>
@@ -25,19 +33,21 @@ const ConfiguratorTaskList = ({ order }: Props) => {
                                 droppableSnapshot.isDraggingOver,
                         })}
                     >
-                        <div>#{order}</div>
+                        <div
+                            className={classNames({
+                                [styles.emptyOrderBlock]: list.length === 0,
+                            })}
+                        >
+                            #{order}
+                        </div>
 
-                        {taskList
-                            .filter(
-                                ({ order: innerOrder }) => order === innerOrder
-                            )
-                            .map((task: ExtendedTask, index: number) => (
-                                <ConfiguratorTask
-                                    key={task.id}
-                                    task={task}
-                                    index={index}
-                                />
-                            ))}
+                        {list.map((task: ExtendedTask, index: number) => (
+                            <ConfiguratorTask
+                                key={task.id}
+                                task={task}
+                                index={index}
+                            />
+                        ))}
                         {provided.placeholder}
                     </div>
                 )}

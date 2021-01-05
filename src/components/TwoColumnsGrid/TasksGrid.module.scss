@@ -1,13 +1,11 @@
 .mainGrid {
   display: grid;
   grid-template-columns: 1fr;
-  width: calc(100% - 40px);
   padding: 0 20px;
   grid-row-gap: 20px;
 
   @media screen and (max-width: 800px) {
     padding: 0;
-    width: calc(100% - 20px);
     grid-row-gap: 10px;
   }
 }
@@ -16,12 +14,10 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 10px;
-  padding: 0 20px;
   width: 100%;
   grid-row-gap: 10px;
 
   @media screen and (max-width: 800px) {
-    padding: 0;
     grid-column-gap: 4px;
     grid-row-gap: 4px;
   }

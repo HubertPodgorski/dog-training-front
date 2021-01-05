@@ -15,3 +15,17 @@
         margin-left: 0;
     }
 }
+
+.twoColumnsWrapper {
+    @media screen and(max-width: 800px) {
+        font-size: 8px;
+    }
+}
+
+.twoColumnsListRow {
+    @media screen and(max-width: 800px) {
+        font-size: 8px;
+        margin-left: 0;
+        margin-top: 2px;
+    }
+}

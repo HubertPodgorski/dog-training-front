@@ -88,7 +88,10 @@ const Task = ({ task, hasTwoColumns, className, style }: Props) => {
 
                 {task.peopleTasks.length > 0 && (
                     <Section name="Zadania ludzi" spacingTop>
-                        <PeopleTasks peopleTasks={task.peopleTasks} />
+                        <PeopleTasks
+                            peopleTasks={task.peopleTasks}
+                            hasTwoColumns={hasTwoColumns}
+                        />
                     </Section>
                 )}
             </Collapse>
