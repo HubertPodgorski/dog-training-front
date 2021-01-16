@@ -5,7 +5,6 @@ import ConfiguratorTask from '../ConfiguratorTask/ConfiguratorTask';
 import TrainingsContext from '../../TrainingsContext';
 import { ExtendedTask } from '../../types';
 import classnames from 'classnames';
-import classNames from 'classnames';
 
 interface Props {
     order: number;
@@ -19,7 +18,7 @@ const ConfiguratorTaskList = ({ order }: Props) => {
         setList(
             taskList.filter(({ order: innerOrder }) => order === innerOrder)
         );
-    }, [taskList]);
+    }, [taskList, order]);
 
     return (
         <>
@@ -34,7 +33,7 @@ const ConfiguratorTaskList = ({ order }: Props) => {
                         })}
                     >
                         <div
-                            className={classNames({
+                            className={classnames({
                                 [styles.emptyOrderBlock]: list.length === 0,
                             })}
                         >
