@@ -11,7 +11,7 @@ import Collapse from '@material-ui/core/Collapse';
 import TextField from '@material-ui/core/TextField';
 import DogTasks from '../DogTasks/DogTasks';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
-import { Dog, DogTask, ExtendedTask, PersonTask } from '../../types';
+import { Column, Dog, DogTask, ExtendedTask, PersonTask } from '../../types';
 import Dogs from '../Dogs/Dogs';
 import Section from '../../components/Section/Section';
 import CustomSelect from '../PeopleTasks/CustomSelect/CustomSelect';
@@ -31,7 +31,7 @@ const getIconBasedOnExpandState = (
 const ConfiguratorTask = ({ task, index }: Props) => {
     const { dogs, taskList, fetchTaskList } = useContext(TrainingsContext);
 
-    const [column, setColumn] = useState<'left' | 'right'>(task.column);
+    const [column, setColumn] = useState<Column>(task.column);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [taskDescription, setTaskDescription] = useState<string>(
         task.description
@@ -133,7 +133,7 @@ const ConfiguratorTask = ({ task, index }: Props) => {
         setIsSaving(false);
     };
 
-    const saveTaskColumn = async (column: 'left' | 'right') => {
+    const saveTaskColumn = async (column: Column) => {
         setIsSaving(true);
 
         await http(apiRoutes.PUT.updateTaskColumn(task.id), httpMethods.PUT, {
@@ -154,7 +154,11 @@ const ConfiguratorTask = ({ task, index }: Props) => {
     };
 
     return (
-        <Draggable index={index} draggableId={task.id} isDragDisabled={false}>
+        <Draggable
+            index={index}
+            draggableId={`task-${task.id}`}
+            isDragDisabled={false}
+        >
             {(provided) => (
                 <div
                     ref={provided.innerRef}
@@ -217,9 +221,7 @@ const ConfiguratorTask = ({ task, index }: Props) => {
                         <Section name="Kolumna">
                             <CustomSelect
                                 onChange={async (column) =>
-                                    await saveTaskColumn(
-                                        column as 'left' | 'right'
-                                    )
+                                    await saveTaskColumn(column as Column)
                                 }
                                 options={[
                                     { id: 'left', name: 'Lewa' },
