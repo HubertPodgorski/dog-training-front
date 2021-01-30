@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styles from './ConfiguratorTaskList.module.scss';
-import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { Droppable } from 'react-beautiful-dnd';
 import ConfiguratorTask from '../ConfiguratorTask/ConfiguratorTask';
 import TrainingsContext from '../../TrainingsContext';
 import { Column, ExtendedTask } from '../../types';
@@ -12,7 +12,7 @@ interface Props {
     index: number;
 }
 
-const ConfiguratorTaskList = ({ order, column, index }: Props) => {
+const ConfiguratorTaskList = ({ order, column }: Props) => {
     const { taskList } = useContext(TrainingsContext);
     const [list, setList] = useState<ExtendedTask[]>([]);
 
