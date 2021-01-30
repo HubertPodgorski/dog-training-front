@@ -5,8 +5,10 @@ export interface ExtendedTask {
     id: string;
     order: number;
     tasks: DogTask[];
-    column: 'left' | 'right';
+    column: Column;
 }
+
+export type Column = 'left' | 'right';
 
 export interface Dog {
     name: string;

@@ -50,16 +50,18 @@ const TasksGrid = () => {
                     }}
                 >
                     {tasks.map((task) => (
-                        <Task
-                            key={task.id}
-                            task={task}
-                            hasTwoColumns={hasTwoColumns}
-                            className={
-                                task.column === 'left'
-                                    ? styles.leftColumnTask
-                                    : styles.rightColumnTask
-                            }
-                        />
+                        <>
+                            <Task
+                                key={task.id}
+                                task={task}
+                                hasTwoColumns={hasTwoColumns}
+                                className={
+                                    task.column === 'left'
+                                        ? styles.leftColumnTask
+                                        : styles.rightColumnTask
+                                }
+                            />
+                        </>
                     ))}
                 </div>
             ))}

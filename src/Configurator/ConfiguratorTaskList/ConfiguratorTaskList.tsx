@@ -3,26 +3,31 @@ import styles from './ConfiguratorTaskList.module.scss';
 import { Droppable } from 'react-beautiful-dnd';
 import ConfiguratorTask from '../ConfiguratorTask/ConfiguratorTask';
 import TrainingsContext from '../../TrainingsContext';
-import { ExtendedTask } from '../../types';
+import { Column, ExtendedTask } from '../../types';
 import classnames from 'classnames';
 
 interface Props {
     order: number;
+    column: Column;
+    index: number;
 }
 
-const ConfiguratorTaskList = ({ order }: Props) => {
+const ConfiguratorTaskList = ({ order, column }: Props) => {
     const { taskList } = useContext(TrainingsContext);
     const [list, setList] = useState<ExtendedTask[]>([]);
 
     useEffect(() => {
         setList(
-            taskList.filter(({ order: innerOrder }) => order === innerOrder)
+            taskList.filter(
+                ({ order: innerOrder, column: taskColumn }) =>
+                    order === innerOrder && taskColumn === column
+            )
         );
-    }, [taskList, order]);
+    }, [taskList, order, column]);
 
     return (
         <>
-            <Droppable droppableId={`${order}`}>
+            <Droppable droppableId={`order-${order}-${column}`}>
                 {(provided, droppableSnapshot) => (
                     <div
                         ref={provided.innerRef}

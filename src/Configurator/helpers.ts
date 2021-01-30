@@ -18,8 +18,15 @@ export const canAddNewTaskPair = (peopleTaskPairs: PersonTask[]): boolean =>
         return Boolean(uuid && personId && taskId && personName && taskName);
     });
 
-export const getOrderList = (taskList: ExtendedTask[]): number[] =>
-    taskList.map((_, index) => index + 1);
+export const getOrderList = (taskList: ExtendedTask[]): number[] => {
+    let orderList: number[] = [];
+
+    for (let i = 1; i <= taskList.length; i++) {
+        orderList = [...orderList, i];
+    }
+
+    return orderList;
+};
 
 export const getUpdatedOrderList = (
     currentList: ExtendedTask[],
