@@ -16,6 +16,7 @@ export interface Dog {
 }
 
 export interface PersonTask {
+    id: string
     uuid: string;
     taskName: string;
     taskId: string;
@@ -31,6 +32,7 @@ export interface SelectOption {
 export interface Person {
     name: string;
     id: string;
+    dogs: Dog[]
 }
 
 export interface DogTask {

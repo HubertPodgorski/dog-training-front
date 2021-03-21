@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, IconButton, Modal } from '@material-ui/core';
+import { Button, Card, IconButton, LinearProgress, Modal } from '@material-ui/core';
 import { apiRoutes } from '../helpers/apiRoutes';
 import styles from './ResourcePanel.module.scss';
 import List from '@material-ui/core/List';
@@ -21,6 +21,21 @@ import useAsyncEffect from '../hooks/useAsyncEffect';
 import useSelector from '../hooks/useSelector';
 import useFetchResourceData from '../hooks/useFetchResourceData';
 import axios from 'axios';
+import CustomMultiselect from '../Configurator/Dogs/CustomMultiselect/CustomMultiselect';
+import useFetchPeople from '../hooks/useFetchPeople';
+import { Dog, DogTask, Person, PersonTask } from '../types';
+
+const getName = (resource: Dog | DogTask | Person | PersonTask): string => {
+    if ('name' in resource) {
+        return resource.name
+    }
+
+    if ('taskName' in resource) {
+        return resource.taskName
+    }
+
+    return ''
+}
 
 const ResourcePanel = () => {
     const {
@@ -31,6 +46,7 @@ const ResourcePanel = () => {
     } = useSelector(s => s.tasksStore);
 
     const fetchResourceData = useFetchResourceData()
+    const fetchPeople = useFetchPeople()
 
     const [resourceType, setResourceType] = useState<
         'people' | 'dogs' | 'peopleTasks' | 'dogTasks'
@@ -38,6 +54,7 @@ const ResourcePanel = () => {
 
     const [addResourceModalOpem, setAddResourceModalOpem] = useState(false);
     const [newResourceValue, setNewResourceValue] = useState('');
+    const [savingDog, setSavingDog] = useState(false)
 
     const getLabel = () => {
         switch (resourceType) {
@@ -52,7 +69,7 @@ const ResourcePanel = () => {
         }
     };
 
-    const getResource = () => {
+    const getResource = (): (Dog | DogTask | Person | PersonTask)[] => {
         switch (resourceType) {
             case 'dogs':
                 return dogs;
@@ -113,6 +130,12 @@ const ResourcePanel = () => {
         await fetchResourceData()
     }, []);
 
+    const updateDogList = async (dogs: string[], personId: string) => {
+        await axios.put(apiRoutes.PUT.updatePerson(personId), {dogs})
+
+        await fetchPeople()
+    }
+
     return (
         <div>
             <Modal
@@ -145,7 +168,10 @@ const ResourcePanel = () => {
                 </Button>
 
                 <List component="nav">
-                    <ListItem button onClick={() => setResourceType('dogs')}>
+                    <ListItem
+                        button onClick={() => setResourceType('dogs')}
+                        selected={resourceType === 'dogs'}
+                    >
                         <ListItemIcon>
                             <Pets />
                         </ListItemIcon>
@@ -155,6 +181,7 @@ const ResourcePanel = () => {
                     <ListItem
                         button
                         onClick={() => setResourceType('dogTasks')}
+                        selected={resourceType === 'dogTasks'}
                     >
                         <ListItemIcon>
                             <ListIcon />
@@ -162,7 +189,10 @@ const ResourcePanel = () => {
                         <ListItemText primary="Zadania psów" />
                     </ListItem>
 
-                    <ListItem button onClick={() => setResourceType('people')}>
+                    <ListItem
+                        button onClick={() => setResourceType('people')}
+                        selected={resourceType === 'people'}
+                    >
                         <ListItemIcon>
                             <GroupAdd />
                         </ListItemIcon>
@@ -172,6 +202,7 @@ const ResourcePanel = () => {
                     <ListItem
                         button
                         onClick={() => setResourceType('peopleTasks')}
+                        selected={resourceType === 'peopleTasks'}
                     >
                         <ListItemIcon>
                             <DirectionsRun />
@@ -185,7 +216,7 @@ const ResourcePanel = () => {
                     <List>
                         {getResource().map((resource) => (
                             <ListItem component="li" key={resource.id}>
-                                <ListItemText primary={resource.name} />{' '}
+                                <ListItemText primary={getName(resource)} />{' '}
                                 <IconButton
                                     onClick={async () =>
                                         deleteResource(resource.id)
@@ -200,7 +231,9 @@ const ResourcePanel = () => {
 
                 {resourceType === 'people' && (
                     <List>
-                        {getResource().map((resource) => (
+                        {savingDog && <LinearProgress />}
+
+                        {(getResource() as Person[]).map((resource) => (
                             <ListItem component="li" key={resource.id}>
                                 <div>
                                     <ListItemText primary={resource.name} />{' '}
@@ -214,8 +247,16 @@ const ResourcePanel = () => {
                                 </div>
 
                                 <div>
-                                    {/*// FIXME:update - everything update*/}
-                                    {/*// FIXME: select to select dog. Button to add next dog. Button to remove dog*/}
+                                    <CustomMultiselect
+                                        onChange={async (dogIds: string[]) => {
+                                            setSavingDog(true)
+                                            await updateDogList(dogIds, resource.id)
+                                            setSavingDog(false)
+                                        }}
+                                        options={dogs}
+                                        selectLabel="Psy"
+                                        selectedValues={resource.dogs.map(({id}) => id)}
+                                    />
                                 </div>
                             </ListItem>
                         ))}
