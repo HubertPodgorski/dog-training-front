@@ -133,6 +133,7 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
         debouncedSaveDescription(value);
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSaveDescription = useCallback(
         debounce(async (description: string) => {
             await saveDescription(description);
