@@ -14,7 +14,7 @@ const ButtonBar = () => {
 
     const isInCalendar = history.location.pathname.match(routePaths.calendar)
     const isInConfigurator = history.location.pathname.match(routePaths.configurator)
-    const isInListing = history.location.pathname.match(routePaths.list)
+    const isInListing = history.location.pathname.match(routePaths.list) || history.location.pathname === '/'
     return (
         <div className={styles.wrapper}>
             <div className={styles.buttonsGrid}>
