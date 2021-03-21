@@ -26,7 +26,6 @@ interface Props {
 }
 
 const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
-    console.log('task => ', task);
     const { dogs, taskList } = useSelector(s => s.tasksStore);
 
     const fetchTaskList = useFetchTaskList()
@@ -204,7 +203,6 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
                 </Section>
 
                 <Section name="Zadania ludzi">
-                    {console.log('peopleTasks => ', peopleTasks)}
                     <PeopleTasks
                         savePeopleTasks={savePeopleTasks}
                         peopleTasks={peopleTasks}

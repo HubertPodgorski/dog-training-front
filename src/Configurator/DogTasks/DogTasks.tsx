@@ -11,7 +11,6 @@ interface Props {
 
 const DogTasks = ({ saveDogTasks, dogTasks }: Props) => {
     const { dogTasks: dogTaskList } = useSelector(s => s.tasksStore);
-    console.log('dogTaskList => ', dogTaskList);
 
     const [selectedDogTasks, setSelectedDogTasks] = useState<string[]>(
         dogTasks.map(dogTask => dogTask.id)

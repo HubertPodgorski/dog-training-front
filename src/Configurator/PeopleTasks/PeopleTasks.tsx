@@ -102,9 +102,6 @@ const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
         }
     };
 
-
-    console.log('peopleTaskPairs => ', peopleTaskPairs)
-
     return (
         <section className={styles.wrapper}>
             {peopleTaskPairs.map((personTask: PersonTask) => (
