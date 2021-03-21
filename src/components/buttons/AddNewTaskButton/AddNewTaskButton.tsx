@@ -2,21 +2,19 @@ import Fab from "@material-ui/core/Fab";
 import styles from './AddNewTaskButton.module.scss'
 import Icon from "@material-ui/core/Icon";
 import React from "react";
-import {TrainingsConsumer} from "../../../TrainingsContext";
+import useAddTask from '../../../hooks/useAddTask';
 
 const AddNewTaskButton = () => {
-    return <TrainingsConsumer>
-        {({addNewTask}) =>
-            <Fab
-                color="primary"
-                aria-label="add"
-                // TODO: add task
-                onClick={addNewTask}
-                className={styles.addNewIcon}
-            >
-                <Icon>add</Icon>
-            </Fab>}
-    </TrainingsConsumer>
+    const addNewTask = useAddTask()
+
+    return <Fab
+        color="primary"
+        aria-label="add"
+        onClick={addNewTask}
+        className={styles.addNewIcon}
+    >
+        <Icon>add</Icon>
+    </Fab>
 }
 
 export default AddNewTaskButton

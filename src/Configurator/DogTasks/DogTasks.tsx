@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './DogTasks.module.scss';
 import CustomMultiselect from './CustomMultiselect/CustomMultiselect';
-import TrainingsContext from '../../TrainingsContext';
 import { DogTask } from '../../types';
+import useSelector from '../../hooks/useSelector';
 
 interface Props {
     saveDogTasks: (dogTasks: DogTask[]) => void;
@@ -10,7 +10,8 @@ interface Props {
 }
 
 const DogTasks = ({ saveDogTasks, dogTasks }: Props) => {
-    const { dogTasks: dogTaskList } = useContext(TrainingsContext);
+    const { dogTasks: dogTaskList } = useSelector(s => s.tasksStore);
+    console.log('dogTaskList => ', dogTaskList);
 
     const [selectedDogTasks, setSelectedDogTasks] = useState<string[]>(
         dogTasks.map(dogTask => dogTask.id)

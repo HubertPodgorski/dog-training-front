@@ -1,8 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card, IconButton, Modal } from '@material-ui/core';
-import { http, httpMethods } from '../helpers/http';
 import { apiRoutes } from '../helpers/apiRoutes';
-import TrainingsContext from '../TrainingsContext';
 import styles from './ResourcePanel.module.scss';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -20,15 +18,19 @@ import ButtonBar from '../components/ButtonBar/ButtonBar';
 import TextField from '@material-ui/core/TextField';
 import classNames from 'classnames';
 import useAsyncEffect from '../hooks/useAsyncEffect';
+import useSelector from '../hooks/useSelector';
+import useFetchResourceData from '../hooks/useFetchResourceData';
+import axios from 'axios';
 
 const ResourcePanel = () => {
     const {
         dogs,
         people,
         peopleTasks,
-        dogTasks,
-        fetchResourceData,
-    } = useContext(TrainingsContext);
+        dogTasks
+    } = useSelector(s => s.tasksStore);
+
+    const fetchResourceData = useFetchResourceData()
 
     const [resourceType, setResourceType] = useState<
         'people' | 'dogs' | 'peopleTasks' | 'dogTasks'
@@ -77,11 +79,11 @@ const ResourcePanel = () => {
     };
 
     const addResource = async () => {
-        await http(getAddRoute(), httpMethods.POST, {
+        await axios.post(getAddRoute(),  {
             name: newResourceValue,
         });
 
-        await fetchResourceData();
+        await fetchResourceData()
         setNewResourceValue('');
         setAddResourceModalOpem(false);
     };
@@ -102,13 +104,13 @@ const ResourcePanel = () => {
     };
 
     const deleteResource = async (id: string) => {
-        await http(getDeleteRoute(id), httpMethods.DELETE);
+        await axios.delete(getDeleteRoute(id));
 
-        await fetchResourceData();
+        await fetchResourceData()
     };
 
     useAsyncEffect(async () => {
-        await fetchResourceData();
+        await fetchResourceData()
     }, []);
 
     return (
@@ -179,20 +181,46 @@ const ResourcePanel = () => {
                 </List>
                 <Divider />
 
-                <List>
-                    {getResource().map((resource) => (
-                        <ListItem component="li" key={resource.id}>
-                            <ListItemText primary={resource.name} />{' '}
-                            <IconButton
-                                onClick={async () =>
-                                    deleteResource(resource.id)
-                                }
-                            >
-                                <Delete />
-                            </IconButton>
-                        </ListItem>
-                    ))}
-                </List>
+                {resourceType !== 'people' && (
+                    <List>
+                        {getResource().map((resource) => (
+                            <ListItem component="li" key={resource.id}>
+                                <ListItemText primary={resource.name} />{' '}
+                                <IconButton
+                                    onClick={async () =>
+                                        deleteResource(resource.id)
+                                    }
+                                >
+                                    <Delete />
+                                </IconButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                )}
+
+                {resourceType === 'people' && (
+                    <List>
+                        {getResource().map((resource) => (
+                            <ListItem component="li" key={resource.id}>
+                                <div>
+                                    <ListItemText primary={resource.name} />{' '}
+                                    <IconButton
+                                        onClick={async () =>
+                                            deleteResource(resource.id)
+                                        }
+                                    >
+                                        <Delete />
+                                    </IconButton>
+                                </div>
+
+                                <div>
+                                    {/*// FIXME:update - everything update*/}
+                                    {/*// FIXME: select to select dog. Button to add next dog. Button to remove dog*/}
+                                </div>
+                            </ListItem>
+                        ))}
+                    </List>
+                )}
             </Card>
         </div>
     );

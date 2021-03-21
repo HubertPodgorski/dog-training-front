@@ -6,6 +6,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import { ExtendedTask } from '../../types';
 import EditTaskModal from '../EditTaskModal/EditTaskModal';
+import axios from 'axios';
+import { apiRoutes } from '../../helpers/apiRoutes';
+import useFetchTaskList from '../../hooks/useFetchTaskList';
 
 interface Props {
     task: ExtendedTask;
@@ -15,6 +18,14 @@ interface Props {
 const ConfiguratorTask = ({ task, index }: Props) => {
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [editOpen, setEditOpen] = useState<boolean>(false);
+
+    const fetchTaskList = useFetchTaskList()
+
+    const deleteTask = async () => {
+        await axios.delete(apiRoutes.DELETE.deleteTask(task.id));
+
+        await fetchTaskList()
+    };
 
     return (
         <>
@@ -26,19 +37,21 @@ const ConfiguratorTask = ({ task, index }: Props) => {
                 {(provided) => (
                     <div
                         ref={provided.innerRef}
-                        {...provided.dragHandleProps}
-                        {...provided.draggableProps}
                         className={styles.row}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
                     >
                         {isSaving && <LinearProgress />}
 
                         <div className={styles.label}>
-                            <div className={styles.dogs}>
+                            <div className={styles.dogs} onClick={() => {
+                                setEditOpen(true);
+                            }}>
                                 {task.dogs.length === 0 && (
                                     <>Brak wybranych psów do tego zadania</>
                                 )}
 
-                                {task.dogs.map((dog, index) => (
+                                {task.dogs.map((dog) => (
                                     <div key={dog.id} className={styles.dog}>
                                         {dog.name}
                                     </div>
@@ -46,12 +59,10 @@ const ConfiguratorTask = ({ task, index }: Props) => {
                             </div>
 
                             <IconButton
-                                onClick={() => {
-                                    setEditOpen(true);
-                                }}
+                                onClick={deleteTask}
                                 className={styles.iconWrapper}
                             >
-                                <Icon className={styles.expandIcon}>mode</Icon>
+                                <Icon className={styles.expandIcon}>cancel</Icon>
                             </IconButton>
                         </div>
                     </div>

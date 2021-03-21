@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './TasksGrid.module.scss';
-import TrainingsContext from '../../TrainingsContext';
 import Task from '../Display/Task/Task';
 import { ExtendedTask } from '../../types';
 import classNames from 'classnames';
+import useSelector from '../../hooks/useSelector';
 
 const TasksGrid = () => {
-    const { taskList } = useContext(TrainingsContext);
+    const taskList = useSelector(s => s.tasksStore.taskList)
     const [grouppedTaskList, setGrouppedTaskList] = useState<{
         [order: number]: ExtendedTask[];
     }>({});

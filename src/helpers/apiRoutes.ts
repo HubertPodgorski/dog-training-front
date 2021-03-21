@@ -1,40 +1,36 @@
-// const devPrefix = 'http://localhost:3001/api';
-const prodPrefix = process.env.REACT_APP_API_PREFIX;
-const appendApiPrefix = (suffix: string): string => `${prodPrefix}${suffix}`;
+// const apiPrefix = 'http://localhost:3001/api';
+// const apiPrefix = 'https://dog-training-strapi.herokuapp.com'
+const apiPrefix = 'http://localhost:1337'
+// const apiPrefix = process.env.REACT_APP_API_PREFIX;
+const appendApiPrefix = (suffix: string): string => `${apiPrefix}${suffix}`;
 
 export const apiRoutes = {
     GET: {
         tasks: appendApiPrefix('/tasks'),
-        allResources: appendApiPrefix('/resources/all'),
+        dogs: appendApiPrefix('/dogs'),
+        people: appendApiPrefix('/people'),
+        personTasks: appendApiPrefix('/person-tasks'),
+        dogTasks: appendApiPrefix('/dog-tasks'),
     },
     PUT: {
-        changeOrder: appendApiPrefix('/tasks/order'),
-        updateTaskDescription: (id: string) =>
-            appendApiPrefix(`/tasks/${id}/description`),
-        updateTaskDogs: (id: string) => appendApiPrefix(`/tasks/${id}/dogs`),
-        updateDogTasks: (id: string) =>
-            appendApiPrefix(`/tasks/${id}/dog-tasks`),
-        updatePeopleTasks: (id: string) =>
-            appendApiPrefix(`/tasks/${id}/people-tasks`),
-        updateTaskOrder: (id: string) => appendApiPrefix(`/tasks/${id}/order`),
-        updateTaskColumn: (id: string) =>
-            appendApiPrefix(`/tasks/${id}/column`),
+        updatePerson: (id: string) => appendApiPrefix(`/people/${id}`),
+        updateTask: (id: string) => appendApiPrefix(`/tasks/${id}`)
     },
     POST: {
         addTask: appendApiPrefix('/tasks'),
-        addPerson: appendApiPrefix('/resources/people'),
-        addPersonTask: appendApiPrefix('/resources/people-tasks'),
-        addDog: appendApiPrefix('/resources/dogs'),
-        addDogTask: appendApiPrefix('/resources/dog-tasks'),
+        addPerson: appendApiPrefix('/people'),
+        addPersonTask: appendApiPrefix('/person-tasks'),
+        addDog: appendApiPrefix('/dogs'),
+        addDogTask: appendApiPrefix('/dog-tasks'),
     },
     DELETE: {
         deleteTask: (id: string) => appendApiPrefix(`/tasks/${id}`),
         deletePerson: (id: string) =>
-            appendApiPrefix(`/resources/people/${id}`),
+            appendApiPrefix(`/people/${id}`),
         deletePersonTask: (id: string) =>
-            appendApiPrefix(`/resources/people-tasks/${id}`),
-        deleteDog: (id: string) => appendApiPrefix(`/resources/dogs/${id}`),
+            appendApiPrefix(`/person-tasks/${id}`),
+        deleteDog: (id: string) => appendApiPrefix(`/dogs/${id}`),
         deleteDogTask: (id: string) =>
-            appendApiPrefix(`/resources/dog-tasks/${id}`),
+            appendApiPrefix(`/dog-tasks/${id}`),
     },
 };

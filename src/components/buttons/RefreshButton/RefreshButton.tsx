@@ -3,22 +3,25 @@ import Icon from "@material-ui/core/Icon";
 import Fab from "@material-ui/core/Fab";
 import React from "react";
 import styles from './RefreshButton.module.scss'
-import { TrainingsConsumer } from "../../../TrainingsContext";
+import useFetchTaskList from '../../../hooks/useFetchTaskList';
+import useSelector from '../../../hooks/useSelector';
 
 // mby swipe down can refetch?
 const RefreshButton = () => {
-    return <TrainingsConsumer>
-        {({fetchTaskList, dataFetching}) => <Fab
-            color="primary"
-            aria-label="refresh"
-            onClick={async () => await fetchTaskList()}
-            className={
-                classnames(styles.refreshIcon, {[styles.refreshIconRotating]: dataFetching})
-            }
-        >
-            <Icon>autorenew</Icon>
-        </Fab>}
-    </TrainingsConsumer>
+    const {isDataFetching} = useSelector(s => s.tasksStore)
+
+    const fetchTaskList = useFetchTaskList()
+
+    return <Fab
+        color="primary"
+        aria-label="refresh"
+        onClick={async () => await fetchTaskList()}
+        className={
+            classnames(styles.refreshIcon, {[styles.refreshIconRotating]: isDataFetching})
+        }
+    >
+        <Icon>autorenew</Icon>
+    </Fab>
 }
 
 export default RefreshButton

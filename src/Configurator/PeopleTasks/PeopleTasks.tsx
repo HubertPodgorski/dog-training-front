@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
@@ -6,8 +6,8 @@ import styles from './PeopleTasks.module.scss';
 import CustomSelect from './CustomSelect/CustomSelect';
 import getUuid from 'uuid/v4';
 import { Person, PersonTask } from '../../types';
-import TrainingsContext from '../../TrainingsContext';
 import {canAddNewTaskPair, isPersonAlreadyInTheList} from "../helpers";
+import useSelector from '../../hooks/useSelector';
 
 interface Props {
     savePeopleTasks: (peopleTasks: PersonTask[]) => void;
@@ -15,8 +15,8 @@ interface Props {
 }
 
 const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
-    const { people: peopleList, peopleTasks: peopleTaskList } = useContext(
-        TrainingsContext
+    const { people: peopleList, peopleTasks: peopleTaskList } = useSelector(
+        s => s.tasksStore
     );
 
     const [peopleTaskPairs, setPeopleTaskPairs] = useState<PersonTask[]>(
@@ -101,6 +101,9 @@ const PeopleTasks = ({ savePeopleTasks, peopleTasks }: Props) => {
             savePeopleTasks(newPeopleTasks);
         }
     };
+
+
+    console.log('peopleTaskPairs => ', peopleTaskPairs)
 
     return (
         <section className={styles.wrapper}>

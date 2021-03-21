@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './Dogs.module.scss';
 import CustomMultiselect from './CustomMultiselect/CustomMultiselect';
 import { Dog } from '../../types';
-import TrainingsContext from '../../TrainingsContext';
+import useSelector from '../../hooks/useSelector';
 
 interface Props {
     saveDogs: (dogs: Dog[]) => void;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Dogs = ({ saveDogs, selectedDogs }: Props) => {
-    const { dogs } = useContext(TrainingsContext);
+    const { dogs } = useSelector(s => s.tasksStore);
 
     const [innerSelectedDogs, setInnerSelectedDogs] = useState(
         selectedDogs.map(dog => dog.id)

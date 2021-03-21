@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Modal } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import classNames from 'classnames';
@@ -11,11 +11,12 @@ import Dogs from '../Dogs/Dogs';
 import TextField from '@material-ui/core/TextField';
 import DogTasks from '../DogTasks/DogTasks';
 import PeopleTasks from '../PeopleTasks/PeopleTasks';
-import { http, httpMethods } from '../../helpers/http';
 import { apiRoutes } from '../../helpers/apiRoutes';
 import debounce from 'lodash.debounce';
-import TrainingsContext from '../../TrainingsContext';
 import styles from './EditTaskModal.module.scss';
+import useSelector from '../../hooks/useSelector';
+import useFetchTaskList from '../../hooks/useFetchTaskList';
+import axios from 'axios';
 
 interface Props {
     open: boolean;
@@ -25,7 +26,10 @@ interface Props {
 }
 
 const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
-    const { dogs, taskList, fetchTaskList } = useContext(TrainingsContext);
+    console.log('task => ', task);
+    const { dogs, taskList } = useSelector(s => s.tasksStore);
+
+    const fetchTaskList = useFetchTaskList()
 
     const [column, setColumn] = useState<Column>(task.column);
     const [taskDescription, setTaskDescription] = useState<string>(
@@ -41,15 +45,14 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
     const saveDescription = async (description: string) => {
         setIsSaving(true);
 
-        await http(
-            apiRoutes.PUT.updateTaskDescription(task.id),
-            httpMethods.PUT,
+        await axios.put(
+            apiRoutes.PUT.updateTask(task.id),
             {
                 description,
             }
         );
 
-        await fetchTaskList();
+        await fetchTaskList()
 
         setIsSaving(false);
     };
@@ -57,13 +60,13 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
     const saveDogs = async (dogs: Dog[]) => {
         setIsSaving(true);
 
-        await http(apiRoutes.PUT.updateTaskDogs(task.id), httpMethods.PUT, {
+        await axios.put(apiRoutes.PUT.updateTask(task.id), {
             dogs,
         });
 
         setSelectedDogs(dogs);
 
-        await fetchTaskList();
+        await fetchTaskList()
 
         setIsSaving(false);
     };
@@ -71,13 +74,13 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
     const saveDogTasks = async (dogTasks: DogTask[]) => {
         setIsSaving(true);
 
-        await http(apiRoutes.PUT.updateDogTasks(task.id), httpMethods.PUT, {
+        await axios.put(apiRoutes.PUT.updateTask(task.id), {
             tasks: dogTasks,
         });
 
         setDogTasks(dogTasks);
 
-        await fetchTaskList();
+        await fetchTaskList()
 
         setIsSaving(false);
     };
@@ -85,13 +88,13 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
     const savePeopleTasks = async (peopleTasks: PersonTask[]) => {
         setIsSaving(true);
 
-        await http(apiRoutes.PUT.updatePeopleTasks(task.id), httpMethods.PUT, {
+        await axios.put(apiRoutes.PUT.updateTask(task.id), {
             peopleTasks,
         });
 
         setPeopleTasks(peopleTasks);
 
-        await fetchTaskList();
+        await fetchTaskList()
 
         setIsSaving(false);
     };
@@ -99,13 +102,13 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
     const saveTaskOrder = async (order: number) => {
         setIsSaving(true);
 
-        await http(apiRoutes.PUT.updateTaskOrder(task.id), httpMethods.PUT, {
+        await axios.put(apiRoutes.PUT.updateTask(task.id),  {
             order,
         });
 
         setOrder(order);
 
-        await fetchTaskList();
+        await fetchTaskList()
 
         setIsSaving(false);
     };
@@ -113,21 +116,15 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
     const saveTaskColumn = async (column: Column) => {
         setIsSaving(true);
 
-        await http(apiRoutes.PUT.updateTaskColumn(task.id), httpMethods.PUT, {
+        await axios.put(apiRoutes.PUT.updateTask(task.id), {
             column,
         });
 
         setColumn(column);
 
-        await fetchTaskList();
+        await fetchTaskList()
 
         setIsSaving(false);
-    };
-
-    const deleteTask = async () => {
-        await http(apiRoutes.DELETE.deleteTask(task.id), httpMethods.DELETE);
-
-        await fetchTaskList();
     };
 
     const onDescriptionChange = (e: any) => {
@@ -206,21 +203,12 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
                 </Section>
 
                 <Section name="Zadania ludzi">
+                    {console.log('peopleTasks => ', peopleTasks)}
                     <PeopleTasks
                         savePeopleTasks={savePeopleTasks}
                         peopleTasks={peopleTasks}
                     />
                 </Section>
-
-                <div>
-                    <IconButton
-                        onClick={deleteTask}
-                        className={styles.iconWrapper}
-                    >
-                        Usuń zadanie
-                        <Icon className={styles.expandIcon}>cancel</Icon>
-                    </IconButton>
-                </div>
             </div>
         </Modal>
     );

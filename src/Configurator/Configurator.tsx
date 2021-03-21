@@ -1,16 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { httpMethods, http } from '../helpers/http';
 import { apiRoutes } from '../helpers/apiRoutes';
 import ConfiguratorTaskList from './ConfiguratorTaskList/ConfiguratorTaskList';
 import { Column, ExtendedTask } from '../types';
-import TrainingsContext from '../TrainingsContext';
 import styles from './Configurator.module.scss';
 import { getOrderList } from './helpers';
 import ButtonBar from '../components/ButtonBar/ButtonBar';
+import useSelector from '../hooks/useSelector';
+import { useDispatch } from 'react-redux';
+import { setTaskList } from '../tasksStore';
+import axios from 'axios';
 
 const Configurator = () => {
-    const { taskList, setTaskList } = useContext(TrainingsContext);
+    const dispatch = useDispatch()
+    const { taskList } = useSelector(s => s.tasksStore);
 
     const onDragEnd = async (result: DropResult): Promise<void> => {
         const { source, destination, draggableId } = result;
@@ -59,12 +62,10 @@ const Configurator = () => {
                         column: destinationColumn as Column,
                     },
                 ];
+                dispatch(setTaskList(updatedTaskList))
 
-                setTaskList(updatedTaskList);
-
-                await http(
-                    apiRoutes.PUT.updateTaskOrder(taskToUpdate.id),
-                    httpMethods.PUT,
+                await axios.put(
+                    apiRoutes.PUT.updateTask(taskToUpdate.id),
                     {
                         order: newOrder,
                         column: destinationColumn as Column,
