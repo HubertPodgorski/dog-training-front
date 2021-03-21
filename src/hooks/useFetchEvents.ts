@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { setIsDataFetching, setTaskList } from '../tasksStore';
+import { setEvents, setIsDataFetching } from '../tasksStore';
 import axios from 'axios';
 import { apiRoutes } from '../helpers/apiRoutes';
 

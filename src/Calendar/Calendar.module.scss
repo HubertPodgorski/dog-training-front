@@ -1,12 +1,9 @@
 .wrapper {
   width: 100%;
-  max-width: 340px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 10px;
-
-  @media screen and (min-width: 500px)  {
-    max-width: 1000px;
-  }
+  box-sizing: border-box;
 }
 
 .select {
@@ -19,6 +16,7 @@
   display: grid;
   grid-gap: 12px;
   grid-auto-rows: 1fr;
+  overflow-x: auto;
 }
 
 .gridCell {
@@ -26,10 +24,15 @@
   padding: 4px;
 }
 
+.presenceCell {
+  background: lightpink;
+}
+
 .cellPresent {
   background: lightgreen;
 }
 
-.cellNotPresent {
-  background: lightpink;
+.pickPresenceCell {
+  display: flex;
+  flex-direction: column;
 }

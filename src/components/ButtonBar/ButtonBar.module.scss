@@ -4,3 +4,9 @@
   align-items: center;
   padding: 10px;
 }
+
+.buttonsGrid {
+  display: grid;
+  grid-gap: 8px;
+  grid-auto-flow: column;
+}
