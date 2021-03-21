@@ -1,4 +1,4 @@
-import { Dog, DogTask, ExtendedTask, Person } from './types';
+import { Dog, DogTask, ExtendedTask, Person, Event } from './types';
 
 const SET_DOGS = '@@tasks_store_SET_DOGS'
 const SET_TASK_LIST = '@@tasks_store_SET_TASK_LIST'
@@ -6,6 +6,7 @@ const SET_PEOPLE = '@@tasks_store_SET_PEOPLE'
 const SET_PEOPLE_TASKS = '@@tasks_store_SET_PEOPLE_TASKS'
 const SET_DOG_TASKS = '@@tasks_store_SET_DOG_TASKS'
 const SET_IS_DATA_FETCHING = '@@tasks_store_SET_IS_DATA_FETCHING'
+const SET_EVENTS = '@@tasks_store_SET_EVENTS'
 
 export interface TasksStore {
     dogs: Dog[]
@@ -14,6 +15,7 @@ export interface TasksStore {
     peopleTasks: { name: string; id: string }[]
     dogTasks: DogTask[]
     isDataFetching: boolean
+    events: Event[]
 }
 
 const initialState: TasksStore = {
@@ -22,7 +24,8 @@ const initialState: TasksStore = {
     people: [],
     peopleTasks: [],
     dogTasks: [],
-    isDataFetching: false
+    isDataFetching: false,
+    events: []
 };
 
 const store = (state = initialState, action: {type: string, payload: any}) =>  {
@@ -64,6 +67,12 @@ const store = (state = initialState, action: {type: string, payload: any}) =>  {
                 taskList: action.payload
             }
         }
+        case SET_EVENTS: {
+            return {
+                ...state,
+                events: action.payload
+            }
+        }
 
         default:
             return state;
@@ -84,3 +93,5 @@ export const setPeopleTasks = (peopleTasks: { name: string; id: string }[]) => (
 export const setDogTasks = (dogTasks: DogTask[]) => ({type: SET_DOG_TASKS, payload: dogTasks})
 
 export const setIsDataFetching = (isDataFetching: boolean) => ({type: SET_IS_DATA_FETCHING, payload: isDataFetching})
+
+export const setEvents = (events: Event[]) => ({type: SET_EVENTS, payload: events})

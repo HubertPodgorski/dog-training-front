@@ -11,10 +11,12 @@ export const apiRoutes = {
         people: appendApiPrefix('/people'),
         personTasks: appendApiPrefix('/person-tasks'),
         dogTasks: appendApiPrefix('/dog-tasks'),
+        events: appendApiPrefix('/events'),
     },
     PUT: {
         updatePerson: (id: string) => appendApiPrefix(`/people/${id}`),
-        updateTask: (id: string) => appendApiPrefix(`/tasks/${id}`)
+        updateTask: (id: string) => appendApiPrefix(`/tasks/${id}`),
+        updateEvent: (id: string) => appendApiPrefix(`/events/${id}`),
     },
     POST: {
         addTask: appendApiPrefix('/tasks'),
@@ -22,6 +24,7 @@ export const apiRoutes = {
         addPersonTask: appendApiPrefix('/person-tasks'),
         addDog: appendApiPrefix('/dogs'),
         addDogTask: appendApiPrefix('/dog-tasks'),
+        addEvent: appendApiPrefix('/events'),
     },
     DELETE: {
         deleteTask: (id: string) => appendApiPrefix(`/tasks/${id}`),
@@ -32,5 +35,7 @@ export const apiRoutes = {
         deleteDog: (id: string) => appendApiPrefix(`/dogs/${id}`),
         deleteDogTask: (id: string) =>
             appendApiPrefix(`/dog-tasks/${id}`),
+        deleteEvent: (id: string) =>
+            appendApiPrefix(`/events/${id}`),
     },
 };

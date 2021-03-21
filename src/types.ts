@@ -35,6 +35,12 @@ export interface Person {
     dogs: Dog[]
 }
 
+export interface Event {
+    name: string;
+    id: string;
+    dogs: Dog[]
+}
+
 export interface DogTask {
     name: string;
     id: string;

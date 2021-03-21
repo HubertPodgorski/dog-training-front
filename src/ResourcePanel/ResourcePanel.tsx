@@ -12,7 +12,8 @@ import {
     Delete,
     GroupAdd,
     DirectionsRun,
-    List as ListIcon,
+    Event as EventIcon,
+    List as ListIcon
 } from '@material-ui/icons';
 import ButtonBar from '../components/ButtonBar/ButtonBar';
 import TextField from '@material-ui/core/TextField';
@@ -23,9 +24,9 @@ import useFetchResourceData from '../hooks/useFetchResourceData';
 import axios from 'axios';
 import CustomMultiselect from '../Configurator/Dogs/CustomMultiselect/CustomMultiselect';
 import useFetchPeople from '../hooks/useFetchPeople';
-import { Dog, DogTask, Person, PersonTask } from '../types';
+import { Dog, DogTask, Person, PersonTask, Event } from '../types';
 
-const getName = (resource: Dog | DogTask | Person | PersonTask): string => {
+const getName = (resource: Dog | DogTask | Person | PersonTask | Event): string => {
     if ('name' in resource) {
         return resource.name
     }
@@ -42,14 +43,15 @@ const ResourcePanel = () => {
         dogs,
         people,
         peopleTasks,
-        dogTasks
+        dogTasks,
+        events
     } = useSelector(s => s.tasksStore);
 
     const fetchResourceData = useFetchResourceData()
     const fetchPeople = useFetchPeople()
 
     const [resourceType, setResourceType] = useState<
-        'people' | 'dogs' | 'peopleTasks' | 'dogTasks'
+        'people' | 'dogs' | 'peopleTasks' | 'dogTasks' | 'events'
     >('dogs');
 
     const [addResourceModalOpem, setAddResourceModalOpem] = useState(false);
@@ -66,10 +68,12 @@ const ResourcePanel = () => {
                 return { button: 'osobę', panel: 'ludźmi' };
             case 'peopleTasks':
                 return { button: 'zadanie osoby', panel: 'zadaniami osób' };
+            case 'events':
+                return {button: 'wydarzenie', panel: 'wydarzenia'}
         }
     };
 
-    const getResource = (): (Dog | DogTask | Person | PersonTask)[] => {
+    const getResource = (): (Dog | DogTask | Person | PersonTask | Event)[] => {
         switch (resourceType) {
             case 'dogs':
                 return dogs;
@@ -79,6 +83,8 @@ const ResourcePanel = () => {
                 return people;
             case 'peopleTasks':
                 return peopleTasks;
+            case 'events':
+                return events;
         }
     };
 
@@ -92,6 +98,8 @@ const ResourcePanel = () => {
                 return apiRoutes.POST.addDogTask;
             case 'dogs':
                 return apiRoutes.POST.addDog;
+            case 'events':
+                return apiRoutes.POST.addEvent;
         }
     };
 
@@ -99,6 +107,8 @@ const ResourcePanel = () => {
         await axios.post(getAddRoute(),  {
             name: newResourceValue,
         });
+
+        //FIXME:  fetch resource type only changed
 
         await fetchResourceData()
         setNewResourceValue('');
@@ -117,6 +127,8 @@ const ResourcePanel = () => {
                 return apiRoutes.DELETE.deleteDogTask(id);
             case 'dogs':
                 return apiRoutes.DELETE.deleteDog(id);
+            case 'events':
+                return apiRoutes.DELETE.deleteEvent(id);
         }
     };
 
@@ -208,6 +220,17 @@ const ResourcePanel = () => {
                             <DirectionsRun />
                         </ListItemIcon>
                         <ListItemText primary="Zadania ludzi" />
+                    </ListItem>
+
+                    <ListItem
+                        button
+                        onClick={() => setResourceType('events')}
+                        selected={resourceType === 'events'}
+                    >
+                        <ListItemIcon>
+                            <EventIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Wydarzenia" />
                     </ListItem>
                 </List>
                 <Divider />
