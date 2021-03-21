@@ -1,6 +1,6 @@
 // const apiPrefix = 'http://localhost:3001/api';
-// const apiPrefix = 'https://dog-training-strapi.herokuapp.com'
-const apiPrefix = 'http://localhost:1337'
+const apiPrefix = 'https://dog-training-strapi.herokuapp.com'
+// const apiPrefix = 'http://localhost:1337'
 // const apiPrefix = process.env.REACT_APP_API_PREFIX;
 const appendApiPrefix = (suffix: string): string => `${apiPrefix}${suffix}`;
 
