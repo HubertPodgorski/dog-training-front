@@ -33,7 +33,7 @@
         "uuid": "^3.4.0"
     },
     "scripts": {
-        "start": "REACT_APP_API_PREFIX=https://dog-training-back.herokuapp.com/api react-scripts start",
+        "start": "REACT_APP_API_PREFIX=https://dog-training-strapi.herokuapp.com react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
