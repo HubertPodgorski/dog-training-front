@@ -52,7 +52,7 @@ const Calendar = () => {
                         return <div className={classNames(styles.gridCell, styles.presenceCell, {[styles.cellPresent]: dogStatus === 'present', [styles.cellNotPresent]: dogStatus === 'notPresent'})} key={id}>{name}</div>
                     }))}
                     {showAllPeople && <div className={styles.gridCell}>
-                        Psów na treningu: {eventDogs.reduce((count, {status}) => {if (status === 'present') {return count + 1} return  count}, 0)}
+                        Frekwencja: {eventDogs.reduce((count, {status}) => {if (status === 'present') {return count + 1} return  count}, 0)}
                     </div>}
 
                     {!showAllPeople && (person as Person).dogs.map((dog) => {
