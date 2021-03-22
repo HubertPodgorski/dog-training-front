@@ -16,17 +16,11 @@ const Calendar = () => {
 
     const fetchEvents = useFetchEvents()
 
-    console.log('events => ', events);
-    console.log('people => ', people);
-    console.log('person => ', person);
-
     const showAllPeople = person === ''
 
     const columnCount = (showAllPeople ? people.reduce((peopleDogsCount, mappingPerson) => {
         return peopleDogsCount + mappingPerson.dogs.length
     }, 0) : (person as Person).dogs.length) + 1
-
-    console.log('columnCount => ', columnCount);
 
     const getDogStatus = (dogId: string, eventDogs: { dog: Dog, status: DogEventStatus }[]): DogEventStatus => {
         const dogFound = eventDogs.find(({dog}) => dog.id === dogId)
@@ -55,8 +49,6 @@ const Calendar = () => {
                     {showAllPeople && people.map(({dogs}) => dogs.map(({id, name}) => {
                         const dogStatus = getDogStatus(id, eventDogs)
 
-                        console.log('dogStatus => ', dogStatus);
-
                         return <div className={classNames(styles.gridCell, styles.presenceCell, {[styles.cellPresent]: dogStatus === 'present', [styles.cellNotPresent]: dogStatus === 'notPresent'})} key={id}>{name}</div>
                     }))}
                     {showAllPeople && <div className={styles.gridCell}>
@@ -66,17 +58,13 @@ const Calendar = () => {
                     {!showAllPeople && (person as Person).dogs.map((dog) => {
                         const dogStatus = getDogStatus(dog.id, eventDogs)
 
-                        console.log('dogStatus => ', dogStatus);
-
                         return <div className={classNames(styles.gridCell, styles.presenceCell, {[styles.cellPresent]: dogStatus === 'present', [styles.cellNotPresent]: dogStatus === 'notPresent'}, styles.pickPresenceCell)} key={dog.id}>
-                            {name}
+                            {dog.name}
 
                             <Select className={styles.select} value={dogStatus} onChange={async (e) => {
                                 setSavingData(true)
 
                                 const newDogsForEvent: { dog: Dog, status: DogEventStatus }[] = eventDogs.filter(({dog: eventDog}) => eventDog.id !== dog.id)
-
-                                console.log('newDogsForEvent => ', newDogsForEvent);
 
                                 await axios.put(apiRoutes.PUT.updateEvent(eventId), {dogs: [...newDogsForEvent, {status: e.target.value, dog}]})
 
