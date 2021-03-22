@@ -84,7 +84,6 @@ const Configurator = () => {
             <ButtonBar />
             <div className={styles.wrapper}>
                 <Select value={selectedEvent ? selectedEvent.id : ''} label='Wydarzenie'  className={styles.select} onChange={e => {
-                    console.log(e.target.value)
                     const eventFound = events.find(({id}) => id === e.target.value)
 
                     if (eventFound) {
@@ -97,8 +96,7 @@ const Configurator = () => {
                 {selectedEvent && <div className={styles.eventDogs}>
                     {!selectedEvent.dogs.length && 'Nie ma psów wybranych na to wydarzenie'}
 
-                    {console.log('selectedEvent => ', selectedEvent)}
-                    {selectedEvent.dogs.map(({dog}) => <div className={classNames(styles.dog, {[styles.dogNotUsed]: dogNotUsed(taskList, dog.id)})}  key={dog.id}>{console.log('dog => ', dog)}{dog.name}</div>)}
+                    {selectedEvent.dogs.map(({dog}) => <div className={classNames(styles.dog, {[styles.dogNotUsed]: dogNotUsed(taskList, dog.id)})}  key={dog.id}>{dog.name}</div>)}
                 </div>}
 
                 <DragDropContext
