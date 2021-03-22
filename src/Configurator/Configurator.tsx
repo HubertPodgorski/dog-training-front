@@ -8,12 +8,16 @@ import { getOrderList } from './helpers';
 import ButtonBar from '../components/ButtonBar/ButtonBar';
 import useSelector from '../hooks/useSelector';
 import { useDispatch } from 'react-redux';
-import { setTaskList } from '../tasksStore';
+import { setSelectedEvent, setTaskList } from '../tasksStore';
 import axios from 'axios';
+import { MenuItem, Select } from '@material-ui/core';
+import classNames from 'classnames';
+
+const dogNotUsed = (taskList: ExtendedTask[], dogId: string) => !taskList.some(({dogs}) => dogs.some(({id}) => id === dogId))
 
 const Configurator = () => {
     const dispatch = useDispatch()
-    const { taskList } = useSelector(s => s.tasksStore);
+    const { taskList, events, selectedEvent } = useSelector(s => s.tasksStore);
 
     const onDragEnd = async (result: DropResult): Promise<void> => {
         const { source, destination, draggableId } = result;
@@ -79,6 +83,24 @@ const Configurator = () => {
         <>
             <ButtonBar />
             <div className={styles.wrapper}>
+                <Select value={selectedEvent ? selectedEvent.id : ''} label='Wydarzenie'  className={styles.select} onChange={e => {
+                    console.log(e.target.value)
+                    const eventFound = events.find(({id}) => id === e.target.value)
+
+                    if (eventFound) {
+                        dispatch(setSelectedEvent(eventFound))
+                    }
+                }}>
+                    {events.map((event) => <MenuItem key={event.id} value={event.id}>{event.name}</MenuItem>)}
+                </Select>
+
+                {selectedEvent && <div className={styles.eventDogs}>
+                    {!selectedEvent.dogs.length && 'Nie ma psów wybranych na to wydarzenie'}
+
+                    {console.log('selectedEvent => ', selectedEvent)}
+                    {selectedEvent.dogs.map(({dog}) => <div className={classNames(styles.dog, {[styles.dogNotUsed]: dogNotUsed(taskList, dog.id)})}  key={dog.id}>{console.log('dog => ', dog)}{dog.name}</div>)}
+                </div>}
+
                 <DragDropContext
                     onDragEnd={async (values) => {
                         await onDragEnd(values);

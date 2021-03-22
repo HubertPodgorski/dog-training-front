@@ -7,6 +7,7 @@ const SET_PEOPLE_TASKS = '@@tasks_store_SET_PEOPLE_TASKS'
 const SET_DOG_TASKS = '@@tasks_store_SET_DOG_TASKS'
 const SET_IS_DATA_FETCHING = '@@tasks_store_SET_IS_DATA_FETCHING'
 const SET_EVENTS = '@@tasks_store_SET_EVENTS'
+const SET_SELECTED_EVENT = '@@tasks_store_SET_SELECTED_EVENT'
 
 export interface TasksStore {
     dogs: Dog[]
@@ -16,6 +17,7 @@ export interface TasksStore {
     dogTasks: DogTask[]
     isDataFetching: boolean
     events: Event[]
+    selectedEvent?: Event
 }
 
 const initialState: TasksStore = {
@@ -73,6 +75,12 @@ const store = (state = initialState, action: {type: string, payload: any}) =>  {
                 events: action.payload
             }
         }
+        case SET_SELECTED_EVENT: {
+            return {
+                ...state,
+                selectedEvent: action.payload
+            }
+        }
 
         default:
             return state;
@@ -95,3 +103,5 @@ export const setDogTasks = (dogTasks: DogTask[]) => ({type: SET_DOG_TASKS, paylo
 export const setIsDataFetching = (isDataFetching: boolean) => ({type: SET_IS_DATA_FETCHING, payload: isDataFetching})
 
 export const setEvents = (events: Event[]) => ({type: SET_EVENTS, payload: events})
+
+export const setSelectedEvent = (event: Event | undefined) => ({type: SET_SELECTED_EVENT, payload: event})

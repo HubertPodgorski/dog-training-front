@@ -18,3 +18,37 @@
     grid-gap: 4px;
   }
 }
+
+.select {
+  width: 100%;
+  background: #d3d3d3;
+  margin: 10px 0;
+  box-sizing: border-box;
+  max-width: 500px;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.eventDogs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  background: #d3d3d3;
+  margin: 10px 0;
+  box-sizing: border-box;
+  max-width: 90vw;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.dog {
+  color: #333;
+  padding: 4px;
+}
+
+.dogNotUsed {
+  text-decoration: underline;
+  font-weight: 500;
+  font-size: 16px;
+}

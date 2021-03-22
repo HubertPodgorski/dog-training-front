@@ -39,7 +39,7 @@ const Calendar = () => {
 
         <Card className={styles.wrapper}>
             {savingData && <LinearProgress />}
-            <Select className={styles.select} value={showAllPeople ? '' : (person as Person).id} onChange={e => {
+            <Select label='Osoba' className={styles.select} value={showAllPeople ? '' : (person as Person).id} onChange={e => {
                 const personFound = people.find(({id}) => (e.target.value || '') === id)
                 setPerson(personFound || '');
             }}>
