@@ -49,7 +49,7 @@ const Calendar = () => {
                     <MenuItem value={id} key={id}>{name}</MenuItem>)}
             </Select>
 
-            <div className={classNames(styles.calendarGrid)} style={{gridTemplateColumns: `repeat(${columnCount}, 1fr)`}}>
+            <div className={classNames(styles.calendarGrid)} style={{gridTemplateColumns: `repeat(${columnCount + 1}, 1fr)`}}>
                 {events.map(({name, id: eventId, dogs: eventDogs}) => <Fragment key={eventId}>
                     <div className={styles.gridCell}>{name}</div>
                     {showAllPeople && people.map(({dogs}) => dogs.map(({id, name}) => {
@@ -59,6 +59,9 @@ const Calendar = () => {
 
                         return <div className={classNames(styles.gridCell, styles.presenceCell, {[styles.cellPresent]: dogStatus === 'present', [styles.cellNotPresent]: dogStatus === 'notPresent'})} key={id}>{name}</div>
                     }))}
+                    {showAllPeople && <div className={styles.gridCell}>
+                        Psów na treningu: {eventDogs.reduce((count, {status}) => {if (status === 'present') {return count + 1} return  count}, 0)}
+                    </div>}
 
                     {!showAllPeople && (person as Person).dogs.map((dog) => {
                         const dogStatus = getDogStatus(dog.id, eventDogs)
