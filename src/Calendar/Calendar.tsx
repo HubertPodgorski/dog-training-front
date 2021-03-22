@@ -2,7 +2,7 @@ import React, { useState, Fragment } from 'react';
 import { Card, LinearProgress, MenuItem, Select } from '@material-ui/core';
 import useSelector from '../hooks/useSelector';
 import styles from './Calendar.module.scss'
-import { Dog, Person } from '../types';
+import { Dog, DogEventStatus, Person } from '../types';
 import classNames from 'classnames';
 import { apiRoutes } from '../helpers/apiRoutes';
 import axios from 'axios';
@@ -28,7 +28,11 @@ const Calendar = () => {
 
     console.log('columnCount => ', columnCount);
 
-    const isDogPresent = (dogId: string, eventDogs: Dog[]) => eventDogs.some(({id}) => id === dogId)
+    const getDogStatus = (dogId: string, eventDogs: { dog: Dog, status: DogEventStatus }[]): DogEventStatus => {
+        const dogFound = eventDogs.find(({dog}) => dog.id === dogId)
+
+        return dogFound ? dogFound.status : 'untouched'
+    }
 
     return <>
         <ButtonBar />
@@ -48,31 +52,38 @@ const Calendar = () => {
             <div className={classNames(styles.calendarGrid)} style={{gridTemplateColumns: `repeat(${columnCount}, 1fr)`}}>
                 {events.map(({name, id: eventId, dogs: eventDogs}) => <Fragment key={eventId}>
                     <div className={styles.gridCell}>{name}</div>
-                    {showAllPeople && people.map(({dogs}) => dogs.map(({id, name}) => <div className={classNames(styles.gridCell, styles.presenceCell, {[styles.cellPresent]: isDogPresent(id, eventDogs)})} key={id}>{name}</div>))}
+                    {showAllPeople && people.map(({dogs}) => dogs.map(({id, name}) => {
+                        const dogStatus = getDogStatus(id, eventDogs)
 
-                    {!showAllPeople && (person as Person).dogs.map(({id, name}) => {
-                        const dogPresent = isDogPresent(id, eventDogs)
+                        console.log('dogStatus => ', dogStatus);
 
-                        return <div className={classNames(styles.gridCell, styles.presenceCell, {[styles.cellPresent]: dogPresent}, styles.pickPresenceCell)} key={id}>
+                        return <div className={classNames(styles.gridCell, styles.presenceCell, {[styles.cellPresent]: dogStatus === 'present', [styles.cellNotPresent]: dogStatus === 'notPresent'})} key={id}>{name}</div>
+                    }))}
+
+                    {!showAllPeople && (person as Person).dogs.map((dog) => {
+                        const dogStatus = getDogStatus(dog.id, eventDogs)
+
+                        console.log('dogStatus => ', dogStatus);
+
+                        return <div className={classNames(styles.gridCell, styles.presenceCell, {[styles.cellPresent]: dogStatus === 'present', [styles.cellNotPresent]: dogStatus === 'notPresent'}, styles.pickPresenceCell)} key={dog.id}>
                             {name}
 
-                            <Select className={styles.select} value={dogPresent ? 'present' : 'notPresent'} onChange={async (e) => {
+                            <Select className={styles.select} value={dogStatus} onChange={async (e) => {
                                 setSavingData(true)
 
-                                let newDogsForEvent: string[] = eventDogs.filter(({id: eventDogId}) => eventDogId !== id).map(({id}) => id)
+                                const newDogsForEvent: { dog: Dog, status: DogEventStatus }[] = eventDogs.filter(({dog: eventDog}) => eventDog.id !== dog.id)
 
-                                if (e.target.value === 'present') {
-                                    newDogsForEvent = [...newDogsForEvent, id ]
-                                }
+                                console.log('newDogsForEvent => ', newDogsForEvent);
 
-                                await axios.put(apiRoutes.PUT.updateEvent(eventId), {dogs: newDogsForEvent})
+                                await axios.put(apiRoutes.PUT.updateEvent(eventId), {dogs: [...newDogsForEvent, {status: e.target.value, dog}]})
 
                                 await fetchEvents()
 
                                 setSavingData(false)
                             }}>
-                                <MenuItem value={'present'}>Tak</MenuItem>
-                                <MenuItem value={'notPresent'}>Nie</MenuItem>
+                                <MenuItem value={'untouched'}>Nie wybrano</MenuItem>
+                                <MenuItem value={'present'}>Obecny</MenuItem>
+                                <MenuItem value={'notPresent'}>Nie obecny</MenuItem>
                             </Select>
                         </div>
                     })}

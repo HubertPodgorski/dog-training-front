@@ -25,11 +25,15 @@
 }
 
 .presenceCell {
-  background: lightpink;
+  background: yellow;
 }
 
 .cellPresent {
   background: lightgreen;
+}
+
+.cellNotPresent {
+  background: lightpink;
 }
 
 .pickPresenceCell {

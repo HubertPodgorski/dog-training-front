@@ -35,10 +35,12 @@ export interface Person {
     dogs: Dog[]
 }
 
+export type DogEventStatus = 'untouched' | 'present' | 'notPresent'
+
 export interface Event {
     name: string;
     id: string;
-    dogs: Dog[]
+    dogs: { dog: Dog, status: DogEventStatus }[]
 }
 
 export interface DogTask {
