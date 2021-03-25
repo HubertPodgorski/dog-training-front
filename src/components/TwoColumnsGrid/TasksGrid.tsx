@@ -13,10 +13,10 @@ const TasksGrid = () => {
     [order: number]: ExtendedTask[]
   }>({})
 
-  const { loading, error, data } = useQuery(TASKS_QUERY)
-  console.log('loading => ', loading)
-  console.log('error => ', error)
-  console.log('data => ', data)
+  // const { loading, error, data } = useQuery(TASKS_QUERY)
+  // console.log('loading => ', loading)
+  // console.log('error => ', error)
+  // console.log('data => ', data)
 
   useEffect(() => {
     setGroupedTaskList(
