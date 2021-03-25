@@ -1,4 +1,24 @@
 {
-    "tabWidth": 4,
-    "singleQuote": true
-  }
+  "printWidth": 100,
+  "parser": "typescript",
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "semi": false,
+  "arrowParens": "always",
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": "*.scss",
+      "options": {
+        "parser": "scss",
+        "singleQuote": false
+      }
+    },
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "html"
+      }
+    }
+  ]  
+}
