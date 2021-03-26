@@ -4,8 +4,8 @@ import Task from '../Display/Task/Task'
 import { ExtendedTask } from '../../types'
 import classNames from 'classnames'
 import useSelector from '../../hooks/useSelector'
-import { useQuery } from '@apollo/react-hooks'
-import TASKS_QUERY from '../../queries/tasksQuery'
+// import { useQuery } from '@apollo/react-hooks'
+// import TASKS_QUERY from '../../queries/tasksQuery'
 
 const TasksGrid = () => {
   const taskList = useSelector((s) => s.tasksStore.taskList)

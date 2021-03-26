@@ -119,6 +119,7 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
     setIsSaving(false)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onDescriptionChange = (e: any) => {
     const { value } = e.currentTarget
     setTaskDescription(value)

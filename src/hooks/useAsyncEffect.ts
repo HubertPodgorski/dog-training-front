@@ -21,6 +21,7 @@ const useAsyncEffect = (
         clearCallback = clear
         maybeClear()
       })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .catch((error: any) => {
         if (error instanceof CancelledError) {
           console.debug(error)

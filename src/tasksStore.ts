@@ -1,4 +1,4 @@
-import { Dog, DogTask, ExtendedTask, Person, Event } from './types'
+import { Dog, DogTask, ExtendedTask, Person, Event, Action } from './types'
 
 const SET_DOGS = '@@tasks_store_SET_DOGS'
 const SET_TASK_LIST = '@@tasks_store_SET_TASK_LIST'
@@ -30,7 +30,7 @@ const initialState: TasksStore = {
   events: [],
 }
 
-const store = (state = initialState, action: { type: string; payload: any }): TasksStore => {
+const store = (state = initialState, action: Action): TasksStore => {
   switch (action.type) {
     case SET_DOGS: {
       return {
@@ -91,28 +91,31 @@ export default store
 
 export const setDogs = (dogs: Dog[]) => ({ type: SET_DOGS, payload: dogs })
 
-export const setTaskList = (taskList: ExtendedTask[]) => ({
+export const setTaskList = (taskList: ExtendedTask[]): Action => ({
   type: SET_TASK_LIST,
   payload: taskList,
 })
 
-export const setPeople = (people: Person[]) => ({ type: SET_PEOPLE, payload: people })
+export const setPeople = (people: Person[]): Action => ({ type: SET_PEOPLE, payload: people })
 
-export const setPeopleTasks = (peopleTasks: { name: string; id: string }[]) => ({
+export const setPeopleTasks = (peopleTasks: { name: string; id: string }[]): Action => ({
   type: SET_PEOPLE_TASKS,
   payload: peopleTasks,
 })
 
-export const setDogTasks = (dogTasks: DogTask[]) => ({ type: SET_DOG_TASKS, payload: dogTasks })
+export const setDogTasks = (dogTasks: DogTask[]): Action => ({
+  type: SET_DOG_TASKS,
+  payload: dogTasks,
+})
 
-export const setIsDataFetching = (isDataFetching: boolean) => ({
+export const setIsDataFetching = (isDataFetching: boolean): Action => ({
   type: SET_IS_DATA_FETCHING,
   payload: isDataFetching,
 })
 
-export const setEvents = (events: Event[]) => ({ type: SET_EVENTS, payload: events })
+export const setEvents = (events: Event[]): Action => ({ type: SET_EVENTS, payload: events })
 
-export const setSelectedEvent = (event: Event | undefined) => ({
+export const setSelectedEvent = (event: Event | undefined): Action => ({
   type: SET_SELECTED_EVENT,
   payload: event,
 })
