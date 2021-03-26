@@ -14,7 +14,7 @@ import {
   List as ListIcon,
 } from '@material-ui/icons'
 import ButtonBar from '../components/ButtonBar/ButtonBar'
-import { Route, Switch, Link, useHistory, NavLink } from 'react-router-dom'
+import { Route, Switch, NavLink } from 'react-router-dom'
 import { resourcePaths } from '../Router'
 import Dogs from './Dogs/Dogs'
 import People from './People/People'
