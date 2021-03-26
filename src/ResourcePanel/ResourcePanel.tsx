@@ -78,7 +78,6 @@ const ResourcePanel = () => {
         <Divider />
 
         <Switch>
-          {console.log('resourcePaths.people => ', resourcePaths.people)}
           <Route exact path={resourcePaths.people}>
             <People />
           </Route>

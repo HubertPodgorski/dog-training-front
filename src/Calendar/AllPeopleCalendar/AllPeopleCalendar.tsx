@@ -12,9 +12,6 @@ const AllPeopleCalendar = () => {
     CALENDAR_ALL_EVENTS_QUERY,
   )
 
-  console.log('loading => ', loading)
-  console.log('allEventsData => ', allEventsData)
-
   const columnCount = allEventsData
     ? allEventsData.people.reduce((count, { dogs }) => count + dogs.length, 0) + 2
     : 0
@@ -39,7 +36,6 @@ const AllPeopleCalendar = () => {
 
               {allEventsData.people.map(({ dogs }) =>
                 dogs.map(({ id, name }) => {
-                  console.log('eventDogs => ', eventDogs)
                   const dogStatus = getDogStatus(id, eventDogs)
 
                   return (
@@ -58,8 +54,8 @@ const AllPeopleCalendar = () => {
 
               <div className={styles.cell}>
                 Frekwencja:{' '}
-                {eventDogs.reduce((count, { status }) => {
-                  if (status === 'present') {
+                {eventDogs.reduce((count, dogWithStatus) => {
+                  if (dogWithStatus && dogWithStatus.status === 'present') {
                     return count + 1
                   }
                   return count

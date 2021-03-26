@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import classNames from 'classnames'
 import styles from './PersonCalendar.module.scss'
 import { getDogStatus } from '../helpers'
@@ -17,6 +17,8 @@ interface Props {
 }
 
 const PersonCalendar = ({ personId }: Props) => {
+  const [saving, setSaving] = useState(false)
+
   const { loading, data, refetch } = useQuery<CalendarPersonEventsQuery>(
     CALENDAR_PERSON_EVENT_DOGS,
     {
@@ -30,7 +32,7 @@ const PersonCalendar = ({ personId }: Props) => {
 
   return (
     <div>
-      {loading && <LinearProgress />}
+      {(loading || saving) && <LinearProgress />}
 
       {data && (
         <div
@@ -63,13 +65,24 @@ const PersonCalendar = ({ personId }: Props) => {
                       className={styles.select}
                       value={dogStatus}
                       onChange={async (e) => {
+                        setSaving(true)
                         const newEventDogs = eventDogs.filter(
-                          ({ dog: eventDog }) => eventDog.id !== dog.id,
+                          (dogWithStatus) => dogWithStatus && dogWithStatus.dog.id !== dog.id,
                         )
 
-                        await axios.put(apiRoutes.PUT.updateEvent(eventId), {
-                          dogs: [...newEventDogs, { status: e.target.value, dog }],
-                        })
+                        const dataToSet = {
+                          dogs: [
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            ...newEventDogs.map(({ status, dog }) => ({
+                              status,
+                              dog: { name: dog.name, _id: dog.id },
+                            })),
+                            { status: e.target.value, dog: { _id: dog.id, name: dog.name } },
+                          ],
+                        }
+
+                        await axios.put(apiRoutes.PUT.updateEvent(eventId), dataToSet)
+                        setSaving(false)
 
                         await refetch()
                       }}

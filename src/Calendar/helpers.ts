@@ -4,8 +4,9 @@ export const getDogStatus = (
   dogId: string,
   eventDogs: { dog: { id: string }; status: DogEventStatus }[],
 ): DogEventStatus => {
-  console.log('eventDogs => ', eventDogs)
-  const dogFound = eventDogs.find(({ dog }) => dog.id === dogId)
+  const dogFound = eventDogs.find(
+    (dogWithStatus) => !!dogWithStatus && dogWithStatus.dog.id === dogId,
+  )
 
   return dogFound ? dogFound.status : 'untouched'
 }
