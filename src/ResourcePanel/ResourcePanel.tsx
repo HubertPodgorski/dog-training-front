@@ -14,7 +14,7 @@ import {
   List as ListIcon,
 } from '@material-ui/icons'
 import ButtonBar from '../components/ButtonBar/ButtonBar'
-import { BrowserRouter as ReactRouter, Route, Switch, Link } from 'react-router-dom'
+import { Route, Switch, Link, useHistory, NavLink } from 'react-router-dom'
 import { resourcePaths } from '../Router'
 import Dogs from './Dogs/Dogs'
 import People from './People/People'
@@ -29,66 +29,50 @@ const ResourcePanel = () => {
 
       <Card className={styles.wrapper}>
         <List component='nav'>
-          <Link to={resourcePaths.dogs}>
-            <ListItem
-              button
-              // FIXME: change to route match
-              // selected={resourceType === 'dogs'}
-            >
+          <NavLink to={resourcePaths.dogs}>
+            <ListItem button>
               <ListItemIcon>
                 <Pets />
               </ListItemIcon>
               <ListItemText primary='Psy' />
             </ListItem>
-          </Link>
+          </NavLink>
 
-          <Link to={resourcePaths.dogTasks}>
-            <ListItem
-              button
-              // selected={resourceType === 'dogTasks'}
-            >
+          <NavLink activeClassName={styles.active} to={resourcePaths.dogTasks}>
+            <ListItem button>
               <ListItemIcon>
                 <ListIcon />
               </ListItemIcon>
               <ListItemText primary='Zadania psów' />
             </ListItem>
-          </Link>
+          </NavLink>
 
-          <Link to={resourcePaths.people}>
-            <ListItem
-              button
-              // selected={resourceType === 'people'}
-            >
+          <NavLink activeClassName={styles.active} to={resourcePaths.people}>
+            <ListItem button>
               <ListItemIcon>
                 <GroupAdd />
               </ListItemIcon>
               <ListItemText primary='Ludzie' />
             </ListItem>
-          </Link>
+          </NavLink>
 
-          <Link to={resourcePaths.peopleTasks}>
-            <ListItem
-              button
-              // selected={resourceType === 'peopleTasks'}
-            >
+          <NavLink activeClassName={styles.active} to={resourcePaths.peopleTasks}>
+            <ListItem button>
               <ListItemIcon>
                 <DirectionsRun />
               </ListItemIcon>
               <ListItemText primary='Zadania ludzi' />
             </ListItem>
-          </Link>
+          </NavLink>
 
-          <Link to={resourcePaths.events}>
-            <ListItem
-              button
-              // selected={resourceType === 'events'}
-            >
+          <NavLink activeClassName={styles.active} to={resourcePaths.events}>
+            <ListItem button>
               <ListItemIcon>
                 <EventIcon />
               </ListItemIcon>
               <ListItemText primary='Wydarzenia' />
             </ListItem>
-          </Link>
+          </NavLink>
         </List>
 
         <Divider />

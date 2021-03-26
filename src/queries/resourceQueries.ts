@@ -1,4 +1,3 @@
-import { DogEventStatus } from '../types'
 import { gql } from 'apollo-boost'
 
 export const DOGS_RESOURCE_QUERY = gql`

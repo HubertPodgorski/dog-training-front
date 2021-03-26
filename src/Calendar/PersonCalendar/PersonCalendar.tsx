@@ -17,7 +17,7 @@ interface Props {
 }
 
 const PersonCalendar = ({ personId }: Props) => {
-  const { loading, data, error, refetch } = useQuery<CalendarPersonEventsQuery>(
+  const { loading, data, refetch } = useQuery<CalendarPersonEventsQuery>(
     CALENDAR_PERSON_EVENT_DOGS,
     {
       variables: { personId: personId },

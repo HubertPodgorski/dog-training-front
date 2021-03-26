@@ -35,6 +35,7 @@ const Router = () => (
       <Route path={routePaths.resourcePanel}>
         <ResourcePanel />
       </Route>
+
       <Route path='/'>
         <MainList />
       </Route>

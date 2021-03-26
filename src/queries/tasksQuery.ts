@@ -1,9 +1,5 @@
 import { gql } from 'apollo-boost'
-import { ExtendedTask, Dog, PersonTask, DogTask, Column } from '../types'
-
-type Task = Pick<ExtendedTask, 'description' | 'id' | 'column' | 'order'> & {
-  dogs: Dog[]
-}
+import { ExtendedTask } from '../types'
 
 export type MainListTasksQuery = {
   tasks: ExtendedTask[]

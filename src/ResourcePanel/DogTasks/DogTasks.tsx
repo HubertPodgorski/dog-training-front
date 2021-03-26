@@ -3,7 +3,6 @@ import { Button, Card, IconButton, LinearProgress, Modal } from '@material-ui/co
 import classNames from 'classnames'
 import styles from '../ResourcePanel.module.scss'
 import TextField from '@material-ui/core/TextField'
-import ButtonBar from '../../components/ButtonBar/ButtonBar'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import { Delete } from '@material-ui/icons'
