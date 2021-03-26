@@ -4,19 +4,12 @@ import Task from '../Display/Task/Task'
 import { ExtendedTask } from '../../types'
 import classNames from 'classnames'
 import useSelector from '../../hooks/useSelector'
-// import { useQuery } from '@apollo/react-hooks'
-// import TASKS_QUERY from '../../queries/tasksQuery'
 
 const TasksGrid = () => {
   const taskList = useSelector((s) => s.tasksStore.taskList)
   const [groupedTaskList, setGroupedTaskList] = useState<{
     [order: number]: ExtendedTask[]
   }>({})
-
-  // const { loading, error, data } = useQuery(TASKS_QUERY)
-  // console.log('loading => ', loading)
-  // console.log('error => ', error)
-  // console.log('data => ', data)
 
   useEffect(() => {
     setGroupedTaskList(

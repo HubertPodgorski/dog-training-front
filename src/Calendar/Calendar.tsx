@@ -8,6 +8,8 @@ import { apiRoutes } from '../helpers/apiRoutes'
 import axios from 'axios'
 import useFetchEvents from '../hooks/useFetchEvents'
 import ButtonBar from '../components/ButtonBar/ButtonBar'
+// import CALENDAR_ALL_EVENTS_QUERY from '../queries/calendarQueries'
+// import { useQuery } from '@apollo/react-hooks'
 
 const Calendar = () => {
   const { people, events } = useSelector((s) => s.tasksStore)
@@ -17,6 +19,8 @@ const Calendar = () => {
   const fetchEvents = useFetchEvents()
 
   const showAllPeople = person === ''
+
+  // const { loading, data: allEventsData } = useQuery(CALENDAR_ALL_EVENTS_QUERY)
 
   const columnCount =
     (showAllPeople
@@ -39,7 +43,7 @@ const Calendar = () => {
       <ButtonBar />
 
       <Card className={styles.wrapper}>
-        {savingData && <LinearProgress />}
+        {(savingData || loading) && <LinearProgress />}
         <Select
           label='Osoba'
           className={styles.select}
@@ -60,7 +64,7 @@ const Calendar = () => {
 
         <div
           className={classNames(styles.calendarGrid)}
-          style={{ gridTemplateColumns: `repeat(${columnCount + showAllPeople}, 1fr)` }}
+          style={{ gridTemplateColumns: `repeat(${columnCount + (showAllPeople ? 1 : 0)}, 1fr)` }}
         >
           {events.map(({ name, id: eventId, dogs: eventDogs }) => (
             <Fragment key={eventId}>
