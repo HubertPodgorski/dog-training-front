@@ -3,17 +3,30 @@ import styles from './TasksGrid.module.scss'
 import Task from '../Display/Task/Task'
 import { ExtendedTask } from '../../types'
 import classNames from 'classnames'
-import useSelector from '../../hooks/useSelector'
+import { useQuery } from '@apollo/react-hooks'
+import { MAIN_LIST_TASKS_QUERY, MainListTasksQuery } from '../../queries/tasksQuery'
+import useAsyncEffect from '../../hooks/useAsyncEffect'
 
 const TasksGrid = () => {
-  const taskList = useSelector((s) => s.tasksStore.taskList)
+  const { loading, data: taskListData, refetch } = useQuery<MainListTasksQuery>(
+    MAIN_LIST_TASKS_QUERY,
+  )
+
+  useAsyncEffect(async () => {
+    await refetch()
+  }, [])
+
   const [groupedTaskList, setGroupedTaskList] = useState<{
     [order: number]: ExtendedTask[]
   }>({})
 
   useEffect(() => {
+    if (loading || !taskListData) {
+      return
+    }
+
     setGroupedTaskList(
-      taskList.reduce((newGroupedTaskList: { [order: number]: ExtendedTask[] }, task): {
+      taskListData.tasks.reduce((newGroupedTaskList: { [order: number]: ExtendedTask[] }, task): {
         [order: number]: ExtendedTask[]
       } => {
         if (newGroupedTaskList[task.order]) {
@@ -26,9 +39,11 @@ const TasksGrid = () => {
         return { ...newGroupedTaskList, [task.order]: [task] }
       }, {}),
     )
-  }, [taskList])
+  }, [taskListData, loading])
 
-  const hasTwoColumns = !!taskList.find(({ column }) => column === 'right')
+  const hasTwoColumns = taskListData
+    ? !!taskListData.tasks.find(({ column }) => column === 'right')
+    : false
 
   return (
     <div className={styles.mainGrid}>
