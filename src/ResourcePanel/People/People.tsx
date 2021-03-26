@@ -24,7 +24,7 @@ const People = () => {
     dogs: { name: string; id: string }[]
   }>(PEOPLE_RESOURCE_QUERY)
 
-  const addResource = async () => {
+  const addPerson = async () => {
     await axios.post(apiRoutes.POST.addPerson, {
       name: newResourceValue,
     })
@@ -36,7 +36,7 @@ const People = () => {
     setAddResourceModalOpem(false)
   }
 
-  const deleteResource = async (id: string) => {
+  const deletePerson = async (id: string) => {
     await axios.delete(apiRoutes.DELETE.deletePerson(id))
 
     await refetch()
@@ -53,7 +53,7 @@ const People = () => {
   }
 
   return (
-    <div>
+    <div className={styles.resourceWrapper}>
       <Modal
         open={addResourceModalOpem}
         onClose={() => setAddResourceModalOpem(false)}
@@ -67,7 +67,7 @@ const People = () => {
             value={newResourceValue}
           />
 
-          <Button onClick={async () => addResource()}>Dodaj</Button>
+          <Button onClick={async () => addPerson()}>Dodaj</Button>
         </Card>
       </Modal>
 
@@ -81,11 +81,11 @@ const People = () => {
 
       {data && (
         <List>
-          {data.people.map(({ name, id }) => (
+          {data.people.map(({ name, id, dogs }) => (
             <ListItem component='li' key={id}>
               <div>
                 <ListItemText primary={name} />{' '}
-                <IconButton onClick={async () => deleteResource(id)}>
+                <IconButton onClick={async () => deletePerson(id)}>
                   <Delete />
                 </IconButton>
               </div>
@@ -97,7 +97,7 @@ const People = () => {
                   }}
                   options={data.dogs}
                   selectLabel='Psy'
-                  selectedValues={data.dogs.map(({ id }) => id)}
+                  selectedValues={dogs.map(({ id }) => id)}
                 />
               </div>
             </ListItem>

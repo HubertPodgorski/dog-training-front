@@ -47,7 +47,7 @@ export const EVENTS_RESOURCE_QUERY = gql`
 
 export const PEOPLE_TASKS_RESOURCE_QUERY = gql`
   query {
-    peopleTasks {
+    personTasks {
       id
       name
     }

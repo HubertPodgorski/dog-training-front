@@ -47,7 +47,7 @@ const DogTasks = () => {
   }, [])
 
   return (
-    <div>
+    <div className={styles.resourceWrapper}>
       <Modal
         open={addResourceModalOpem}
         onClose={() => setAddResourceModalOpem(false)}

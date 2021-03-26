@@ -19,7 +19,7 @@ const PeopleTasks = () => {
   const [addResourceModalOpem, setAddResourceModalOpem] = useState(false)
   const [newResourceValue, setNewResourceValue] = useState('')
 
-  const { loading, data, refetch } = useQuery<{ peopleTasks: PersonTask[] }>(
+  const { loading, data, refetch } = useQuery<{ personTasks: { name: string; id: string }[] }>(
     PEOPLE_TASKS_RESOURCE_QUERY,
   )
 
@@ -46,7 +46,7 @@ const PeopleTasks = () => {
   }, [])
 
   return (
-    <div>
+    <div className={styles.resourceWrapper}>
       <Modal
         open={addResourceModalOpem}
         onClose={() => setAddResourceModalOpem(false)}
@@ -74,7 +74,7 @@ const PeopleTasks = () => {
 
       {data && (
         <List>
-          {data.peopleTasks.map(({ name, id }) => (
+          {data.personTasks.map(({ name, id }) => (
             <ListItem component='li' key={id}>
               <ListItemText primary={name} />{' '}
               <IconButton onClick={async () => deletePersonTask(id)}>

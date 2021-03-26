@@ -93,26 +93,24 @@ const ResourcePanel = () => {
 
         <Divider />
 
-        <ReactRouter>
-          <Switch>
-            {console.log('resourcePaths.people => ', resourcePaths.people)}
-            <Route exact path={resourcePaths.people}>
-              <People />
-            </Route>
-            <Route exact path={resourcePaths.dogs}>
-              <Dogs />
-            </Route>
-            <Route exact path={resourcePaths.peopleTasks}>
-              <PeopleTasks />
-            </Route>
-            <Route exact path={resourcePaths.dogTasks}>
-              <DogTasks />
-            </Route>
-            <Route exact path={resourcePaths.events}>
-              <Events />
-            </Route>
-          </Switch>
-        </ReactRouter>
+        <Switch>
+          {console.log('resourcePaths.people => ', resourcePaths.people)}
+          <Route exact path={resourcePaths.people}>
+            <People />
+          </Route>
+          <Route exact path={resourcePaths.dogs}>
+            <Dogs />
+          </Route>
+          <Route exact path={resourcePaths.peopleTasks}>
+            <PeopleTasks />
+          </Route>
+          <Route exact path={resourcePaths.dogTasks}>
+            <DogTasks />
+          </Route>
+          <Route exact path={resourcePaths.events}>
+            <Events />
+          </Route>
+        </Switch>
       </Card>
     </div>
   )
