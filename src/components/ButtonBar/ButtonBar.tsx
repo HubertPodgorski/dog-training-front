@@ -1,5 +1,4 @@
 import React from 'react'
-import RefreshButton from '../buttons/RefreshButton/RefreshButton'
 import ResourcePanelButton from '../buttons/ResourcePanelButton/ResourcePanelButton'
 import LockButton from '../buttons/LockButton/LockButton'
 import styles from './ButtonBar.module.scss'
@@ -12,7 +11,7 @@ import ListingButton from '../buttons/ListingButton/ListingButton'
 const ButtonBar = () => {
   const history = useHistory()
 
-  const isInCalendar = history.location.pathname.includes(routePaths.calendar)
+  // const isInCalendar = history.location.pathname.includes(routePaths.calendar)
   const isInConfigurator = history.location.pathname.includes(routePaths.configurator)
   const isInListing =
     history.location.pathname.includes(routePaths.list) || history.location.pathname === '/'
