@@ -19,9 +19,8 @@ const ButtonBar = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.buttonsGrid}>
-        <RefreshButton />
-        {!isInCalendar && <CalendarButton />}
-        {isInCalendar && <ListingButton />}
+        {isInListing && <CalendarButton />}
+        {!isInListing && <ListingButton />}
       </div>
 
       <div className={styles.buttonsGrid}>
