@@ -14,24 +14,32 @@ import { useQuery } from '@apollo/react-hooks'
 import { EVENTS_RESOURCE_QUERY } from '../../queries/resourceQueries'
 
 const Events = () => {
-  const [addResourceModalOpem, setAddResourceModalOpem] = useState(false)
-  const [newResourceValue, setNewResourceValue] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [eventName, setEventName] = useState('')
+  const [editingId, setEditingId] = useState<string | undefined>()
 
   const { loading, data, refetch } = useQuery<{ events: { name: string; id: string }[] }>(
     EVENTS_RESOURCE_QUERY,
   )
 
-  const addEvent = async () => {
-    await axios.post(apiRoutes.POST.addEvent, {
-      name: newResourceValue,
-    })
+  const saveEvent = async () => {
+    if (editingId) {
+      await axios.put(apiRoutes.PUT.updateEvent(editingId), {
+        name: eventName,
+      })
+    } else {
+      await axios.post(apiRoutes.POST.addEvent, {
+        name: eventName,
+      })
+    }
 
     //FIXME:  fetch resource type only changed
 
     // FIXME: fetch people tasks
     await refetch()
-    setNewResourceValue('')
-    setAddResourceModalOpem(false)
+    setModalOpen(false)
+    setEventName('')
+    setEditingId(undefined)
   }
 
   const deleteEvent = async (id: string) => {
@@ -49,25 +57,29 @@ const Events = () => {
   return (
     <div className={styles.resourceWrapper}>
       <Modal
-        open={addResourceModalOpem}
-        onClose={() => setAddResourceModalOpem(false)}
+        open={modalOpen}
+        onClose={() => {
+          setModalOpen(false)
+          setEventName('')
+          setEditingId(undefined)
+        }}
         aria-labelledby={`Dodaj wydarzenie`}
       >
         <Card className={classNames(styles.wrapper, styles.form)}>
           <TextField
             variant='outlined'
             label='Nazwa'
-            onChange={(e) => setNewResourceValue(e.target.value)}
-            value={newResourceValue}
+            onChange={(e) => setEventName(e.target.value)}
+            value={eventName}
           />
 
-          <Button onClick={async () => addEvent()}>Dodaj</Button>
+          <Button onClick={async () => saveEvent()}>{editingId ? 'Edytuj' : 'Dodaj'}</Button>
         </Card>
       </Modal>
 
       {loading && <LinearProgress />}
       <h1>Zarządzanie wydarzeniami</h1>
-      <Button variant='outlined' color='primary' onClick={() => setAddResourceModalOpem(true)}>
+      <Button variant='outlined' color='primary' onClick={() => setModalOpen(true)}>
         Dodaj wydarzenie
       </Button>
 
@@ -75,7 +87,14 @@ const Events = () => {
         <List>
           {data.events.map(({ name, id }) => (
             <ListItem component='li' key={id}>
-              <ListItemText primary={name} />{' '}
+              <ListItemText
+                primary={name}
+                onClick={() => {
+                  setEventName(name)
+                  setEditingId(id)
+                  setModalOpen(true)
+                }}
+              />{' '}
               <IconButton onClick={async () => deleteEvent(id)}>
                 <Delete />
               </IconButton>
