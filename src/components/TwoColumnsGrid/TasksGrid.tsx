@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import { useQuery } from '@apollo/react-hooks'
 import { MAIN_LIST_TASKS_QUERY, MainListTasksQuery } from '../../queries/tasksQuery'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
+import { LinearProgress } from '@material-ui/core'
 
 const TasksGrid = () => {
   const { loading, data: taskListData, refetch } = useQuery<MainListTasksQuery>(
@@ -46,30 +47,36 @@ const TasksGrid = () => {
     : false
 
   return (
-    <div className={styles.mainGrid}>
-      {Object.entries(groupedTaskList).map(([order, tasks]) => (
-        <div
-          key={order}
-          className={classNames(styles.innerGrid, {
-            [styles.singleColumn]: !hasTwoColumns,
-          })}
-          style={{
-            gridRow: `${+order} / ${+order + 1}`,
-          }}
-        >
-          {tasks.map((task) => (
-            <>
-              <Task
-                key={task.id}
-                task={task}
-                hasTwoColumns={hasTwoColumns}
-                className={task.column === 'left' ? styles.leftColumnTask : styles.rightColumnTask}
-              />
-            </>
-          ))}
-        </div>
-      ))}
-    </div>
+    <>
+      {loading && <LinearProgress />}
+
+      <div className={styles.mainGrid}>
+        {Object.entries(groupedTaskList).map(([order, tasks]) => (
+          <div
+            key={order}
+            className={classNames(styles.innerGrid, {
+              [styles.singleColumn]: !hasTwoColumns,
+            })}
+            style={{
+              gridRow: `${+order} / ${+order + 1}`,
+            }}
+          >
+            {tasks.map((task) => (
+              <>
+                <Task
+                  key={task.id}
+                  task={task}
+                  hasTwoColumns={hasTwoColumns}
+                  className={
+                    task.column === 'left' ? styles.leftColumnTask : styles.rightColumnTask
+                  }
+                />
+              </>
+            ))}
+          </div>
+        ))}
+      </div>
+    </>
   )
 }
 
