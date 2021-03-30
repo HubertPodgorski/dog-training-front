@@ -15,22 +15,30 @@ import { DOGS_RESOURCE_QUERY } from '../../queries/resourceQueries'
 import { Dog } from '../../types'
 
 const Dogs = () => {
-  const [addResourceModalOpem, setAddResourceModalOpem] = useState(false)
-  const [newResourceValue, setNewResourceValue] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [dogName, setDogName] = useState('')
+  const [editingId, setEditingId] = useState<string | undefined>()
 
   const { loading, data, refetch } = useQuery<{ dogs: Dog[] }>(DOGS_RESOURCE_QUERY)
 
-  const addDog = async () => {
-    await axios.post(apiRoutes.POST.addDog, {
-      name: newResourceValue,
-    })
+  const saveDog = async () => {
+    if (editingId) {
+      await axios.put(apiRoutes.PUT.editDog(editingId), {
+        name: dogName,
+      })
+    } else {
+      await axios.post(apiRoutes.POST.addDog, {
+        name: dogName,
+      })
+    }
 
     //FIXME:  fetch resource type only changed
 
     // FIXME: fetch people tasks
     await refetch()
-    setNewResourceValue('')
-    setAddResourceModalOpem(false)
+    setDogName('')
+    setModalOpen(false)
+    setEditingId(undefined)
   }
 
   const deleteDog = async (id: string) => {
@@ -48,19 +56,22 @@ const Dogs = () => {
   return (
     <div className={styles.resourceWrapper}>
       <Modal
-        open={addResourceModalOpem}
-        onClose={() => setAddResourceModalOpem(false)}
+        open={modalOpen}
+        onClose={() => {
+          setModalOpen(false)
+          setEditingId(undefined)
+        }}
         aria-labelledby='Dodaj psa'
       >
         <Card className={classNames(styles.wrapper, styles.form)}>
           <TextField
             variant='outlined'
             label='Nazwa'
-            onChange={(e) => setNewResourceValue(e.target.value)}
-            value={newResourceValue}
+            onChange={(e) => setDogName(e.target.value)}
+            value={dogName}
           />
 
-          <Button onClick={async () => addDog()}>Dodaj</Button>
+          <Button onClick={async () => saveDog()}>{editingId ? 'Edytuj' : Dodaj}</Button>
         </Card>
       </Modal>
 
@@ -68,14 +79,22 @@ const Dogs = () => {
 
       <h1>Zarządzanie psami</h1>
 
-      <Button variant='outlined' color='primary' onClick={() => setAddResourceModalOpem(true)}>
+      <Button variant='outlined' color='primary' onClick={() => setModalOpen(true)}>
         Dodaj psa
       </Button>
 
       {data && (
         <List>
           {data.dogs.map(({ name, id }) => (
-            <ListItem component='li' key={id}>
+            <ListItem
+              component='li'
+              key={id}
+              onClick={() => {
+                setEditingId(id)
+                setDogName(name)
+                setModalOpen(true)
+              }}
+            >
               <ListItemText primary={name} />{' '}
               <IconButton onClick={async () => deleteDog(id)}>
                 <Delete />

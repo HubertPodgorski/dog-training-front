@@ -14,21 +14,29 @@ import { useQuery } from '@apollo/react-hooks'
 import { PEOPLE_TASKS_RESOURCE_QUERY } from '../../queries/resourceQueries'
 
 const PeopleTasks = () => {
-  const [addResourceModalOpem, setAddResourceModalOpem] = useState(false)
-  const [newResourceValue, setNewResourceValue] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [personTaskName, setPersonTaskName] = useState('')
+  const [editingId, setEditingId] = useState<undefined | string>()
 
   const { loading, data, refetch } = useQuery<{ personTasks: { name: string; id: string }[] }>(
     PEOPLE_TASKS_RESOURCE_QUERY,
   )
 
-  const addPersonTask = async () => {
-    await axios.post(apiRoutes.POST.addPersonTask, {
-      name: newResourceValue,
-    })
+  const savePersonTask = async () => {
+    if (editingId) {
+      await axios.put(apiRoutes.PUT.updatePersonTask(editingId), {
+        name: personTaskName,
+      })
+    } else {
+      await axios.post(apiRoutes.POST.addPersonTask, {
+        name: personTaskName,
+      })
+    }
 
     await refetch()
-    setNewResourceValue('')
-    setAddResourceModalOpem(false)
+    setEditingId(undefined)
+    setPersonTaskName('')
+    setModalOpen(false)
   }
 
   const deletePersonTask = async (id: string) => {
@@ -46,19 +54,23 @@ const PeopleTasks = () => {
   return (
     <div className={styles.resourceWrapper}>
       <Modal
-        open={addResourceModalOpem}
-        onClose={() => setAddResourceModalOpem(false)}
+        open={modalOpen}
+        onClose={() => {
+          setEditingId(undefined)
+          setPersonTaskName('')
+          setModalOpen(false)
+        }}
         aria-labelledby={`Dodaj zadanie osoby`}
       >
         <Card className={classNames(styles.wrapper, styles.form)}>
           <TextField
             variant='outlined'
             label='Nazwa'
-            onChange={(e) => setNewResourceValue(e.target.value)}
-            value={newResourceValue}
+            onChange={(e) => setPersonTaskName(e.target.value)}
+            value={personTaskName}
           />
 
-          <Button onClick={async () => addPersonTask()}>Dodaj</Button>
+          <Button onClick={async () => savePersonTask()}>{editingId ? 'Edytuj' : 'Dodaj'}</Button>
         </Card>
       </Modal>
 
@@ -66,7 +78,7 @@ const PeopleTasks = () => {
 
       <h1>Zarządzanie zadaniami osób</h1>
 
-      <Button variant='outlined' color='primary' onClick={() => setAddResourceModalOpem(true)}>
+      <Button variant='outlined' color='primary' onClick={() => setModalOpen(true)}>
         Dodaj zadanie osoby
       </Button>
 
@@ -74,7 +86,14 @@ const PeopleTasks = () => {
         <List>
           {data.personTasks.map(({ name, id }) => (
             <ListItem component='li' key={id}>
-              <ListItemText primary={name} />{' '}
+              <ListItemText
+                primary={name}
+                onClick={() => {
+                  setEditingId(id)
+                  setPersonTaskName(name)
+                  setModalOpen(true)
+                }}
+              />{' '}
               <IconButton onClick={async () => deletePersonTask(id)}>
                 <Delete />
               </IconButton>

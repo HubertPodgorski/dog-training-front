@@ -15,24 +15,32 @@ import { useQuery } from '@apollo/react-hooks'
 import { PEOPLE_RESOURCE_QUERY } from '../../queries/resourceQueries'
 
 const People = () => {
-  const [addResourceModalOpem, setAddResourceModalOpem] = useState(false)
-  const [newResourceValue, setNewResourceValue] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [personName, setPersonName] = useState('')
+  const [editingId, setEditingId] = useState<undefined | string>()
 
   const { loading, data, refetch } = useQuery<{
     people: { name: string; id: string; dogs: { name: string; id: string }[] }[]
     dogs: { name: string; id: string }[]
   }>(PEOPLE_RESOURCE_QUERY)
 
-  const addPerson = async () => {
-    await axios.post(apiRoutes.POST.addPerson, {
-      name: newResourceValue,
-    })
+  const savePerson = async () => {
+    if (editingId) {
+      await axios.put(apiRoutes.PUT.updatePerson(editingId), {
+        name: personName,
+      })
+    } else {
+      await axios.post(apiRoutes.POST.addPerson, {
+        name: personName,
+      })
+    }
 
     //FIXME:  fetch resource type only changed
 
     await refetch()
-    setNewResourceValue('')
-    setAddResourceModalOpem(false)
+    setEditingId(undefined)
+    setPersonName('')
+    setModalOpen(false)
   }
 
   const deletePerson = async (id: string) => {
@@ -54,19 +62,23 @@ const People = () => {
   return (
     <div className={styles.resourceWrapper}>
       <Modal
-        open={addResourceModalOpem}
-        onClose={() => setAddResourceModalOpem(false)}
+        open={modalOpen}
+        onClose={() => {
+          setModalOpen(false)
+          setEditingId(undefined)
+          setPersonName('')
+        }}
         aria-labelledby={`Dodaj osobę`}
       >
         <Card className={classNames(styles.wrapper, styles.form)}>
           <TextField
             variant='outlined'
             label='Nazwa'
-            onChange={(e) => setNewResourceValue(e.target.value)}
-            value={newResourceValue}
+            onChange={(e) => setPersonName(e.target.value)}
+            value={personName}
           />
 
-          <Button onClick={async () => addPerson()}>Dodaj</Button>
+          <Button onClick={async () => savePerson()}>{editingId ? 'Edytuj' : 'Dodaj'}</Button>
         </Card>
       </Modal>
 
@@ -74,7 +86,7 @@ const People = () => {
 
       <h1>Zarządzanie ludźmi</h1>
 
-      <Button variant='outlined' color='primary' onClick={() => setAddResourceModalOpem(true)}>
+      <Button variant='outlined' color='primary' onClick={() => setModalOpen(true)}>
         Dodaj osobę
       </Button>
 
@@ -83,7 +95,14 @@ const People = () => {
           {data.people.map(({ name, id, dogs }) => (
             <ListItem component='li' key={id}>
               <div>
-                <ListItemText primary={name} />{' '}
+                <ListItemText
+                  primary={name}
+                  onClick={() => {
+                    setEditingId(id)
+                    setPersonName(name)
+                    setModalOpen(true)
+                  }}
+                />{' '}
                 <IconButton onClick={async () => deletePerson(id)}>
                   <Delete />
                 </IconButton>
