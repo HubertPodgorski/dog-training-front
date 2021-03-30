@@ -42,7 +42,7 @@ const CustomMultiselect = ({ options, selectedValues, selectLabel, onChange }: P
           return 1
         }
 
-        return 0
+        return -1
       })
     }
 
@@ -61,7 +61,7 @@ const CustomMultiselect = ({ options, selectedValues, selectLabel, onChange }: P
         name={selectLabel}
         multiple
       >
-        {sortOptionsByDogAvailability(options).map((option: SelectOption) => {
+        {sortOptionsByDogAvailability().map((option: SelectOption) => {
           const dogOnEvent =
             selectedEvent && selectedEvent.dogs.find(({ dog }) => dog.id === option.id)
 
