@@ -53,8 +53,6 @@ const CustomMultiselect = ({ options, selectedValues, selectLabel, onChange }: P
     <FormControl className={styles.multiselect}>
       <InputLabel htmlFor='name-disabled'>{selectLabel}</InputLabel>
 
-      {console.log('selectedValues => ', selectedValues)}
-      {console.log('options => ', options)}
       <Select
         value={selectedValues}
         onChange={(e) => onChange(e.target.value)}
