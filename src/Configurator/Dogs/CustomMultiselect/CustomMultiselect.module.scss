@@ -2,3 +2,15 @@
     min-width: 200px !important;
     width: 100%;
 }
+
+.selectOption {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.presenceIcon {
+    display: flex;
+    align-items: center;
+}

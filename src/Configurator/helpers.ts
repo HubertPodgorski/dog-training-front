@@ -1,4 +1,4 @@
-import { ExtendedTask, PersonTask } from '../types'
+import { Dog, ExtendedTask, PersonTask, SelectOption } from '../types'
 import _cloneDeep from 'lodash/cloneDeep'
 import { DogTraining } from '../types'
 
@@ -78,3 +78,6 @@ export const getDogNamesByOrder = (taskList: ExtendedTask[], orderToFind: number
 
   return ` => ${dogNames.join(' // ')}`
 }
+
+export const mapDogsToSelectShape = (dogs: Dog[]): SelectOption[] =>
+  dogs.map(({ name, id }) => ({ name, id }))
