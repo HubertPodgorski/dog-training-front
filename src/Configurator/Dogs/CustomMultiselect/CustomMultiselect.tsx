@@ -72,14 +72,12 @@ const CustomMultiselect = ({ options, selectedValues, selectLabel, onChange }: P
                 {dogOnEvent && (
                   <div>
                     {dogOnEvent.status !== 'present' ? (
-                      <div className={styles.presenceIcon}>
-                        {dogOnEvent.status === 'notPresent' && 'Nie obecny'}
-                        {dogOnEvent.status === 'untouched' && 'Nie wybrano'} <Icon>block</Icon>
-                      </div>
+                      <>
+                        {dogOnEvent.status === 'notPresent' && <Icon>block</Icon>}
+                        {dogOnEvent.status === 'untouched' && <Icon>warning</Icon>}
+                      </>
                     ) : (
-                      <div className={styles.presenceIcon}>
-                        Obecny <Icon>checkCircleOutline</Icon>
-                      </div>
+                      <Icon>checkCircleOutline</Icon>
                     )}
                   </div>
                 )}
