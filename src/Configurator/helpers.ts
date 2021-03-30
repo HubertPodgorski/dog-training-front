@@ -21,7 +21,15 @@ export const canAddNewTaskPair = (peopleTaskPairs: PersonTask[]): boolean =>
 export const getOrderList = (taskList: ExtendedTask[]): number[] => {
   let orderList: number[] = []
 
-  for (let i = 1; i <= taskList.length; i++) {
+  const highestOrder = taskList.reduce((order, { order: taskOrder }) => {
+    if (taskOrder > order) {
+      return taskOrder
+    }
+
+    return order
+  }, 1)
+
+  for (let i = 1; i <= highestOrder + 1; i++) {
     orderList = [...orderList, i]
   }
 
