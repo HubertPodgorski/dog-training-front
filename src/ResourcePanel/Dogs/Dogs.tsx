@@ -23,7 +23,7 @@ const Dogs = () => {
 
   const saveDog = async () => {
     if (editingId) {
-      await axios.put(apiRoutes.PUT.editDog(editingId), {
+      await axios.put(apiRoutes.PUT.updateDog(editingId), {
         name: dogName,
       })
     } else {
@@ -71,7 +71,7 @@ const Dogs = () => {
             value={dogName}
           />
 
-          <Button onClick={async () => saveDog()}>{editingId ? 'Edytuj' : Dodaj}</Button>
+          <Button onClick={async () => saveDog()}>{editingId ? 'Edytuj' : 'Dodaj'}</Button>
         </Card>
       </Modal>
 

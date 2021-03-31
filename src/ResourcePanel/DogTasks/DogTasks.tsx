@@ -23,7 +23,7 @@ const DogTasks = () => {
 
   const saveDogTask = async () => {
     if (editingId) {
-      await axios.put(apiRoutes.PUT.editDogTask(editingId), {
+      await axios.put(apiRoutes.PUT.updateDogTask(editingId), {
         name: dogTaskName,
       })
     } else {
