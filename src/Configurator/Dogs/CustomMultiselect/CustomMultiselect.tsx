@@ -6,7 +6,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import InputLabel from '@material-ui/core/InputLabel'
 import { SelectOption } from '../../../types'
 import useSelector from '../../../hooks/useSelector'
-import { Icon } from '@material-ui/core'
+import { ListItemIcon, ListItemText } from '@material-ui/core'
+import { Block, Warning, CheckCircleOutline } from '@material-ui/icons'
 
 interface Props {
   options: SelectOption[]
@@ -58,6 +59,17 @@ const CustomMultiselect = ({ options, selectedValues, selectLabel, onChange }: P
         onChange={(e) => onChange(e.target.value)}
         name={selectLabel}
         multiple
+        renderValue={(value) =>
+          (value as string[]).map((dogId, index) => {
+            const dogFound = options.find(({ id }) => id === dogId)
+
+            if (!dogFound) {
+              return ''
+            }
+
+            return `${dogFound.name}${index + 1 !== (value as string[]).length ? ', ' : ''}`
+          })
+        }
       >
         {sortOptionsByDogAvailability().map((option: SelectOption) => {
           const dogOnEvent =
@@ -65,21 +77,22 @@ const CustomMultiselect = ({ options, selectedValues, selectLabel, onChange }: P
 
           return (
             <MenuItem key={option.id} value={option.id}>
-              <div className={styles.selectOption}>
-                <div>{option.name}</div>
-                {dogOnEvent && (
-                  <div>
-                    {dogOnEvent.status !== 'present' ? (
-                      <>
-                        {dogOnEvent.status === 'notPresent' && <Icon>block</Icon>}
-                        {dogOnEvent.status === 'untouched' && <Icon>warning</Icon>}
-                      </>
-                    ) : (
-                      <Icon>checkCircleOutline</Icon>
-                    )}
-                  </div>
-                )}
-              </div>
+              <ListItemText primary={option.name} />
+
+              {!selectedEvent && 'Wybierz wydarzenie'}
+
+              {dogOnEvent && (
+                <ListItemIcon>
+                  {dogOnEvent.status !== 'present' ? (
+                    <>
+                      {dogOnEvent.status === 'notPresent' && <Block />}
+                      {dogOnEvent.status === 'untouched' && <Warning />}
+                    </>
+                  ) : (
+                    <CheckCircleOutline />
+                  )}
+                </ListItemIcon>
+              )}
             </MenuItem>
           )
         })}
