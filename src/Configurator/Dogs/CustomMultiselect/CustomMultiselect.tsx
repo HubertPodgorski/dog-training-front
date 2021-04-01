@@ -15,9 +15,16 @@ interface Props {
   selectLabel: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (e: any) => void
+  hideEventIcons?: boolean
 }
 
-const CustomMultiselect = ({ options, selectedValues, selectLabel, onChange }: Props) => {
+const CustomMultiselect = ({
+  options,
+  selectedValues,
+  selectLabel,
+  onChange,
+  hideEventIcons,
+}: Props) => {
   const { selectedEvent } = useSelector((s) => s.tasksStore)
 
   const sortOptionsByDogAvailability = () => {
@@ -79,19 +86,23 @@ const CustomMultiselect = ({ options, selectedValues, selectLabel, onChange }: P
             <MenuItem key={option.id} value={option.id}>
               <ListItemText primary={option.name} />
 
-              {!selectedEvent && 'Wybierz wydarzenie'}
+              {!hideEventIcons && (
+                <>
+                  {!selectedEvent && 'Wybierz wydarzenie'}
 
-              {dogOnEvent && (
-                <ListItemIcon>
-                  {dogOnEvent.status !== 'present' ? (
-                    <>
-                      {dogOnEvent.status === 'notPresent' && <Block />}
-                      {dogOnEvent.status === 'untouched' && <Warning />}
-                    </>
-                  ) : (
-                    <CheckCircleOutline />
+                  {dogOnEvent && (
+                    <ListItemIcon>
+                      {dogOnEvent.status !== 'present' ? (
+                        <>
+                          {dogOnEvent.status === 'notPresent' && <Block />}
+                          {dogOnEvent.status === 'untouched' && <Warning />}
+                        </>
+                      ) : (
+                        <CheckCircleOutline />
+                      )}
+                    </ListItemIcon>
                   )}
-                </ListItemIcon>
+                </>
               )}
             </MenuItem>
           )

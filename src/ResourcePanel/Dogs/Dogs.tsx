@@ -10,8 +10,6 @@ import ListItemText from '@material-ui/core/ListItemText'
 import { apiRoutes } from '../../helpers/apiRoutes'
 import axios from 'axios'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
-import { useQuery } from '@apollo/react-hooks'
-import { DOGS_RESOURCE_QUERY } from '../../queries/resourceQueries'
 import { Dog } from '../../types'
 
 const Dogs = () => {
@@ -19,7 +17,17 @@ const Dogs = () => {
   const [dogName, setDogName] = useState('')
   const [editingId, setEditingId] = useState<string | undefined>()
 
-  const { loading, data, refetch } = useQuery<{ dogs: Dog[] }>(DOGS_RESOURCE_QUERY)
+  const [loading, setLoading] = useState(false)
+  const [dogsData, setDogsData] = useState<{ data: Dog[] }>({ data: [] })
+
+  const fetchDogs = async () => {
+    setLoading(true)
+    const { data } = await axios.get(apiRoutes.GET.dogs)
+    setDogsData({ data })
+    setLoading(false)
+  }
+
+  useAsyncEffect(fetchDogs, [])
 
   const saveDog = async () => {
     if (editingId) {
@@ -32,10 +40,7 @@ const Dogs = () => {
       })
     }
 
-    //FIXME:  fetch resource type only changed
-
-    // FIXME: fetch people tasks
-    await refetch()
+    await fetchDogs()
     setDogName('')
     setModalOpen(false)
     setEditingId(undefined)
@@ -44,14 +49,8 @@ const Dogs = () => {
   const deleteDog = async (id: string) => {
     await axios.delete(apiRoutes.DELETE.deleteDog(id))
 
-    // FIXME: fetch people tasks
-    await refetch()
+    await fetchDogs()
   }
-
-  useAsyncEffect(async () => {
-    // FIXME: fetch people tasks
-    await refetch()
-  }, [])
 
   return (
     <div className={styles.resourceWrapper}>
@@ -83,26 +82,24 @@ const Dogs = () => {
         Dodaj psa
       </Button>
 
-      {data && (
-        <List>
-          {data.dogs.map(({ name, id }) => (
-            <ListItem
-              component='li'
-              key={id}
-              onClick={() => {
-                setEditingId(id)
-                setDogName(name)
-                setModalOpen(true)
-              }}
-            >
-              <ListItemText primary={name} />{' '}
-              <IconButton onClick={async () => deleteDog(id)}>
-                <Delete />
-              </IconButton>
-            </ListItem>
-          ))}
-        </List>
-      )}
+      <List>
+        {dogsData.data.map(({ name, id }) => (
+          <ListItem
+            component='li'
+            key={id}
+            onClick={() => {
+              setEditingId(id)
+              setDogName(name)
+              setModalOpen(true)
+            }}
+          >
+            <ListItemText primary={name} />{' '}
+            <IconButton onClick={async () => deleteDog(id)}>
+              <Delete />
+            </IconButton>
+          </ListItem>
+        ))}
+      </List>
     </div>
   )
 }

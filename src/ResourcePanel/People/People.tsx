@@ -11,18 +11,36 @@ import CustomMultiselect from '../../Configurator/Dogs/CustomMultiselect/CustomM
 import { apiRoutes } from '../../helpers/apiRoutes'
 import axios from 'axios'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
-import { useQuery } from '@apollo/react-hooks'
-import { PEOPLE_RESOURCE_QUERY } from '../../queries/resourceQueries'
+import { Dog, Person } from '../../types'
 
 const People = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [personName, setPersonName] = useState('')
   const [editingId, setEditingId] = useState<undefined | string>()
 
-  const { loading, data, refetch } = useQuery<{
-    people: { name: string; id: string; dogs: { name: string; id: string }[] }[]
-    dogs: { name: string; id: string }[]
-  }>(PEOPLE_RESOURCE_QUERY)
+  const [peopleLoading, setPeopleLoading] = useState(false)
+  const [dogsLoading, setDogLoading] = useState(false)
+  const [dogsData, setDogsData] = useState<{ data: Dog[] }>({ data: [] })
+  const [peopleData, setPeopleData] = useState<{ data: Person[] }>({ data: [] })
+
+  const fetchDogs = async () => {
+    setDogLoading(true)
+    const { data } = await axios.get(apiRoutes.GET.dogs)
+    setDogsData({ data })
+    setDogLoading(false)
+  }
+
+  const fetchPeople = async () => {
+    setPeopleLoading(true)
+    const { data } = await axios.get(apiRoutes.GET.people)
+    setPeopleData({ data })
+    setPeopleLoading(false)
+  }
+
+  useAsyncEffect(async () => {
+    await fetchDogs()
+    await fetchPeople()
+  }, [])
 
   const savePerson = async () => {
     if (editingId) {
@@ -37,7 +55,7 @@ const People = () => {
 
     //FIXME:  fetch resource type only changed
 
-    await refetch()
+    await fetchPeople()
     setEditingId(undefined)
     setPersonName('')
     setModalOpen(false)
@@ -46,17 +64,13 @@ const People = () => {
   const deletePerson = async (id: string) => {
     await axios.delete(apiRoutes.DELETE.deletePerson(id))
 
-    await refetch()
+    await fetchPeople()
   }
-
-  useAsyncEffect(async () => {
-    await refetch()
-  }, [])
 
   const updateDogList = async (dogs: string[], personId: string) => {
     await axios.put(apiRoutes.PUT.updatePerson(personId), { dogs })
 
-    await refetch()
+    await fetchPeople()
   }
 
   return (
@@ -82,7 +96,7 @@ const People = () => {
         </Card>
       </Modal>
 
-      {loading && <LinearProgress />}
+      {(dogsLoading || peopleLoading) && <LinearProgress />}
 
       <h1>Zarządzanie ludźmi</h1>
 
@@ -90,38 +104,37 @@ const People = () => {
         Dodaj osobę
       </Button>
 
-      {data && (
-        <List>
-          {data.people.map(({ name, id, dogs }) => (
-            <ListItem component='li' key={id}>
-              <div>
-                <ListItemText
-                  primary={name}
-                  onClick={() => {
-                    setEditingId(id)
-                    setPersonName(name)
-                    setModalOpen(true)
-                  }}
-                />{' '}
-                <IconButton onClick={async () => deletePerson(id)}>
-                  <Delete />
-                </IconButton>
-              </div>
+      <List>
+        {peopleData.data.map(({ name, id, dogs }) => (
+          <ListItem component='li' key={id}>
+            <div>
+              <ListItemText
+                primary={name}
+                onClick={() => {
+                  setEditingId(id)
+                  setPersonName(name)
+                  setModalOpen(true)
+                }}
+              />{' '}
+              <IconButton onClick={async () => deletePerson(id)}>
+                <Delete />
+              </IconButton>
+            </div>
 
-              <div>
-                <CustomMultiselect
-                  onChange={async (dogIds: string[]) => {
-                    await updateDogList(dogIds, id)
-                  }}
-                  options={data.dogs}
-                  selectLabel='Psy'
-                  selectedValues={dogs.map(({ id }) => id)}
-                />
-              </div>
-            </ListItem>
-          ))}
-        </List>
-      )}
+            <div>
+              <CustomMultiselect
+                onChange={async (dogIds: string[]) => {
+                  await updateDogList(dogIds, id)
+                }}
+                options={dogsData.data}
+                selectLabel='Psy'
+                selectedValues={dogs.map(({ id }) => id)}
+                hideEventIcons
+              />
+            </div>
+          </ListItem>
+        ))}
+      </List>
     </div>
   )
 }

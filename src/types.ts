@@ -1,6 +1,6 @@
 export interface ExtendedTask {
   dogs: Dog[]
-  peopleTasks: PersonTask[]
+  peopleTasks: PersonAndPersonTaskPair[]
   description: string
   id: string
   order: number
@@ -15,13 +15,18 @@ export interface Dog {
   id: string
 }
 
-export interface PersonTask {
+export interface PersonAndPersonTaskPair {
   id: string
   uuid: string
   taskName: string
   taskId: string
   personId: string
   personName: string
+}
+
+export interface PersonTask {
+  id: string
+  name: string
 }
 
 export interface SelectOption {
@@ -54,7 +59,7 @@ export interface DogTraining {
   trainingDescription: string
   order: number
   dogTasks: string[]
-  peopleTasks: PersonTask[]
+  peopleTasks: PersonAndPersonTaskPair[]
   isDisabled: boolean
 }
 

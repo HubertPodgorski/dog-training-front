@@ -10,17 +10,26 @@ import ListItemText from '@material-ui/core/ListItemText'
 import { apiRoutes } from '../../helpers/apiRoutes'
 import axios from 'axios'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
-import { useQuery } from '@apollo/react-hooks'
-import { PEOPLE_TASKS_RESOURCE_QUERY } from '../../queries/resourceQueries'
+import { PersonTask } from '../../types'
 
 const PeopleTasks = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [personTaskName, setPersonTaskName] = useState('')
   const [editingId, setEditingId] = useState<undefined | string>()
 
-  const { loading, data, refetch } = useQuery<{ personTasks: { name: string; id: string }[] }>(
-    PEOPLE_TASKS_RESOURCE_QUERY,
-  )
+  const [loading, setLoading] = useState(false)
+  const [personTasksData, setPersonTasksData] = useState<{ data: PersonTask[] }>({
+    data: [],
+  })
+
+  const fetchPersonTasks = async () => {
+    setLoading(true)
+    const { data } = await axios.get(apiRoutes.GET.personTasks)
+    setPersonTasksData({ data })
+    setLoading(false)
+  }
+
+  useAsyncEffect(fetchPersonTasks, [])
 
   const savePersonTask = async () => {
     if (editingId) {
@@ -33,7 +42,7 @@ const PeopleTasks = () => {
       })
     }
 
-    await refetch()
+    await fetchPersonTasks()
     setEditingId(undefined)
     setPersonTaskName('')
     setModalOpen(false)
@@ -42,14 +51,8 @@ const PeopleTasks = () => {
   const deletePersonTask = async (id: string) => {
     await axios.delete(apiRoutes.DELETE.deletePersonTask(id))
 
-    // FIXME: fetch people tasks
-    await refetch()
+    await fetchPersonTasks()
   }
-
-  useAsyncEffect(async () => {
-    // FIXME: fetch people tasks
-    await refetch()
-  }, [])
 
   return (
     <div className={styles.resourceWrapper}>
@@ -82,25 +85,23 @@ const PeopleTasks = () => {
         Dodaj zadanie osoby
       </Button>
 
-      {data && (
-        <List>
-          {data.personTasks.map(({ name, id }) => (
-            <ListItem component='li' key={id}>
-              <ListItemText
-                primary={name}
-                onClick={() => {
-                  setEditingId(id)
-                  setPersonTaskName(name)
-                  setModalOpen(true)
-                }}
-              />{' '}
-              <IconButton onClick={async () => deletePersonTask(id)}>
-                <Delete />
-              </IconButton>
-            </ListItem>
-          ))}
-        </List>
-      )}
+      <List>
+        {personTasksData.data.map(({ name, id }) => (
+          <ListItem component='li' key={id}>
+            <ListItemText
+              primary={name}
+              onClick={() => {
+                setEditingId(id)
+                setPersonTaskName(name)
+                setModalOpen(true)
+              }}
+            />{' '}
+            <IconButton onClick={async () => deletePersonTask(id)}>
+              <Delete />
+            </IconButton>
+          </ListItem>
+        ))}
+      </List>
     </div>
   )
 }

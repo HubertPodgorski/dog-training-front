@@ -5,12 +5,21 @@ import { Person } from '../types'
 import ButtonBar from '../components/ButtonBar/ButtonBar'
 import AllPeopleCalendar from './AllPeopleCalendar/AllPeopleCalendar'
 import PersonCalendar from './PersonCalendar/PersonCalendar'
-import { useQuery } from '@apollo/react-hooks'
-import { PEOPLE_RESOURCE_QUERY } from '../queries/resourceQueries'
+import useAsyncEffect from '../hooks/useAsyncEffect'
+import axios from 'axios'
+import { apiRoutes } from '../helpers/apiRoutes'
 
 const Calendar = () => {
   const [person, setPerson] = useState<Person | ''>('')
-  const { loading, data } = useQuery<{ people: Person[] }>(PEOPLE_RESOURCE_QUERY)
+  const [loading, setLoading] = useState(false)
+  const [peopleData, setPeopleData] = useState<{ data: Person[] }>({ data: [] })
+
+  useAsyncEffect(async () => {
+    setLoading(true)
+    const { data } = await axios.get(apiRoutes.GET.people)
+    setPeopleData({ data })
+    setLoading(false)
+  }, [])
 
   const showAllPeople = person === ''
 
@@ -26,23 +35,17 @@ const Calendar = () => {
           className={styles.select}
           value={showAllPeople ? '' : (person as Person).id}
           onChange={(e) => {
-            if (!data) {
-              setPerson('')
-              return
-            }
-
-            const personFound = data.people.find(({ id }) => (e.target.value || '') === id)
+            const personFound = peopleData.data.find(({ id }) => (e.target.value || '') === id)
             setPerson(personFound || '')
           }}
         >
           <MenuItem value={''}>Wszyscy</MenuItem>
 
-          {data &&
-            data.people.map(({ id, name }) => (
-              <MenuItem value={id} key={id}>
-                {name}
-              </MenuItem>
-            ))}
+          {peopleData.data.map(({ id, name }) => (
+            <MenuItem value={id} key={id}>
+              {name}
+            </MenuItem>
+          ))}
         </Select>
 
         {showAllPeople && <AllPeopleCalendar />}

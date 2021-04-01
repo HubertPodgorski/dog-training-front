@@ -1,18 +1,18 @@
-import { Dog, ExtendedTask, PersonTask, SelectOption } from '../types'
+import { Dog, ExtendedTask, PersonAndPersonTaskPair, SelectOption } from '../types'
 import _cloneDeep from 'lodash/cloneDeep'
 import { DogTraining } from '../types'
 
 export const isPersonAlreadyInTheList = (
   personUuid: string,
-  currentPeopleTasks: PersonTask[],
+  currentPeopleTasks: PersonAndPersonTaskPair[],
 ): boolean => {
-  return currentPeopleTasks.some((personTask: PersonTask): boolean =>
+  return currentPeopleTasks.some((personTask: PersonAndPersonTaskPair): boolean =>
     personTask.personId ? personTask.personId === personUuid : false,
   )
 }
 
-export const canAddNewTaskPair = (peopleTaskPairs: PersonTask[]): boolean =>
-  peopleTaskPairs.every((peopleTaskPair: PersonTask): boolean => {
+export const canAddNewTaskPair = (peopleTaskPairs: PersonAndPersonTaskPair[]): boolean =>
+  peopleTaskPairs.every((peopleTaskPair: PersonAndPersonTaskPair): boolean => {
     const { uuid, personId, personName, taskName, taskId } = peopleTaskPair
 
     return Boolean(uuid && personId && taskId && personName && taskName)

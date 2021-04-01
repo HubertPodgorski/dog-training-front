@@ -6,7 +6,7 @@ import Icon from '@material-ui/core/Icon'
 import Section from '../../components/Section/Section'
 import CustomSelect from '../PeopleTasks/CustomSelect/CustomSelect'
 import { getDogNamesByOrder } from '../helpers'
-import { Column, Dog, DogTask, ExtendedTask, PersonTask } from '../../types'
+import { Column, Dog, DogTask, ExtendedTask, PersonAndPersonTaskPair } from '../../types'
 import Dogs from '../Dogs/Dogs'
 import TextField from '@material-ui/core/TextField'
 import DogTasks from '../DogTasks/DogTasks'
@@ -35,7 +35,7 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
   const [dogTasks, setDogTasks] = useState<DogTask[]>(task.tasks)
   const [selectedDogs, setSelectedDogs] = useState<Dog[]>(task.dogs)
   const [order, setOrder] = useState<number>(task.order)
-  const [peopleTasks, setPeopleTasks] = useState<PersonTask[]>(task.peopleTasks)
+  const [peopleTasks, setPeopleTasks] = useState<PersonAndPersonTaskPair[]>(task.peopleTasks)
 
   const saveDescription = async (description: string) => {
     setIsSaving(true)
@@ -77,7 +77,7 @@ const EditTaskModal = ({ open, onClose, task, setIsSaving }: Props) => {
     setIsSaving(false)
   }
 
-  const savePeopleTasks = async (peopleTasks: PersonTask[]) => {
+  const savePeopleTasks = async (peopleTasks: PersonAndPersonTaskPair[]) => {
     setIsSaving(true)
 
     await axios.put(apiRoutes.PUT.updateTask(task.id), {

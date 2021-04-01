@@ -10,17 +10,24 @@ import ListItemText from '@material-ui/core/ListItemText'
 import { apiRoutes } from '../../helpers/apiRoutes'
 import axios from 'axios'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
-import { useQuery } from '@apollo/react-hooks'
-import { EVENTS_RESOURCE_QUERY } from '../../queries/resourceQueries'
+import { Event } from '../../types'
 
 const Events = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [eventName, setEventName] = useState('')
   const [editingId, setEditingId] = useState<string | undefined>()
 
-  const { loading, data, refetch } = useQuery<{ events: { name: string; id: string }[] }>(
-    EVENTS_RESOURCE_QUERY,
-  )
+  const [loading, setLoading] = useState(false)
+  const [eventsData, setEventsData] = useState<{ data: Event[] }>({ data: [] })
+
+  const fetchEvents = async () => {
+    setLoading(true)
+    const { data } = await axios.get(apiRoutes.GET.events)
+    setEventsData({ data })
+    setLoading(false)
+  }
+
+  useAsyncEffect(fetchEvents, [])
 
   const saveEvent = async () => {
     if (editingId) {
@@ -36,7 +43,7 @@ const Events = () => {
     //FIXME:  fetch resource type only changed
 
     // FIXME: fetch people tasks
-    await refetch()
+    await fetchEvents()
     setModalOpen(false)
     setEventName('')
     setEditingId(undefined)
@@ -46,13 +53,8 @@ const Events = () => {
     await axios.delete(apiRoutes.DELETE.deleteEvent(id))
 
     // FIXME: fetch people tasks
-    await refetch()
+    await fetchEvents()
   }
-
-  useAsyncEffect(async () => {
-    // FIXME: fetch people tasks
-    await refetch()
-  }, [])
 
   return (
     <div className={styles.resourceWrapper}>
@@ -83,25 +85,23 @@ const Events = () => {
         Dodaj wydarzenie
       </Button>
 
-      {data && (
-        <List>
-          {data.events.map(({ name, id }) => (
-            <ListItem component='li' key={id}>
-              <ListItemText
-                primary={name}
-                onClick={() => {
-                  setEventName(name)
-                  setEditingId(id)
-                  setModalOpen(true)
-                }}
-              />{' '}
-              <IconButton onClick={async () => deleteEvent(id)}>
-                <Delete />
-              </IconButton>
-            </ListItem>
-          ))}
-        </List>
-      )}
+      <List>
+        {eventsData.data.map(({ name, id }) => (
+          <ListItem component='li' key={id}>
+            <ListItemText
+              primary={name}
+              onClick={() => {
+                setEventName(name)
+                setEditingId(id)
+                setModalOpen(true)
+              }}
+            />{' '}
+            <IconButton onClick={async () => deleteEvent(id)}>
+              <Delete />
+            </IconButton>
+          </ListItem>
+        ))}
+      </List>
     </div>
   )
 }
