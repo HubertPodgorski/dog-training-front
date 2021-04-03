@@ -93,6 +93,9 @@ const Statistics = () => {
                     setEditingStatistics(statistic)
                     setOpen(true)
                   }}
+                  onDelete={async () => {
+                    await fetchDogStatistics()
+                  }}
                 />
               ))}
             </List>

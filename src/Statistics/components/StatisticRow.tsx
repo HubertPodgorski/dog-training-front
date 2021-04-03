@@ -1,15 +1,19 @@
 import React from 'react'
 import styles from './StatisticRow.module.scss'
 import { Dog, Statistic } from '../../types'
-import { List, ListItem } from '@material-ui/core'
+import { List, ListItem, ListItemIcon } from '@material-ui/core'
+import { DeleteOutline } from '@material-ui/icons'
+import { apiRoutes } from '../../helpers/apiRoutes'
+import axios from 'axios'
 
 interface Props {
   statistic: Statistic
   onClick: () => void
   dogs: Dog[]
+  onDelete: () => void
 }
 
-const StatisticRow = ({ statistic, onClick, dogs }: Props) => {
+const StatisticRow = ({ statistic, onClick, dogs, onDelete }: Props) => {
   const getRunAt = () => {
     if (statistic.runAt === 'asFirst') {
       return 'Jako pierwszy'
@@ -23,19 +27,32 @@ const StatisticRow = ({ statistic, onClick, dogs }: Props) => {
 
     return `Na: ${dogFound.name}`
   }
+
+  const removeStatistic = async () => {
+    await axios.delete(apiRoutes.DELETE.deleteDogStatistics(statistic.id))
+
+    onDelete()
+  }
+
   return (
-    <List onClick={onClick} title='Statystyki psa' className={styles.wrapper}>
-      {!!statistic.runAt && <ListItem>{getRunAt()}</ListItem>}
+    <List title='Statystyki psa' className={styles.wrapper}>
+      <ListItemIcon onClick={removeStatistic}>
+        <DeleteOutline />
+      </ListItemIcon>
 
-      {!!statistic.startMeter && <ListItem>Metr startowy: {statistic.startMeter}</ListItem>}
+      <div onClick={onClick}>
+        {!!statistic.runAt && <ListItem>{getRunAt()}</ListItem>}
 
-      {!!statistic.fullRunTime && (
-        <ListItem>Czas pełnego przebiegu: {statistic.fullRunTime}</ListItem>
-      )}
+        {!!statistic.startMeter && <ListItem>Metr startowy: {statistic.startMeter}</ListItem>}
 
-      {!!statistic.recallTime && <ListItem>Czas recalla: {statistic.recallTime}</ListItem>}
+        {!!statistic.fullRunTime && (
+          <ListItem>Czas pełnego przebiegu: {statistic.fullRunTime}</ListItem>
+        )}
 
-      {!!statistic.tapTime && <ListItem>Czas tapa: {statistic.tapTime}</ListItem>}
+        {!!statistic.recallTime && <ListItem>Czas recalla: {statistic.recallTime}</ListItem>}
+
+        {!!statistic.tapTime && <ListItem>Czas tapa: {statistic.tapTime}</ListItem>}
+      </div>
     </List>
   )
 }

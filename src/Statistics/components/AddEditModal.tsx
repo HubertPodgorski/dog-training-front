@@ -56,7 +56,10 @@ const AddEditModal = ({
     setEditingStatistics(undefined)
     setOpen(false)
     onSaved()
-    setFormData({})
+    setFormData({
+      dogId: selectedDog.id,
+      eventId: selectedEvent.id,
+    })
   }
 
   useEffect(() => {
