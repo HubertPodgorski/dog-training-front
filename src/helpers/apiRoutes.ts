@@ -12,10 +12,12 @@ export const apiRoutes = {
     personTasks: appendApiPrefix('/person-tasks'),
     dogTasks: appendApiPrefix('/dog-tasks'),
     events: appendApiPrefix('/events'),
+    dogStatistics: appendApiPrefix('/dog-statistics'),
   },
   PUT: {
     updatePerson: (id: string) => appendApiPrefix(`/people/${id}`),
     updateDog: (id: string) => appendApiPrefix(`/dogs/${id}`),
+    updateDogStatistics: (id: string) => appendApiPrefix(`/dog-statistics/${id}`),
     updateDogTask: (id: string) => appendApiPrefix(`/dog-tasks/${id}`),
     updatePersonTask: (id: string) => appendApiPrefix(`/person-tasks/${id}`),
     updateTask: (id: string) => appendApiPrefix(`/tasks/${id}`),
@@ -28,6 +30,7 @@ export const apiRoutes = {
     addDog: appendApiPrefix('/dogs'),
     addDogTask: appendApiPrefix('/dog-tasks'),
     addEvent: appendApiPrefix('/events'),
+    addDogStatistics: appendApiPrefix(`/dog-statistics`),
   },
   DELETE: {
     deleteTask: (id: string) => appendApiPrefix(`/tasks/${id}`),
@@ -36,5 +39,6 @@ export const apiRoutes = {
     deleteDog: (id: string) => appendApiPrefix(`/dogs/${id}`),
     deleteDogTask: (id: string) => appendApiPrefix(`/dog-tasks/${id}`),
     deleteEvent: (id: string) => appendApiPrefix(`/events/${id}`),
+    deleteDogStatistics: (id: string) => appendApiPrefix(`/dog-statistics/${id}`),
   },
 }

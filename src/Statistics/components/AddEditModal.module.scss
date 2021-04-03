@@ -1,0 +1,12 @@
+.wrapper {
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 12px;
+}

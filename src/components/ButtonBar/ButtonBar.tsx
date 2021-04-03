@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom'
 import { routePaths } from '../../Router'
 import CalendarButton from '../buttons/CalendarButton/CalendarButton'
 import ListingButton from '../buttons/ListingButton/ListingButton'
+import StatisticsButton from '../buttons/StatisticsButton/StatisticsButton'
 
 const ButtonBar = () => {
   const history = useHistory()
@@ -18,8 +19,9 @@ const ButtonBar = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.buttonsGrid}>
-        {isInListing && <CalendarButton />}
-        {!isInListing && <ListingButton />}
+        <CalendarButton />
+        <ListingButton />
+        <StatisticsButton />
       </div>
 
       <div className={styles.buttonsGrid}>

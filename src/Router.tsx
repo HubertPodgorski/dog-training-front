@@ -4,12 +4,14 @@ import Configurator from './Configurator/Configurator'
 import React from 'react'
 import Calendar from './Calendar/Calendar'
 import ResourcePanel from './ResourcePanel/ResourcePanel'
+import Statistics from './Statistics/Statistics'
 
 export const routePaths = {
   list: '/list',
   configurator: '/configurator',
   calendar: '/calendar',
   resourcePanel: '/resourcePanel',
+  statistics: '/statistics',
 }
 
 export const resourcePaths = {
@@ -34,6 +36,9 @@ const Router = () => (
       </Route>
       <Route path={routePaths.resourcePanel}>
         <ResourcePanel />
+      </Route>
+      <Route path={routePaths.statistics}>
+        <Statistics />
       </Route>
 
       <Route path='/'>

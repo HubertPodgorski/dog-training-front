@@ -24,6 +24,17 @@ export interface PersonAndPersonTaskPair {
   personName: string
 }
 
+export interface Statistic {
+  id: string
+  startMeter?: string
+  fullRunTime?: string
+  recallTime?: string
+  tapTime?: string
+  runAt?: string
+  eventId?: string
+  dogId?: string
+}
+
 export interface PersonTask {
   id: string
   name: string
