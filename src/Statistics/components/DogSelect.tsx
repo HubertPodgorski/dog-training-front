@@ -4,7 +4,7 @@ import { InputLabel, MenuItem, Select } from '@material-ui/core'
 import { Dog } from '../../types'
 
 interface Props {
-  selectedDog: Dog
+  selectedDog?: Dog
   setSelectedDog: (dog: Dog) => void
   dogs: Dog[]
 }
@@ -26,6 +26,8 @@ const DogSelect = ({ selectedDog, setSelectedDog, dogs }: Props) => {
           }
         }}
       >
+        <MenuItem value={''}>Wybierz psa</MenuItem>
+
         {dogs.map((dog) => (
           <MenuItem key={dog.id} value={dog.id}>
             {dog.name}

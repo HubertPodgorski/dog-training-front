@@ -16,20 +16,24 @@ const Statistics = () => {
   const [dogs, setDogs] = useState<Dog[]>([])
   const [events, setEvents] = useState<Event[]>([])
   const [dataLoading, setDataLoading] = useState(false)
-  const [selectedDog, setSelectedDog] = useState()
-  const [selectedEvent, setSelectedEvent] = useState()
+  const [selectedDog, setSelectedDog] = useState<Dog | undefined>()
+  const [selectedEvent, setSelectedEvent] = useState<Event | 'basicData'>('basicData')
   const [dogStatistics, setDogStatistics] = useState<Statistic[]>([])
   const [open, setOpen] = useState(false)
   const [editingStatistics, setEditingStatistics] = useState<Statistic | undefined>()
 
   const fetchDogStatistics = async () => {
-    // FIXME: fetch only relevant data
     setDataLoading(true)
-    console.log('selectedDog.id => ', selectedDog.id)
-    console.log('selectedEvent.id => ', selectedEvent.id)
+    if (!selectedEvent || !selectedDog) {
+      return
+    }
+
+    const event = selectedEvent === 'basicData' ? selectedEvent : selectedEvent.id
+
     const dogStatisticsResponse = await axios.get(
-      `${apiRoutes.GET.dogStatistics}?dogId_eq=${selectedDog.id}&eventId_eq=${selectedEvent.id}`,
+      `${apiRoutes.GET.dogStatistics}?dogId_eq=${selectedDog.id}&eventId_eq=${event}`,
     )
+
     setDogStatistics(dogStatisticsResponse.data)
     setDataLoading(false)
   }
@@ -54,9 +58,6 @@ const Statistics = () => {
     setDataLoading(false)
   }, [])
 
-  console.log('selectedDog => ', selectedDog)
-  console.log('selectedEvent => ', selectedEvent)
-  console.log('dogStatistics => ', dogStatistics)
   return (
     <div>
       <ButtonBar />

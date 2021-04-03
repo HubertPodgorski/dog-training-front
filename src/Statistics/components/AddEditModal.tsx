@@ -14,7 +14,7 @@ interface Props {
   setEditingStatistics: (statistic: Statistic | undefined) => void
   editingStatistics?: Statistic
   selectedDog: Dog
-  selectedEvent: Event
+  selectedEvent: Event | 'basicData'
   onSaved: () => void
 }
 
@@ -34,19 +34,19 @@ const AddEditModal = ({
       ? editingStatistics
       : {
           dogId: selectedDog.id,
-          eventId: selectedEvent.id,
+          eventId: selectedEvent === 'basicData' ? selectedEvent : selectedEvent.id,
         },
   )
 
   useEffect(() => {
-    setFormData({ ...formData, dogId: selectedDog.id, eventId: selectedEvent.id })
+    setFormData({
+      ...formData,
+      dogId: selectedDog.id,
+      eventId: selectedEvent === 'basicData' ? selectedEvent : selectedEvent.id,
+    })
   }, [selectedDog, selectedEvent])
 
   const saveData = async () => {
-    console.log('open => ', open)
-
-    console.log('formData => ', formData)
-
     if (editingStatistics) {
       await axios.put(apiRoutes.PUT.updateDogStatistics(editingStatistics.id), formData)
     } else {
@@ -58,7 +58,7 @@ const AddEditModal = ({
     onSaved()
     setFormData({
       dogId: selectedDog.id,
-      eventId: selectedEvent.id,
+      eventId: selectedEvent === 'basicData' ? selectedEvent : selectedEvent.id,
     })
   }
 
@@ -68,8 +68,6 @@ const AddEditModal = ({
     }
   }, [editingStatistics])
 
-  console.log('formData => ', formData)
-  console.log('editingStatistics => ', editingStatistics)
   return (
     <Modal
       open={open}
