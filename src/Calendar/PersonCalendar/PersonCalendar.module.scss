@@ -6,6 +6,18 @@
   overflow-x: auto;
 }
 
+.eventWrapper {
+  margin-bottom: 16px;
+
+  &:last-of-type {
+    margin: 0;
+  }
+}
+
+.eventLabel {
+  padding: 4px;
+}
+
 .cell {
   border: 1px solid #333;
   padding: 4px 8px;

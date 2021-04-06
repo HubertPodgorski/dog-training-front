@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames'
 import styles from './PersonCalendar.module.scss'
 import { getDogStatus } from '../helpers'
@@ -34,15 +34,15 @@ const PersonCalendar = ({ personId }: Props) => {
     <div>
       {(loading || saving) && <LinearProgress />}
 
-      {data && (
-        <div
-          className={classNames(styles.grid)}
-          style={{ gridTemplateColumns: `repeat(${data.person.dogs.length + 1}, 1fr)` }}
-        >
-          {data.events.map(({ name: eventName, id: eventId, dogs: eventDogs }) => (
-            <Fragment key={eventId}>
-              <div className={styles.cell}>{eventName}</div>
+      {data &&
+        data.events.map(({ name: eventName, id: eventId, dogs: eventDogs }) => (
+          <div key={eventId} className={styles.eventWrapper}>
+            <div className={styles.eventLabel}>{eventName}</div>
 
+            <div
+              className={classNames(styles.grid)}
+              style={{ gridTemplateColumns: `repeat(${data.person.dogs.length}, 1fr)` }}
+            >
               {data.person.dogs.map((dog) => {
                 const dogStatus = getDogStatus(dog.id, eventDogs)
 
@@ -94,10 +94,9 @@ const PersonCalendar = ({ personId }: Props) => {
                   </div>
                 )
               })}
-            </Fragment>
-          ))}
-        </div>
-      )}
+            </div>
+          </div>
+        ))}
     </div>
   )
 }

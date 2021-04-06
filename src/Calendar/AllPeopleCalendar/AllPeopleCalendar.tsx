@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import styles from './AllPeopleCalendar.module.scss'
 import { useQuery } from '@apollo/react-hooks'
 import { CALENDAR_ALL_EVENTS_QUERY, CalendarAllEventsQuery } from '../../queries/calendarQueries'
