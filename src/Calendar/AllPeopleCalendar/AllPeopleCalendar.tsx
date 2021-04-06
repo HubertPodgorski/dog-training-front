@@ -13,7 +13,7 @@ const AllPeopleCalendar = () => {
   )
 
   const columnCount = allEventsData
-    ? allEventsData.people.reduce((count, { dogs }) => count + dogs.length, 0) + 2
+    ? allEventsData.people.reduce((count, { dogs }) => count + dogs.length, 0)
     : 0
 
   useAsyncEffect(async () => {
@@ -23,17 +23,28 @@ const AllPeopleCalendar = () => {
   return (
     <div>
       {loading && <LinearProgress />}
-      {allEventsData && (
-        <div
-          className={styles.grid}
-          style={{
-            gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
-          }}
-        >
-          {allEventsData.events.map(({ dogs: eventDogs, name }, index) => (
-            <Fragment key={index}>
-              <div className={styles.cell}>{name}</div>
+      {allEventsData &&
+        allEventsData.events.map(({ dogs: eventDogs, name, id: eventId }) => (
+          <div key={eventId} className={styles.eventWrapper}>
+            <div className={styles.eventLabel}>
+              <div>
+                {name} <br />
+                Frekwencja:{' '}
+                {eventDogs.reduce((count, dogWithStatus) => {
+                  if (dogWithStatus && dogWithStatus.status === 'present') {
+                    return count + 1
+                  }
+                  return count
+                }, 0)}
+              </div>
+            </div>
 
+            <div
+              className={styles.grid}
+              style={{
+                gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
+              }}
+            >
               {allEventsData.people.map(({ dogs }) =>
                 dogs.map(({ id, name }) => {
                   const dogStatus = getDogStatus(id, eventDogs)
@@ -51,20 +62,9 @@ const AllPeopleCalendar = () => {
                   )
                 }),
               )}
-
-              <div className={styles.cell}>
-                Frekwencja:{' '}
-                {eventDogs.reduce((count, dogWithStatus) => {
-                  if (dogWithStatus && dogWithStatus.status === 'present') {
-                    return count + 1
-                  }
-                  return count
-                }, 0)}
-              </div>
-            </Fragment>
-          ))}
-        </div>
-      )}
+            </div>
+          </div>
+        ))}
     </div>
   )
 }
