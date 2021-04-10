@@ -66,25 +66,16 @@ const PersonCalendar = ({ personId }: Props) => {
                       value={dogStatus}
                       onChange={async (e) => {
                         setSaving(true)
-                        const newEventDogs = eventDogs.filter(
-                          (dogWithStatus) => dogWithStatus && dogWithStatus.dog.id !== dog.id,
-                        )
 
-                        const dataToSet = {
-                          dogs: [
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            ...newEventDogs.map(({ status, dog }) => ({
-                              status,
-                              dog: { name: dog.name, _id: dog.id },
-                            })),
-                            { status: e.target.value, dog: { _id: dog.id, name: dog.name } },
-                          ],
+                        const newDog = {
+                          status: e.target.value,
+                          dog: { _id: dog.id, name: dog.name },
                         }
 
-                        await axios.put(apiRoutes.PUT.updateEvent(eventId), dataToSet)
-                        setSaving(false)
+                        await axios.put(apiRoutes.PUT.updateEventDog(eventId), newDog)
 
                         await refetch()
+                        setSaving(false)
                       }}
                     >
                       <MenuItem value={'untouched'}>Nie wybrano</MenuItem>

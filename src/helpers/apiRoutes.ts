@@ -22,6 +22,7 @@ export const apiRoutes = {
     updatePersonTask: (id: string) => appendApiPrefix(`/person-tasks/${id}`),
     updateTask: (id: string) => appendApiPrefix(`/tasks/${id}`),
     updateEvent: (id: string) => appendApiPrefix(`/events/${id}`),
+    updateEventDog: (id: string) => appendApiPrefix(`/events/${id}/dog`),
   },
   POST: {
     addTask: appendApiPrefix('/tasks'),
