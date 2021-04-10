@@ -107,16 +107,18 @@ const Configurator = () => {
           <div className={styles.eventDogs}>
             {!selectedEvent.dogs.length && 'Nie ma psów wybranych na to wydarzenie'}
 
-            {selectedEvent.dogs.map(({ dog }) => (
-              <div
-                className={classNames(styles.dog, {
-                  [styles.dogNotUsed]: dogNotUsed(taskList, dog.id),
-                })}
-                key={dog.id}
-              >
-                {dog.name}
-              </div>
-            ))}
+            {selectedEvent.dogs
+              .filter(({ status }) => status === 'present')
+              .map(({ dog }) => (
+                <div
+                  className={classNames(styles.dog, {
+                    [styles.dogNotUsed]: dogNotUsed(taskList, dog.id),
+                  })}
+                  key={dog.id}
+                >
+                  {dog.name}
+                </div>
+              ))}
           </div>
         )}
 
