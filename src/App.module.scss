@@ -6,3 +6,11 @@
     min-height: 100vh;
     color: $main-font-color;
 }
+
+.version {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    font-size: 10px;
+    color: #d3d3d3;
+}

@@ -7,6 +7,8 @@ const App = () => {
   return (
     <section className={styles.wrapper}>
       <Router />
+
+      <div className={styles.version}>v1.0.0</div>
     </section>
   )
 }
