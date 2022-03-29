@@ -19,6 +19,7 @@ const TasksGrid = () => {
     setLoading(true)
     const { data } = await axios.get(apiRoutes.GET.tasks)
     setTasksData({ data })
+
     setLoading(false)
   }, [])
 
@@ -28,18 +29,34 @@ const TasksGrid = () => {
     }
 
     setGroupedTaskList(
-      tasksData.data.reduce((newGroupedTaskList: { [order: number]: ExtendedTask[] }, task): {
-        [order: number]: ExtendedTask[]
-      } => {
-        if (newGroupedTaskList[task.order]) {
-          return {
-            ...newGroupedTaskList,
-            [task.order]: [...newGroupedTaskList[task.order], task],
-          }
-        }
+      tasksData.data.reduce(
+        (
+          newGroupedTaskList: { [order: number]: ExtendedTask[] },
+          task,
+        ): {
+          [order: number]: ExtendedTask[]
+        } => {
+          if (newGroupedTaskList[task.order]) {
+            const newTasksForOrder = [...newGroupedTaskList[task.order], task]
 
-        return { ...newGroupedTaskList, [task.order]: [task] }
-      }, {}),
+            const newer = newTasksForOrder.sort((a, b) => {
+              if (b.column === 'left') {
+                return 1
+              } else {
+                return -1
+              }
+            })
+
+            return {
+              ...newGroupedTaskList,
+              [task.order]: newTasksForOrder,
+            }
+          }
+
+          return { ...newGroupedTaskList, [task.order]: [task] }
+        },
+        {},
+      ),
     )
   }, [tasksData, loading])
 
