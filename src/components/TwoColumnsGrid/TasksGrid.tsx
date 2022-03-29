@@ -37,9 +37,7 @@ const TasksGrid = () => {
           [order: number]: ExtendedTask[]
         } => {
           if (newGroupedTaskList[task.order]) {
-            const newTasksForOrder = [...newGroupedTaskList[task.order], task]
-
-            const newer = newTasksForOrder.sort((a, b) => {
+            const newTasksForOrder = [...newGroupedTaskList[task.order], task].sort((a, b) => {
               if (b.column === 'left') {
                 return 1
               } else {
