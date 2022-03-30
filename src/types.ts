@@ -6,6 +6,8 @@ export interface ExtendedTask {
   order: number
   tasks: DogTask[]
   column: Column
+  index: number
+  updatedAt?: string
 }
 
 export type Column = 'left' | 'right'

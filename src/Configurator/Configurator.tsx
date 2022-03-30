@@ -38,14 +38,14 @@ const Configurator = () => {
       return
     }
 
-    // FIXME: logix for same container reorder
-
     // Item on the same place
     if (source.droppableId === destination.droppableId && destination.index === source.index) {
       return
     }
 
     const [draggableIdentifier, extractedDraggableId] = draggableId.split('-')
+
+    console.log('draggableIdentifier => ', draggableIdentifier)
 
     if (draggableIdentifier === 'task') {
       const taskToUpdate = taskList.find(({ id }) => id === extractedDraggableId)
@@ -54,10 +54,20 @@ const Configurator = () => {
         return
       }
 
+      console.log('destination => ', destination)
+
+      // FIXME: logix for same container reorder
+
       const [identifier, destinationOrder, destinationColumn] = destination.droppableId.split('-')
+      console.log('identifier => ', identifier)
+      console.log('destinationOrder => ', destinationOrder)
+      console.log('destinationColumn => ', destinationColumn)
 
       if (identifier === 'order') {
         const newOrder = +destinationOrder
+
+        console.log('taskToUpdate => ', taskToUpdate)
+        console.log('newOrder => ', newOrder)
 
         const updatedTaskList: ExtendedTask[] = [
           ...taskList.filter(({ id }) => id !== taskToUpdate.id),
@@ -65,13 +75,16 @@ const Configurator = () => {
             ...taskToUpdate,
             order: newOrder,
             column: destinationColumn as Column,
+            index: destination.index + 1,
           },
         ]
+
         dispatch(setTaskList(updatedTaskList))
 
         await axios.put(apiRoutes.PUT.updateTask(taskToUpdate.id), {
           order: newOrder,
           column: destinationColumn as Column,
+          index: destination.index + 1,
         })
       }
     }
