@@ -1,5 +1,15 @@
 import React, { useState } from 'react'
-import { Button, Card, IconButton, LinearProgress, Modal } from '@material-ui/core'
+import {
+  Button,
+  Card,
+  Grid,
+  IconButton,
+  InputLabel,
+  LinearProgress,
+  MenuItem,
+  Modal,
+  Select,
+} from '@material-ui/core'
 import classNames from 'classnames'
 import styles from '../ResourcePanel.module.scss'
 import TextField from '@material-ui/core/TextField'
@@ -12,6 +22,10 @@ import axios from 'axios'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
 import { Event } from '../../types'
 import { KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers'
+import FormControl from '@material-ui/core/FormControl'
+import { formatDate, formatTime, sortByDateDesc } from '../../helpers/date'
+
+const eventNameOptions = ['Trening na trawie TKKF', 'Trening na matach szkoła']
 
 const Events = () => {
   const [modalOpen, setModalOpen] = useState(false)
@@ -74,37 +88,74 @@ const Events = () => {
         aria-labelledby={`Dodaj wydarzenie`}
       >
         <Card className={classNames(styles.wrapper, styles.form)}>
-          <TextField
-            variant='outlined'
-            label='Nazwa'
-            onChange={(e) => setEventName(e.target.value)}
-            value={eventName}
-          />
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant='outlined'
+                label='Nazwa'
+                onChange={(e) => setEventName(e.target.value)}
+                value={eventName}
+              />
+            </Grid>
 
-          <KeyboardDatePicker
-            margin='normal'
-            label='Data'
-            format='MM/dd/yyyy'
-            value={eventDate}
-            onChange={(e) => setEventDate(e || new Date())}
-            KeyboardButtonProps={{
-              'aria-label': 'Zmień datę',
-            }}
-          />
+            <Grid item xs={12}>
+              <FormControl variant='outlined' fullWidth>
+                <InputLabel id='name-label'>Nazwa</InputLabel>
 
-          <KeyboardTimePicker
-            margin='normal'
-            label='Godzina'
-            value={eventTime}
-            onChange={(e) => setEventTime(e || new Date())}
-            KeyboardButtonProps={{
-              'aria-label': 'Zmień godzinę',
-            }}
-            ampm={false}
-            autoOk
-          />
+                <Select
+                  labelId='name-label'
+                  value={eventName}
+                  label='Nazwa'
+                  onChange={(e) => setEventName(e.target.value as string)}
+                >
+                  <MenuItem value=''>
+                    <em>Brak</em>
+                  </MenuItem>
 
-          <Button onClick={async () => saveEvent()}>{editingId ? 'Edytuj' : 'Dodaj'}</Button>
+                  {eventNameOptions.map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <KeyboardDatePicker
+                fullWidth
+                margin='normal'
+                label='Data'
+                format='MM/dd/yyyy'
+                value={eventDate}
+                autoOk
+                onChange={(e) => setEventDate(e || new Date())}
+                KeyboardButtonProps={{
+                  'aria-label': 'Zmień datę',
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <KeyboardTimePicker
+                fullWidth
+                margin='normal'
+                label='Godzina'
+                value={eventTime}
+                onChange={(e) => setEventTime(e || new Date())}
+                KeyboardButtonProps={{
+                  'aria-label': 'Zmień godzinę',
+                }}
+                ampm={false}
+                autoOk
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button onClick={async () => saveEvent()}>{editingId ? 'Edytuj' : 'Dodaj'}</Button>
+            </Grid>
+          </Grid>
         </Card>
       </Modal>
 
@@ -115,10 +166,16 @@ const Events = () => {
       </Button>
 
       <List>
-        {eventsData.data.map(({ name, id, time, date }) => (
+        {eventsData.data.sort(sortByDateDesc).map(({ name, id, time, date }) => (
           <ListItem component='li' key={id}>
             <ListItemText
               primary={name}
+              secondary={
+                <>
+                  <br />
+                  {formatDate(date)} {formatTime(time)}
+                </>
+              }
               onClick={() => {
                 setEventName(name)
                 setEventTime(new Date(time))

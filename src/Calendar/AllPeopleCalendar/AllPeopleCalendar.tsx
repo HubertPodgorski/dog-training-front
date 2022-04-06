@@ -4,10 +4,9 @@ import { useQuery } from '@apollo/react-hooks'
 import { CALENDAR_ALL_EVENTS_QUERY, CalendarAllEventsQuery } from '../../queries/calendarQueries'
 import { LinearProgress } from '@material-ui/core'
 import classNames from 'classnames'
-import { getDogStatus, sortByDateDesc } from '../helpers'
+import { getDogStatus } from '../helpers'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
-import { format } from 'date-fns'
-import { pl } from 'date-fns/locale'
+import { formatDate, formatTime, sortByDateDesc } from '../../helpers/date'
 
 const AllPeopleCalendar = () => {
   const {
@@ -37,8 +36,7 @@ const AllPeopleCalendar = () => {
                 <div>
                   {name}
                   <br />
-                  {format(new Date(date), 'dd/MM/yy', { locale: pl })}{' '}
-                  {format(new Date(time), 'HH:m', { locale: pl })}
+                  {formatDate(date)} {formatTime(time)}
                   <br />
                   Frekwencja:{' '}
                   {eventDogs.reduce((count, dogWithStatus) => {

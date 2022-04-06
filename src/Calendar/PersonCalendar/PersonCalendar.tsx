@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import classNames from 'classnames'
 import styles from './PersonCalendar.module.scss'
-import { getDogStatus, sortByDateDesc } from '../helpers'
+import { getDogStatus } from '../helpers'
 import { LinearProgress, MenuItem, Select } from '@material-ui/core'
 import axios from 'axios'
 import { apiRoutes } from '../../helpers/apiRoutes'
@@ -11,8 +11,7 @@ import {
   CalendarPersonEventsQuery,
 } from '../../queries/calendarQueries'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
-import { format } from 'date-fns'
-import { pl } from 'date-fns/locale'
+import { formatDate, formatTime, sortByDateDesc } from '../../helpers/date'
 
 interface Props {
   personId: string
@@ -43,8 +42,7 @@ const PersonCalendar = ({ personId }: Props) => {
             <div key={eventId} className={styles.eventWrapper}>
               <div className={styles.eventLabel}>
                 {eventName} <br />
-                {format(new Date(date), 'dd/MM/yy', { locale: pl })}{' '}
-                {format(new Date(time), 'HH:m', { locale: pl })}
+                {formatDate(date)} {formatTime(time)}
               </div>
 
               <div
