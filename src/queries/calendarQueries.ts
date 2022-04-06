@@ -1,12 +1,16 @@
 import { gql } from 'apollo-boost'
 import { Dog, DogEventStatus } from '../types'
 
+export type Event = {
+  id: string
+  name: string
+  time: string
+  date: string
+  dogs: { status: DogEventStatus; dog: { id: string } }[]
+}
+
 export type CalendarAllEventsQuery = {
-  events: {
-    id: string
-    name: string
-    dogs: { status: DogEventStatus; dog: { id: string } }[]
-  }[]
+  events: Event[]
   people: { dogs: { id: string; name: string }[] }[]
 }
 
@@ -15,6 +19,8 @@ export const CALENDAR_ALL_EVENTS_QUERY = gql`
     events {
       id
       name
+      time
+      date
       dogs {
         status
         dog {
@@ -31,20 +37,26 @@ export const CALENDAR_ALL_EVENTS_QUERY = gql`
   }
 `
 
+export type PersonEvent = {
+  id: string
+  name: string
+  time: string
+  date: string
+  dogs: { status: DogEventStatus; dog: { id: string; name: string } }[]
+}
+
 export type CalendarPersonEventsQuery = {
-  events: {
-    id: string
-    name: string
-    dogs: { status: DogEventStatus; dog: { id: string; name: string } }[]
-  }[]
+  events: PersonEvent[]
   person: { dogs: Dog[] }
 }
 
 export const CALENDAR_PERSON_EVENT_DOGS = gql`
-  query($personId: ID!) {
+  query ($personId: ID!) {
     events {
       id
       name
+      time
+      date
       dogs {
         status
         dog {
