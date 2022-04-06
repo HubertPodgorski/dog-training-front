@@ -57,6 +57,8 @@ export interface Event {
   name: string
   id: string
   dogs: { dog: Dog; status: DogEventStatus }[]
+  time: string
+  date: string
 }
 
 export interface DogTask {

@@ -11,10 +11,14 @@ import { apiRoutes } from '../../helpers/apiRoutes'
 import axios from 'axios'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
 import { Event } from '../../types'
+import { KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers'
 
 const Events = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [eventName, setEventName] = useState('')
+  const [eventDate, setEventDate] = useState(new Date())
+  const [eventTime, setEventTime] = useState(new Date())
+
   const [editingId, setEditingId] = useState<string | undefined>()
 
   const [loading, setLoading] = useState(false)
@@ -30,14 +34,16 @@ const Events = () => {
   useAsyncEffect(fetchEvents, [])
 
   const saveEvent = async () => {
+    const data = {
+      name: eventName,
+      time: eventTime.toISOString(),
+      date: eventDate.toISOString(),
+    }
+
     if (editingId) {
-      await axios.put(apiRoutes.PUT.updateEvent(editingId), {
-        name: eventName,
-      })
+      await axios.put(apiRoutes.PUT.updateEvent(editingId), data)
     } else {
-      await axios.post(apiRoutes.POST.addEvent, {
-        name: eventName,
-      })
+      await axios.post(apiRoutes.POST.addEvent, data)
     }
 
     //FIXME:  fetch resource type only changed
@@ -75,6 +81,29 @@ const Events = () => {
             value={eventName}
           />
 
+          <KeyboardDatePicker
+            margin='normal'
+            label='Data'
+            format='MM/dd/yyyy'
+            value={eventDate}
+            onChange={(e) => setEventDate(e || new Date())}
+            KeyboardButtonProps={{
+              'aria-label': 'Zmień datę',
+            }}
+          />
+
+          <KeyboardTimePicker
+            margin='normal'
+            label='Godzina'
+            value={eventTime}
+            onChange={(e) => setEventTime(e || new Date())}
+            KeyboardButtonProps={{
+              'aria-label': 'Zmień godzinę',
+            }}
+            ampm={false}
+            autoOk
+          />
+
           <Button onClick={async () => saveEvent()}>{editingId ? 'Edytuj' : 'Dodaj'}</Button>
         </Card>
       </Modal>
@@ -86,12 +115,14 @@ const Events = () => {
       </Button>
 
       <List>
-        {eventsData.data.map(({ name, id }) => (
+        {eventsData.data.map(({ name, id, time, date }) => (
           <ListItem component='li' key={id}>
             <ListItemText
               primary={name}
               onClick={() => {
                 setEventName(name)
+                setEventTime(new Date(time))
+                setEventDate(new Date(date))
                 setEditingId(id)
                 setModalOpen(true)
               }}
