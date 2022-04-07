@@ -127,7 +127,7 @@ const Events = () => {
                 fullWidth
                 margin='normal'
                 label='Data'
-                format='MM/dd/yyyy'
+                format='dd/MM/yy'
                 value={eventDate}
                 autoOk
                 onChange={(e) => setEventDate(e || new Date())}
@@ -167,15 +167,10 @@ const Events = () => {
 
       <List>
         {eventsData.data.sort(sortByDateDesc).map(({ name, id, time, date }) => (
-          <ListItem component='li' key={id}>
+          <ListItem component='li' key={id} divider>
             <ListItemText
               primary={name}
-              secondary={
-                <>
-                  <br />
-                  {formatDate(date)} {formatTime(time)}
-                </>
-              }
+              secondary={`${formatDate(date)} ${formatTime(time)}`}
               onClick={() => {
                 setEventName(name)
                 setEventTime(new Date(time))
