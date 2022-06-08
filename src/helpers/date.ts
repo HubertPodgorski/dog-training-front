@@ -14,3 +14,4 @@ export const sortByDateDesc = (eventA: Event, eventB: Event) => {
 
 export const formatDate = (date: string) => format(new Date(date), 'dd/MM/yy', { locale: pl })
 export const formatTime = (time: string) => format(new Date(time), 'HH:mm', { locale: pl })
+export const getDayOfWeek = (date: string) => format(new Date(date), 'eeee', { locale: pl })

@@ -15,6 +15,7 @@ import classNames from 'classnames'
 import useAsyncEffect from '../hooks/useAsyncEffect'
 import useFetchResourceData from '../hooks/useFetchResourceData'
 import useFetchTaskList from '../hooks/useFetchTaskList'
+import { formatDate, formatTime, getDayOfWeek } from '../helpers/date'
 
 const dogNotUsed = (taskList: ExtendedTask[], dogId: string) =>
   !taskList.some(({ dogs }) => dogs.some(({ id }) => id === dogId))
@@ -98,6 +99,7 @@ const Configurator = () => {
         >
           {events.map((event) => (
             <MenuItem key={event.id} value={event.id}>
+              {formatDate(event.date)} ({getDayOfWeek(event.date)}) {formatTime(event.time)}{' '}
               {event.name}
             </MenuItem>
           ))}

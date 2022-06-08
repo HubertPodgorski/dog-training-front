@@ -11,7 +11,7 @@ import {
   CalendarPersonEventsQuery,
 } from '../../queries/calendarQueries'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
-import { formatDate, formatTime, sortByDateDesc } from '../../helpers/date'
+import { formatDate, formatTime, getDayOfWeek, sortByDateDesc } from '../../helpers/date'
 
 interface Props {
   personId: string
@@ -42,7 +42,7 @@ const PersonCalendar = ({ personId }: Props) => {
             <div key={eventId} className={styles.eventWrapper}>
               <div className={styles.eventLabel}>
                 {eventName} <br />
-                {formatDate(date)} {formatTime(time)}
+                {formatDate(date)} ({getDayOfWeek(date)}) {formatTime(time)}
               </div>
 
               <div

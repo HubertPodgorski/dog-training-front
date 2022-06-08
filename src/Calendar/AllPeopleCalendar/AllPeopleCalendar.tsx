@@ -6,7 +6,7 @@ import { LinearProgress } from '@material-ui/core'
 import classNames from 'classnames'
 import { getDogStatus } from '../helpers'
 import useAsyncEffect from '../../hooks/useAsyncEffect'
-import { formatDate, formatTime, sortByDateDesc } from '../../helpers/date'
+import { formatDate, formatTime, getDayOfWeek, sortByDateDesc } from '../../helpers/date'
 
 const AllPeopleCalendar = () => {
   const {
@@ -36,7 +36,7 @@ const AllPeopleCalendar = () => {
                 <div>
                   {name}
                   <br />
-                  {formatDate(date)} {formatTime(time)}
+                  {formatDate(date)} ({getDayOfWeek(date)}) {formatTime(time)}
                   <br />
                   Frekwencja:{' '}
                   {eventDogs.reduce((count, dogWithStatus) => {

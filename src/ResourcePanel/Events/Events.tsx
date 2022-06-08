@@ -23,7 +23,7 @@ import useAsyncEffect from '../../hooks/useAsyncEffect'
 import { Event } from '../../types'
 import { KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers'
 import FormControl from '@material-ui/core/FormControl'
-import { formatDate, formatTime, sortByDateDesc } from '../../helpers/date'
+import { formatDate, formatTime, getDayOfWeek, sortByDateDesc } from '../../helpers/date'
 
 const eventNameOptions = ['Trening na trawie TKKF', 'Trening na matach szkoła']
 
@@ -170,7 +170,7 @@ const Events = () => {
           <ListItem component='li' key={id} divider>
             <ListItemText
               primary={name}
-              secondary={`${formatDate(date)} ${formatTime(time)}`}
+              secondary={`${formatDate(date)} (${getDayOfWeek(date)}) ${formatTime(time)}`}
               onClick={() => {
                 setEventName(name)
                 setEventTime(new Date(time))
